@@ -35,21 +35,30 @@ ok   rud   Cn   error 0.0000 of 0.0640: 0 %
 ok   rud   Cl   error 0.0013 of 0.0087: 14 %
 
 Mod IV with the CFD's own thrust through the slipstreams
-ok   58 KCAS, flaps 30: CLmax 4.40-4.58  CL 4.52 at 14 deg
-  dCL, model (STAR-CCM+): 2: 1.22 (1.14) 4: 1.31 (1.27) 8: 1.42 (1.45) 10: 1.46 (1.50) 12: 1.51 (1.52) 14: 1.65 (1.62) 15: 1.62 (1.67)
+ok   58 KCAS, flaps 30: CLmax 4.40-4.58  CL 4.53 at 14 deg
+  dCL, model (STAR-CCM+): 2: 1.23 (1.14) 4: 1.31 (1.27) 8: 1.42 (1.45) 10: 1.46 (1.50) 12: 1.51 (1.52) 14: 1.65 (1.62) 15: 1.63 (1.67)
   dCm, model (STAR-CCM+): 2: +0.57 (+0.60) 4: +0.62 (+0.58) 8: +0.60 (+0.45) 10: +0.40 (+0.33) 12: +0.10 (+0.13) 14: +0.08 (+0.12) 15: +0.09 (+0.09)
-ok   dCL +1.1 to +1.7 between 2 and 15 deg  from 1.22 to 1.62
+ok   dCL +1.1 to +1.7 between 2 and 15 deg  from 1.23 to 1.63
 ok   dCm +0.6 falling to +0.1  from +0.57 to +0.09
 ok   the props' CL, 35-75 KCAS, below stall: inside the solvers' spread  error 0.079, spread 0.078
-ok   the props' Cm, 35-75 KCAS, below stall: inside the solvers' spread  error 0.021, spread 0.136
+ok   the props' Cm, 35-75 KCAS, below stall: inside the solvers' spread  error 0.022, spread 0.136
 ok   the props' CD, 35-75 KCAS, below stall: inside the solvers' spread  error 0.026, spread 0.030
 ok   power on: ail   Cl   error 0.0059 of 0.0382: 16 %
 ok   power on: stab  CL   error 0.0632 of 0.3336: 19 %
-ok   power on: stab  Cm   error 0.3212 of 2.1051: 15 %
+ok   power on: stab  Cm   error 0.3209 of 2.1051: 15 %
 ok   power on: rud   CY   error 0.0099 of 0.1410: 7 %
 ok   power on: rud   Cn   error 0.0045 of 0.0664: 7 %
 ok   power on: beta  CY   error 0.0310 of 0.3484: 9 %
-ok   power on: beta  Cn   error 0.0030 of 0.0409: 7 %
+ok   power on: beta  Cn   error 0.0031 of 0.0409: 7 %
 ok   power on: beta  Cl   error 0.0079 of 0.0349: 23 %
+
+Mod III, one cruise propeller at the CFD's thrust, against the CFD's power-off run
+  41 cases; skipped 20 the motor can't reach or below 30 ft/s: 10.7 KCAS 142 N m, 10.7 KCAS 194 N m, 10.7 KCAS 242 N m, 10.7 KCAS 285 N m, 42.8 KCAS 311 N m, 64.3 KCAS 331 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 98.5875 KCAS 334 N m, 118.35 KCAS 264 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 123.78 KCAS 268 N m, 125.76 KCAS 278 N m, 141.61 KCAS -85 N m, 141.61 KCAS 284 N m
+ok   one cruise propeller: CD   error 0.0012 of 0.0025: 48 %, the model's 1.01 of the CFD's
+ok   one cruise propeller: CL   error 0.0064 of 0.0440: 15 %, the model's 1.07 of the CFD's
+ok   one cruise propeller: CY   error 0.0021 of 0.0021: 100 %, the model's 0.00 of the CFD's
+ok   one cruise propeller: Cl, the strips' own  error 0.0029 of 0.0176: 17 %, the model's 1.03 of the CFD's
+ok   one cruise propeller: Cm   error 0.0036 of 0.0168: 21 %, the model's 0.88 of the CFD's
+ok   one cruise propeller: Cn   error 0.0014 of 0.0013: 112 %, the model's 1.14 of the CFD's
 
 1 misses: ail   Cm 

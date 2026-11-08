@@ -4,7 +4,8 @@
 
 Every part's forces come from the air at that part: translation, rotation about the centre of gravity, and what the other parts do to it.
   Wing:      strips in a lifting line solved ahead of time, on their own section tables, each with its own speed. So a strip in a slipstream, or behind a stopped disc, has its own lift.
-  Discs:     thrust, torque and in-plane force, a slipstream by momentum theory with a contraction, and its swirl. A jet drifts sideways with the crossflow,
+  Discs:     thrust, torque and in-plane force, a slipstream by momentum theory with a contraction, and its swirl. A disc that names its loading gets its swirl
+             across the radius (swirl_profile), which then turns the flow a strip's force stands on as well as its incidence. A jet drifts sideways with the crossflow,
              the less the stronger it is, so in a sideslip it leaves some strips and covers others; the tail's drift with the wing's wake as well.
   Bodies:    Munk's force and crossflow drag by stations, with the wing's upwash and downwash on them. The fuselage's crossflow also reaches the wing: a high wing gets its dihedral effect that way.
   Tail:      strips in the wing's downwash, by the wing's trailing vortices with the wake's height, and its wake's loss of dynamic pressure.
@@ -86,6 +87,24 @@ def ground_tables(rows, gt, stab, z_wing, b):
     wing[-1] = tail[-1] = 1.0
     x_w = float(np.mean([r['x4'] for r in rows]))
     return dict(hb=hb.tolist(), wing=wing, tail=tail, z_wing_ft=z_wing * F, b_ft=b * F, tail_arm_ft=(h0['x4'] - x_w) * F)
+
+
+def swirl_profile(x, Rs, sw, con):
+    """A propeller's swirl across its jet, on the swirl a uniform one would have at 0.7 R (the discs' vt-fps), at x the radius over the jet's.
+    The swirl behind a blade is B Gamma / 2 pi r. With an optimum (Betz) loading the far wake is a rigid helix, so the swirl goes as
+    lam x / (x^2 + lam^2), lam the advance ratio over pi, with Prandtl's tip loss for B blades standing for Goldstein's: like a solid body inside
+    lam, a free vortex outside, nil at the tip. Nil inside the nacelle, whose surface the jet runs along. Scaled to carry the torque's
+    angular momentum: as the jet contracts each ring keeps its own, so it spins faster by 1/contraction"""
+    lam = sw['J'] / math.pi
+    xh = sw['hub_r'] / Rs
+
+    def g(q):
+        st = lam / math.sqrt(1 + lam * lam)
+        tip = 2 / math.pi * np.arccos(np.clip(np.exp(-sw['blades'] * (1 - q) / (2 * st)), 0.0, 1.0))
+        return np.where((q >= xh) & (q < 1.0), lam * q / (q * q + lam * lam) * tip, 0.0)
+    qq = np.linspace(xh, 1.0, 2001)
+    k = (0.35 / con) / np.trapezoid(g(qq) * qq * qq, qq)
+    return k * g(np.asarray(x, float))
 
 
 def wetted_drag(L, wet, ff, k=1.0, V=65.0, nu=1.5e-5):
@@ -240,6 +259,9 @@ class Aero:
         """what the discs do to a strip: for each disc that reaches it, its share of the slipstream's speed and of its swirl, each as a value at no drift
         and a table over the jet's drift (nil at none, so a straight flight is as before). None if no jet can reach it"""
         def sw_of(dy, Rs, d):
+            if d.get('swirl'):
+                xr = np.abs(dy) / Rs
+                return float(np.mean(-np.sign(dy) * swirl_profile(xr, Rs, d['swirl'], s.c['contraction']))) * d['spin']
             core = 0.35 * Rs
             return float(np.mean(np.where((np.abs(dy) < Rs) & (np.abs(dy) > core), -np.sign(dy), 0.0))) * d['spin']
         out = []
@@ -337,7 +359,12 @@ class Aero:
             if fp:
                 w4 = D(w4, M(v(fp), p('flex/qd%s-fps' % sd)))
             w4 = M(w4, kj) if kj else w4
-            phi4 = s.fn(nm + '/phi4', ATAN2(S(M(v(ny), v4), M(v(nz), w4), *([M(lean, v4)] if lean else [])), U), 'flow at the bound vortex: the force\'s direction (rad)')
+            # The swirl turns the flow the force stands on, so a strip in its upwash leans its lift forward: the slipstream's rotation won back as thrust, as a tip
+            # propeller turning against the tip vortex does. The fuselage's upwash doesn't: a potential flow with no vorticity of its own, it leaves the wake's drag to
+            # the line. Only for a disc whose swirl is known across its radius (swirl_profile): with wing on both sides of a hub the net is the difference between
+            # two large leans, as uncertain as the even swirl standing in for an unpublished loading. Given it, the high-lift discs' drag fell further under the CFD's
+            sw4 = [M(k, p(d['nm'] + '/vt-fps')) for d, k in swirl if k and d.get('swirl')]
+            phi4 = s.fn(nm + '/phi4', ATAN2(S(M(v(ny), v4), M(v(nz), w4), *([M(lean, v4)] if lean else []), *sw4), U), 'flow at the bound vortex: the force\'s direction (rad)')
             key = r.get('sec') or ('winglet' if r['kind'] == 'winglet' else 'root' if r['thick'] >= 0.145 else 'mid' if r['thick'] >= 0.128 else 'tip')
             tb = T[key]
             col = 'ctl/flap-deg' if r['flap'] else ('ctl/ail-left-deg' if r['side'] < 0 else 'ctl/ail-right-deg') if r['aileron'] else None
@@ -632,7 +659,8 @@ class Aero:
         if cr:
             cf = s.c['coef']
             kb = M(p('aero/qbar-psf'), v(cf['S'] * cf['b']))
-            tb = lambda d: T2('prop/%s/J' % d, 'prop/%s/pitch-deg' % d, cr['J'], cr['pitch'], cr['dCl'])
+            # a propeller whose forces are gone [SIM table 1] takes its table with it
+            tb = lambda d: M(T2('prop/%s/J' % d, 'prop/%s/pitch-deg' % d, cr['J'], cr['pitch'], cr['dCl']), D(v(1), p('ctl/no-prop-forces-%s' % d)))
             own = M(v(cr['k'] * cf['S'] * cf['b']), D(MAX(p('prop/r/thrust-lbs'), v(0)), MAX(p('prop/l/thrust-lbs'), v(0))))
             s.add('fit-cruise', 0.0, 0.0, 0.0, Mx=s.fn('bu/fit/cruise-L', S(M(kb, D(tb('r'), tb('l'))), own)))
         r = s.c.get('rate_fit')

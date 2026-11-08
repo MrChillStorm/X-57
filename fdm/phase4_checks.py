@@ -14,6 +14,7 @@ import phase1_checks as C
 HERE = os.path.dirname(os.path.abspath(__file__))
 T = json.load(open(os.path.join(HERE, 'data', 'aero_tables.json')))
 SOL = C.H_SOLVERS
+T_B = json.load(open(os.path.join(HERE, 'data', 'geometry.json')))['reference']['b_ft']
 LIM = {0.0: (0.044, 0.058), 10.0: (0.093, 0.087), 30.0: (0.060, 0.054)}      # CL, Cm: phase0_checks.py's spread, linear range
 STALL = {0.0: 15.0, 10.0: 12.0, 20.0: 12.0, 30.0: 12.0}
 fails = []
@@ -178,8 +179,71 @@ def highlift(f):
     f['bu/test/hl-thrust'] = -999
 
 
+def cruise(f):
+    """One cruise propeller against NASA's power-on cruise CFD, which turns the right one alone [TM]: its effect on each coefficient, against the same
+    sheet's power-off run at that condition, solver by solver. Flaps 0, the one setting that sheet has power-off runs for. The model's right propeller
+    at the CFD's rpm and thrust, by the lever; the left's forces and slipstream gone, as the CFD has no disc there. Unfitted, but for the roll, which
+    takes NASA's tables whole for the windmilling propeller they hold (x57fit.cruise_fit): so the roll tested is the strips' own, the fit's term taken
+    out. Limits as every power-on input's above: 25 % of the CFD's effect, or 0.005"""
+    from scipy.optimize import brentq
+    print('Mod III, one cruise propeller at the CFD\'s thrust, against the CFD\'s power-off run')
+    rows = C.L('cruise')
+    key = lambda r: (r['hp'], r['kcas'], r['alpha'], r['beta'], r['ail'], r['flap'])
+    base = {key(r): r for r in rows if r['prop'] is None}
+
+    def at(r, lever):
+        H.configure(f, r['flap'], 0, 0, r['prop']['rpm'], lever, stab=0.0)
+        f['ctl/one-aileron'] = 1
+        f['ctl/one-aileron-deg'] = r['ail']
+        f['ctl/no-prop-forces-l'] = 1
+        f['ctl/no-prop-forces-r'] = 0
+        H.air(f, r['v_fts'], r['alpha'], r['beta'], hp=r['hp'])
+        return f['prop/r/thrust-lbs'] - r['prop']['T_lbf']
+
+    def on(r):
+        if r['v_fts'] < 30.0 or at(r, -0.174) * at(r, 1.66) > 0:
+            return None
+        brentq(lambda x: at(r, x), -0.174, 1.66, xtol=1e-5)
+        return own(C.coef(f))
+
+    def own(c):
+        fit = f['bu/fit/cruise-L'] if f.get_property_manager().hasNode('bu/fit/cruise-L') else 0.0
+        c['Cl'] -= fit / (f['bu/qS'] * T_B)
+        return c
+
+    def off(r):
+        f['ctl/no-prop-forces-r'] = 1
+        H.air(f, r['v_fts'], r['alpha'], r['beta'], hp=r['hp'])
+        out = own(C.coef(f))
+        f['ctl/no-prop-forces-r'] = 0
+        return out
+    res, skipped = {}, []
+    for r in rows:
+        b = base.get(key(r))
+        if not r['prop'] or b is None or r['beta'] or r['ail']:
+            continue
+        m = on(r)
+        if m is None:
+            skipped.append(r)
+            continue
+        m0 = off(r)
+        for c in C.SIX:
+            d = [r[s][c] - b[s][c] for s in ('star', 'lava', 'usm3d') if s in r and s in b and c in r[s] and c in b[s]]
+            if d:
+                res.setdefault(c, []).append((m[c] - m0[c] - float(np.mean(d)), float(np.mean(d))))
+    print('  %d cases; skipped %d the motor can\'t reach or below 30 ft/s: ' % (len(res['CL']), len(skipped))
+          + ', '.join('%g KCAS %.0f N m' % (r['kcas'], r['prop']['Q_lbft'] * 1.35582) for r in skipped))
+    for c in C.SIX:
+        e, d = zip(*res[c])
+        rel = rms(e) / max(rms(d), 1e-6)
+        slope = float(np.dot(np.add(e, d), d) / np.dot(d, d))
+        check('one cruise propeller: %-3s' % (c if c != 'Cl' else 'Cl, the strips\' own'), rel <= 0.25 or rms(e) <= 0.005, 'error %.4f of %.4f: %.0f %%, the model\'s %.2f of the CFD\'s' % (rms(e), rms(d), 100 * rel, slope))
+    for s in 'lr':
+        f['ctl/no-prop-forces-%s' % s] = 0
+
+
 def main():
-    what = sys.argv[1:] or ['poweroff', 'stall', 'controls', 'highlift']
+    what = sys.argv[1:] or ['poweroff', 'stall', 'controls', 'highlift', 'cruise']
     f = H.load('mod3')
     f4 = None
     for w in what:

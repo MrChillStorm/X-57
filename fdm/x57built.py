@@ -128,6 +128,12 @@ def body(sections, cuts):
     return P.body_stations(sections, cuts)
 
 
+# The cruise propellers' swirl across the jet: NASA's CFD loads them by Goldstein [TM sec. 3.1], so the optimum's profile (builtup.swirl_profile), here at
+# J 1.0, mid-way through their cruise and climb (across J 0.8 to 1.6 the strip beside the nacelle takes 1.74 to 1.95 of the even swirl, the next 0.95 to 1.01).
+# The jet's inner edge is the nacelle, 13.8 in across [X-57.vsp3]. The high-lift discs' BEM loading isn't published: they keep the even swirl
+SWIRL = dict(J=1.0, blades=GEO['cruise']['blades'], hub_r=13.8 / 2 * IN / 0.3048)
+
+
 def nacelles():
     """the tip's by its discs' size; the high-lift nacelles lumped, six to a side at their mean span: a small part of a small part"""
     tip_y = GEO['cruise']['hub_in'][1]
@@ -176,7 +182,7 @@ def config(hl):
         c['bodies'].append(dict(name=nm, stations=b['stations'], xmax=b['xmax'], y=y, sides=(-1, 1)))
     # discs: their slipstreams here, their forces from propulsion.py
     hub = GEO['cruise']['hub_in']
-    D = [dict(name=s, hub=(hub[0] * IN, sp * hub[1] * IN, hub[2] * IN), D=GEO['cruise']['diameter_in'] * IN, spin=sp, thrust='prop/%s/thrust-lbs' % s, torque='prop/%s/q-air-ftlb' % s, tip=True) for s, _, sp in PR.SIDES]
+    D = [dict(name=s, hub=(hub[0] * IN, sp * hub[1] * IN, hub[2] * IN), D=GEO['cruise']['diameter_in'] * IN, spin=sp, thrust='prop/%s/thrust-lbs' % s, torque='prop/%s/q-air-ftlb' % s, tip=True, swirl=SWIRL) for s, _, sp in PR.SIDES]
     if hl:
         for i, q in enumerate(PR.hl_stations(), 1):
             D.append(dict(name='h%d' % i, hub=tuple(v * IN for v in q), D=GEO['high_lift']['diameter_in'] * IN, spin=PR.spin_hl(i), thrust='prop/hl/d%d/thrust-lbs' % i, torque='prop/hl/d%d/q-air-ftlb' % i, test='prop/hl/d%d/power' % i))

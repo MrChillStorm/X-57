@@ -307,9 +307,10 @@ def rud_fit():
 
 
 def cruise_fit():
-    """One propeller's roll. NASA's tables give it on J and blade pitch, about twice what the jet does to the strips near the tip, and
-    they go on past zero thrust: a windmilling propeller takes lift off its own wing. So the tables go in whole and the strips' own share,
-    which goes with thrust over dynamic pressure, comes out. Nil while the two sides match"""
+    """One propeller's roll. NASA's tables give it on J and blade pitch, and they go on past zero thrust: a windmilling propeller takes lift off its
+    own wing, which the strips, fed only by thrust, don't. So the tables go in whole and the strips' own share, which goes with thrust over dynamic
+    pressure, comes out. With the swirl across the radius the strips' own roll comes within 17 % of the CFD's (phase4_checks.py cruise), where it was
+    0.7 of it: what the tables add now is mostly the windmilling. Nil while the two sides match"""
     import math
     import phase1_checks as K
     f = H.load('mod3')

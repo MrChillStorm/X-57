@@ -32,16 +32,16 @@ Ringing with the air nearly gone: 300,000 ft, propellers parked
   Mod IV, antisymmetric, damping                          0.0057   target 0.0057   ok
 
 In flight, trimmed level, 6,000 ft, a kick to each mode
-  Mod III            100 KCAS: alpha 6.6, tip +0.19 ft up; symmetric 2.39 Hz, damping 0.022; antisymmetric 3.54 Hz, 0.012  ok
-  Mod III            135 KCAS: alpha 0.9, tip +0.18 ft up; symmetric 2.39 Hz, damping 0.034; antisymmetric 3.55 Hz, 0.019  ok
-  Mod III            175 KCAS: alpha -1.4, tip +0.16 ft up; symmetric 2.39 Hz, damping 0.039; antisymmetric 3.56 Hz, 0.024  ok
-  Mod IV             100 KCAS: alpha 6.6, tip +0.18 ft up; symmetric 2.37 Hz, damping 0.021; antisymmetric 3.87 Hz, 0.012  ok
-  Mod IV             135 KCAS: alpha 0.9, tip +0.16 ft up; symmetric 2.37 Hz, damping 0.032; antisymmetric 3.87 Hz, 0.022  ok
-  Mod IV             175 KCAS: alpha -1.4, tip +0.15 ft up; symmetric 2.38 Hz, damping 0.037; antisymmetric 3.90 Hz, 0.028  ok
+  Mod III            100 KCAS: alpha 6.5, tip +0.20 ft up; symmetric 2.39 Hz, damping 0.022; antisymmetric 3.54 Hz, 0.012  ok
+  Mod III            135 KCAS: alpha 0.8, tip +0.19 ft up; symmetric 2.39 Hz, damping 0.034; antisymmetric 3.55 Hz, 0.019  ok
+  Mod III            175 KCAS: alpha -1.5, tip +0.18 ft up; symmetric 2.39 Hz, damping 0.040; antisymmetric 3.56 Hz, 0.024  ok
+  Mod IV             100 KCAS: alpha 6.5, tip +0.18 ft up; symmetric 2.37 Hz, damping 0.021; antisymmetric 3.87 Hz, 0.012  ok
+  Mod IV             135 KCAS: alpha 0.8, tip +0.17 ft up; symmetric 2.37 Hz, damping 0.032; antisymmetric 3.87 Hz, 0.022  ok
+  Mod IV             175 KCAS: alpha -1.5, tip +0.16 ft up; symmetric 2.38 Hz, damping 0.038; antisymmetric 3.90 Hz, 0.028  ok
   Mod IV, high lift   70 KCAS: alpha 5.0, tip +0.09 ft up; symmetric 2.37 Hz, damping 0.017; antisymmetric 3.86 Hz, 0.013  ok
 
 Dihedral effect, Mod III, 100 KCAS, flaps 0, bent to its 1 g shape against rigid
-  Cl beta -0.1511 rigid, -0.1654 bent; Cn beta 0.1112, 0.1072; tip 0.19 ft
+  Cl beta -0.1515 rigid, -0.1660 bent; Cn beta 0.1103, 0.1061; tip 0.20 ft
 
 On the gear, wings bending, nothing running
   standing, the pilot's g, spread                         0.0000   target 0.0000   ok
