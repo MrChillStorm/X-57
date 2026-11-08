@@ -178,7 +178,7 @@ class Kit:
         s.objs.append(lathe(name + '-ring', ((r * 1.35, x), (r * 1.35, x + 0.0022), (r, x + 0.0022)), y, z))
         s.black.append(name + '-ring')
         s.objs.append(circle(name, y, z, r, x + 0.0024, 'lens-%s.png' % colour))
-        s.xml.append(lit((name,), level, LENS[colour][0], 0.8))
+        s.xml.append(lit((name,), level, LENS[colour][0], DEAD))
 
     def led2(s, name, y, z, r, x=0.0):
         """a bicolor LED: green, or red while its flag says so"""
@@ -186,7 +186,7 @@ class Kit:
         s.black.append(name + '-ring')
         for c, cond in (('g', '<not><property>%stc-red/%s</property></not>' % (X57, name)), ('r', '<property>%stc-red/%s</property>' % (X57, name))):
             s.objs.append(circle('led-%s-%s' % (name, c), y, z, r, x + 0.0024, 'lens-%s.png' % c))
-            s.xml.append(lit(('led-%s-%s' % (name, c),), LAMP + 'tc-' + name, LENS[c][0], 0.8))
+            s.xml.append(lit(('led-%s-%s' % (name, c),), LAMP + 'tc-' + name, LENS[c][0], DEAD))
             s.xml.append('<animation><type>select</type><object-name>led-%s-%s</object-name><condition>%s</condition></animation>' % (name, c, cond))
 
     def push(s, name, y, z, r, prop, x=0.0, h=0.0028, red=False):
@@ -235,6 +235,9 @@ def toggle_model(d):
                       lathe('bat', ((0.0018, 0.003), (0.0021, 0.008), (0.0030, 0.0165), (0.0030, 0.0185), (0.0018, 0.0195)))]))
 
 
+# an unlit lens: the daylight it gives back, as a fraction of its picture. Coloured glass over a dark lamp cavity is a dark
+# dead front; at 0.7-0.8 the green ones looked lit with the gear up, so nothing seemed to change
+DEAD = 0.15
 LENS = {'g': ('0.25 1 0.35', (46, 170, 84)), 'b': ('0.2 0.45 1', (44, 92, 210)), 'y': ('1 0.8 0.15', (214, 186, 60)), 'r': ('1 0.18 0.1', (176, 44, 34)), 'a': ('1 0.72 0.15', (206, 136, 44))}
 
 
@@ -467,7 +470,7 @@ def annunciator(k):
             centred(d, 96, 96 + (i - (len(parts) - 1) / 2) * 46, part, 40, (252, 238, 205))
         name = 'ann-' + lamp_
         k.objs.append(plate(name, y - 0.0088, z - 0.0088, y + 0.0088, z + 0.0088, 0.0085, k.picture(name, q)))
-        k.xml.append(lit((name,), LAMP + lamp_, reflect=0.8))
+        k.xml.append(lit((name,), LAMP + lamp_, reflect=DEAD))        # unlit, a dark tile, its legend just readable [the panel photographs]
 
 
 def high_lift(k):
@@ -626,7 +629,7 @@ def stack(k):
     for i in range(10):
         y = -0.0685 + 0.137 * (90 + i * 94) / 1024.0
         k.objs.append(circle('can-%d' % i, y, -0.1030, 0.0021, 0.0070, 'lens-g.png'))
-        k.xml.append(lit(('can-%d' % i,), LAMP + 'can-%d' % i, '0.25 1 0.35', 0.7))
+        k.xml.append(lit(('can-%d' % i,), LAMP + 'can-%d' % i, LENS['g'][0], DEAD))
     # the audio panel
     im = Image.new('RGB', (1024, 128), (26, 27, 30))
     g = ImageDraw.Draw(im)
@@ -912,7 +915,7 @@ def lower(d):
     for c, v_ in (('g', 1), ('r', 2), ('a', 3)):
         n = 'rec-' + c
         k.objs.append(circle(n, y, z, 0.0040, X + 0.0024, 'lens-%s.png' % c))
-        k.xml.append(lit((n,), LAMP + 'rec', LENS[c][0], 0.8))
+        k.xml.append(lit((n,), LAMP + 'rec', LENS[c][0], DEAD))
         k.xml.append('<animation><type>select</type><object-name>%s</object-name><condition><equals><property>%srec-colour</property><value>%d</value></equals></condition></animation>' % (n, X57, v_))
     finish(k, 'lower')
     return '<model><path>lower.xml</path><offsets><x-m>0.0135</x-m><y-m>0</y-m><z-m>-0.285</z-m><pitch-deg>-21</pitch-deg></offsets></model>'
