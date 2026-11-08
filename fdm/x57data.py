@@ -30,8 +30,9 @@ MASS = dict(weight_lb=3075.0, design_weight_lb=3000.0, flight_weight_lb=dict(mod
 # surface alone. The tab was swept at flaps 0 only. The rudder 26 each way: the P2006T's flight manual (26, tolerance 2
 # [AFM]), NASA's ground-handling simulation (+-26 [GROUND]) and its Mod III simulator, whose pilots hold it at 26 after
 # a motor failure [ASYM fig. 14]; the tail is the P2006T's on every Mod. The CFD swept it to 28, the tolerance's far end. The
-# flight manual gives ailerons up 20, down 17, and the stabilator's trailing edge up 4, down 15, the opposite way round
-# to NASA's; NASA's figures are used.
+# aileron's 25 up and 18 down are 'the full range' [SIM]; NASA's pilots at full aileron read 20.5 [ASYM fig. 14, DITTO fig. 18],
+# the two surfaces' mean, 21.5, within a degree. The flight manual's ailerons (up 20, down 17) are the old wing's. Its
+# stabilator's trailing edge up 4, down 15 is the opposite way round to NASA's; NASA's figures are used.
 SURFACES = dict(stabilator=(-15.0, 5.0), aileron=(-25.0, 18.0), rudder=(-26.0, 26.0), tab=(-12.0, 11.0),
                 flaps=(0.0, 10.0, 30.0))         # 20 deg also has 11 power-off cases
 

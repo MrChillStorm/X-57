@@ -151,7 +151,7 @@ def config(tunnel=False, tail=True, nacelles=True):
         Lw = BU.lumps(rows, ysplit)
         Es = BU.eps_lumps(rows, st, zw, hs.tolist(), S, gt, Lw)
         # Helmbold's lifting surface: a line overstates a surface of aspect ratio 4
-        cfg.update(stab=st, eps_lumps=Lw, eps_lump=Es, e_tail=0.74, a_tail=a_sec, eta_tail=fit['eta_tail'], stab_zero=0.0 if tunnel else fit['stab_zero'])
+        cfg.update(stab=st, eps_lumps=Lw, eps_lump=Es, eps_shifts=BU.WAKE_SHIFTS, e_tail=0.74, a_tail=a_sec, eta_tail=fit['eta_tail'], stab_zero=0.0 if tunnel else fit['stab_zero'])
         fn = P.fin()
         hgt = fn['h']
         AR = hgt ** 2 / fn['S']

@@ -213,7 +213,7 @@ def config(hl):
     # the propellers' in-plane force at incidence, up on the mode; the high-lift set shares one figure, spread by its hubs
     al = xf.p('aero/alpha-rad')
     c['flex_forces'] = {sd: [xf.M(xf.p('prop/%s/inplane-lbs' % s), al)] + ([xf.M(xf.v(sum(FX.phi_at(c['flex'], h[1] / 12.0) for h in HUBS) / 12.0), xf.p('prop/hl/inplane-lbs'), al)] if hl else []) for sd, s in (('L', 'l'), ('R', 'r'))}
-    c.update(stab=st, eps_h=hs, eps_lumps=Lw, eps_lump=Es, e_tail=0.74, a_tail=a_sec, eta_tail=P.FIT['eta_tail'], stab_zero=0.0, fin=fn, sidewash=P.FIT['sidewash'])
+    c.update(stab=st, eps_h=hs, eps_lumps=Lw, eps_lump=Es, eps_shifts=BU.WAKE_SHIFTS, e_tail=0.74, a_tail=a_sec, eta_tail=P.FIT['eta_tail'], stab_zero=0.0, fin=fn, sidewash=P.FIT['sidewash'])
     area = BU.wetted_drag(fus['length'], fus['wet'], 1 + 60 / (fus['length'] / fus['d_eq']) ** 3 + fus['length'] / fus['d_eq'] / 400)
     area += 2 * BU.wetted_drag(tip['length'], tip['wet'], 1.3)
     area += 2 * 6 * BU.wetted_drag(hln['length'], hln['wet'], 1.3)

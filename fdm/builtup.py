@@ -59,9 +59,15 @@ def lumps(rows, y_split):
     return out
 
 
-def eps_lumps(rows, stab, z_wing, hs, S, gt, L):
-    """downwash at each tail strip, left and right, per unit of each lump's lift coefficient, by the tail strip's height over the wake:
-    {'L': [tail strip][lump][height], 'R': ...}. Each is the mean across the tail strip's span, which is what a strip of tail flies in"""
+WAKE_SHIFTS = [-3.0, -2.0, -1.5, -1.0, -0.6, -0.3, 0.0, 0.3, 0.6, 1.0, 1.5, 2.0, 3.0]      # m
+
+
+def eps_lumps(rows, stab, z_wing, hs, S, gt, L, shifts=WAKE_SHIFTS):
+    """downwash at each tail strip, left and right, per unit of each lump's lift coefficient, by the tail strip's height over the wake and the
+    wake's offset beside it: {'L': [tail strip][lump][height][offset], 'R': ...}. Each is the mean across the tail strip's span, which is what a
+    strip of tail flies in. In a sideslip the wake runs back along the air, not the body, so at the tail it lies beside where it would: at 20 deg
+    about 1.7 m, half the tail's span. Read straight back, the lumps put a blown wing's sideslip asymmetry on the wrong tail strips, 7 deg
+    apart, and took a tenth of the roll from sideslip the CFD has with the propellers on"""
     gx, gw = np.polynomial.legendre.leggauss(12)
     c = np.array([r['c'] for r in rows])
     area = np.array([r['area'] for r in rows])
@@ -76,8 +82,8 @@ def eps_lumps(rows, stab, z_wing, hs, S, gt, L):
         per = []
         for h in stab['strips']:
             y1, y2 = side * h['y'] - 0.5 * h['dy'], side * h['y'] + 0.5 * h['dy']
-            per.append([[float(sum(-mean_field(rows[j], g[j], h['x4'], y1, y2, h['z'], h['z'] - z_wing - hh, gx, gw) for j in lp['members'])) for hh in hs]
-                        for lp, g in zip(L, unit)])
+            per.append([[[float(sum(-mean_field(rows[j], g[j], h['x4'], y1 + sh, y2 + sh, h['z'], h['z'] - z_wing - hh, gx, gw) for j in lp['members']))
+                           for sh in shifts] for hh in hs] for lp, g in zip(L, unit)])
         out[tag] = per
     return out
 
@@ -508,6 +514,9 @@ class Aero:
         xte, zte, cref = c['wake_te']
         cd = MAX(s.cdw, v(0.004))
         ang, tanw = s.wake_shape()
+        arm = c['ground']['tail_arm_ft'] * 0.3048
+        sh = c['eps_shifts']
+        s.fn('bu/wake-shift', MIN(v(sh[-1]), MAX(v(sh[0]), M(v(arm), Q(s.V, MAX(s.U, v(10)))))), 'how far the wing\'s wake lies beside the tail in a sideslip (m), as the tail reads it')
         tanw = s.fn('bu/wake-tan', tanw)
         dh = c['eps_h']
         lag = c['eps_lag']
@@ -522,7 +531,7 @@ class Aero:
                 hw, loss = s.wake_loss(nm, h['x4'], h['z'], xte, zte, cref, cd, tanw, c['k_wake'])
                 E = c['eps_lump']['L' if side < 0 else 'R'][h['i']]
                 dist = (h['x4'] - xte) * F
-                eps = s.fn(nm + '/eps', D(M(S(*[M(T1(nm + '/hw', dh, e), cl) for e, cl in zip(E, s.CLlump)]), s.get),
+                eps = s.fn(nm + '/eps', D(M(S(*[M(T2(nm + '/hw', 'bu/wake-shift', dh, c['eps_shifts'], e), cl) for e, cl in zip(E, s.CLlump)]), s.get),
                                           M(v(lag * dist), Q(ad, MAX(s.Vt, v(10))))), 'downwash (rad), with its lag')
                 jet = []
                 for d in s.D:

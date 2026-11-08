@@ -26,7 +26,7 @@ Ground effect against the CFD, up to 10 deg
 Rates of climb, gear down, takeoff flaps, 2,500 ft. High lift on NASA's propeller table, as its simulator
   full power: 144.2 kW, stabilator -2.8, alpha 4.3
   Mod III, 97 KCAS, full power                             597   target 430      MISS (limit 60)
-  one motor out, zero sideslip: left disc -27 lbf, right 255, rudder -0.69, aileron 0.47, bank 5.6, residual 6e-13
+  one motor out, zero sideslip: left disc -27 lbf, right 255, rudder -0.69, aileron 0.47, bank 5.6, residual 2e-12
   windmilling, at zero sideslip: -531 ft/min
   feathered: left disc 3 lbf, rudder -0.62, aileron 0.48, bank 5.1
   Mod III, one motor out, feathered                       -419   target -450     ok
@@ -46,11 +46,11 @@ Rates of climb, gear down, takeoff flaps, 2,500 ft. High lift on NASA's propelle
   DiTTo 84 KIAS, a traction bus out                         88   target 100      ok
 
 Minimum control speed, Mod III, takeoff flaps, gear down, full power on the right, left disc windmilling, zero sideslip
-  120 KCAS: pedal 0.41 of full, bank 5.2, residual 4e-13
-  105 KCAS: pedal 0.56 of full, bank 5.4, residual 1e-12
-  97 KCAS: pedal 0.69 of full, bank 5.6, residual 1e-12
-  92 KCAS: pedal 0.80 of full, bank 5.8, residual 4e-13
-  88 KCAS: pedal 0.91 of full, bank 6.0, residual 5e-11
+  120 KCAS: pedal 0.41 of full, bank 5.2, residual 3e-13
+  105 KCAS: pedal 0.56 of full, bank 5.4, residual 6e-13
+  97 KCAS: pedal 0.69 of full, bank 5.6, residual 7e-13
+  92 KCAS: pedal 0.80 of full, bank 5.8, residual 3e-10
+  88 KCAS: pedal 0.91 of full, bank 6.0, residual 6e-13
   85 KCAS: pedal 1.00 of full, bank 6.1, residual 1e-01
   82 KCAS: pedal 1.00 of full, bank 5.7, residual 6e-01
   78 KCAS: pedal 1.00 of full, bank 5.3, residual 1e+00
@@ -58,18 +58,18 @@ Minimum control speed, Mod III, takeoff flaps, gear down, full power on the righ
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 0, gear up [20240006682 figs. 6-9]
   trim: alpha 8.1 (NASA 8.4), lever 0.49, 65 kW, 113 lbf a motor
-  left disc after 3 s: -38 lbf at 2030 rpm; alpha 8.0 to 9.7
+  left disc after 3 s: -38 lbf at 2029 rpm; alpha 8.0 to 9.8
   bank at 3 s                                              -75   target -87      ok
   pitch at 3 s                                           -10.1   target -11.5    ok
   heading at 3 s                                         -23.2   target -23.0    ok
   peak roll rate, deg/s                                    -47   target -47      ok
   peak sideslip                                           10.5   target 9.1      ok
-  sink at 3 s, ft/s                                       19.1   target 24.5     ok
+  sink at 3 s, ft/s                                       19.0   target 24.5     ok
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 10, gear down [20240006682 figs. 6-9]
   trim: alpha 5.2 (NASA 8.4), lever 0.73, 97 kW, 170 lbf a motor
-  left disc after 3 s: -33 lbf at 1800 rpm; alpha 5.2 to 8.0
-  at 3 s: bank -83 (-87), pitch -18.2 from 5.2 (-11.5 from 8), heading -22.7 (-23), roll rate -52 (-47), sideslip 16.5 (9.1), sink 24.8 (24.5)
+  left disc after 3 s: -33 lbf at 1796 rpm; alpha 5.2 to 8.4
+  at 3 s: bank -83 (-87), pitch -18.0 from 5.2 (-11.5 from 8), heading -23.0 (-23), roll rate -52 (-47), sideslip 16.4 (9.1), sink 24.0 (24.5)
 
 Contactor failure on the right wing, 58 KCAS, flaps 30, the CFD's thrust [TM figs. 47-51, read by eye]
   failure A, alpha 2: dCL -0.301, Cl +0.041, Cn -0.0082, CY +0.000, dCm -0.068; 0.75 of the discs working
@@ -84,19 +84,19 @@ Contactor failure on the right wing, 58 KCAS, flaps 30, the CFD's thrust [TM fig
   failure A, Cn at 8 deg, inside the solvers           -0.0055   target 0.0000   ok
 
 NASA's failure list [20240006496 table 1], Mod III at 97 KCAS, full power, 4 s after each
-  Controller fails, half power                 torque 255 to 128 Nm, thrust 255 to 112 lbf, 2657 rpm, pitch 20.3 to 16.3  ok
-  Motor fails, propeller forces remain         torque 255 to 0 Nm, thrust 255 to -41 lbf, 1895 rpm, pitch 20.3 to 16.3  ok
+  Controller fails, half power                 torque 255 to 128 Nm, thrust 255 to 112 lbf, 2653 rpm, pitch 20.3 to 16.3  ok
+  Motor fails, propeller forces remain         torque 255 to 0 Nm, thrust 255 to -40 lbf, 1890 rpm, pitch 20.3 to 16.3  ok
   Motor fails, no propeller forces             torque 255 to 0 Nm, thrust 255 to -0 lbf, 1732 rpm, pitch 20.3 to 16.4  ok
   Fixed pitch, lever to half                   torque 255 to 127 Nm, thrust 255 to 115 lbf, 2200 rpm, pitch 20.3 to 20.3  ok
-  Half power, hub frozen                       torque 255 to 128 Nm, thrust 255 to 109 lbf, 2253 rpm, pitch 20.3 to 20.3  ok
-  Zero power, hub frozen                       torque 255 to 0 Nm, thrust 255 to -26 lbf, 1629 rpm, pitch 20.3 to 20.3  ok
+  Half power, hub frozen                       torque 255 to 128 Nm, thrust 255 to 109 lbf, 2250 rpm, pitch 20.3 to 20.3  ok
+  Zero power, hub frozen                       torque 255 to 0 Nm, thrust 255 to -26 lbf, 1625 rpm, pitch 20.3 to 20.3  ok
   Instant feather                              torque 255 to 255 Nm, thrust 255 to 27 lbf, 1594 rpm, pitch 20.3 to 85.0  ok
   Command stuck, one motor, lever to half      left 255 to 255 Nm, right 255 to 127  ok
   Command stuck, both, lever to half           left 255 to 255 Nm, right 255 to 255  ok
   Runaway to feather                           torque 255 to 255 Nm, thrust 255 to 227 lbf, 2310 rpm, pitch 20.3 to 24.3  ok
   Runaway to fine                              torque 255 to 255 Nm, thrust 255 to 171 lbf, 2847 rpm, pitch 20.3 to 16.3  ok
   Mod IV, 75 KCAS, flaps 30, high lift on
-  3 high-lift motors, same wing                3 discs down, on the left: [2, 4, 6], thrust left 87, right 184 lbf  ok
+  3 high-lift motors, same wing                3 discs down, on the left: [2, 4, 6], thrust left 87, right 183 lbf  ok
   6 high-lift motors, same wing                6 discs down, on the left: [1, 2, 3, 4, 5, 6], thrust left -13, right 185 lbf  ok
 
 The P2006T on a paved runway, 1180 kg, sea level, and its landing on grass

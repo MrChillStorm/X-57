@@ -50,7 +50,7 @@ ok   power on: rud   CY   error 0.0099 of 0.1410: 7 %
 ok   power on: rud   Cn   error 0.0045 of 0.0664: 7 %
 ok   power on: beta  CY   error 0.0311 of 0.3484: 9 %
 ok   power on: beta  Cn   error 0.0031 of 0.0409: 8 %
-MISS power on: beta  Cl   error 0.0092 of 0.0349: 26 %
+MISS power on: beta  Cl   error 0.0091 of 0.0349: 26 %
 
 Mod III, one cruise propeller at the CFD's thrust, against the CFD's power-off run
   41 cases; skipped 20 the motor can't reach or below 30 ft/s: 10.7 KCAS 142 N m, 10.7 KCAS 194 N m, 10.7 KCAS 242 N m, 10.7 KCAS 285 N m, 42.8 KCAS 311 N m, 64.3 KCAS 331 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 98.5875 KCAS 334 N m, 118.35 KCAS 264 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 123.78 KCAS 268 N m, 125.76 KCAS 278 N m, 141.61 KCAS -85 N m, 141.61 KCAS 284 N m

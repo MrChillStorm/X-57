@@ -1,4 +1,4 @@
-mod3: 6042 reads a step unoptimised, 5541 optimised, 5541 with the high-lift channels at rest
+mod3: 6080 reads a step unoptimised, 5579 optimised, 5579 with the high-lift channels at rest
 
 
      JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
@@ -8,7 +8,7 @@ JSBSim startup beginning ...
 
 ok   mod3: no NaN
 ok   mod3: the two fly the same through 36 s  worst 0.00e+00 of velocities/u-aero-fps
-mod4: 8025 reads a step unoptimised, 7474 optimised, 6352 with the high-lift channels at rest
+mod4: 8063 reads a step unoptimised, 7512 optimised, 6390 with the high-lift channels at rest
 ok   mod4: no NaN
 ok   mod4: the two fly the same through 36 s  worst 0.00e+00 of velocities/u-aero-fps
 ok   mod4: the high-lift channels ran and rested  on for 14.5 s of 36
