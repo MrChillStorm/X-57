@@ -17097,8 +17097,8 @@
 </tableData></table></product></function></fcs_function>
 <fcs_function name="bu/fit/Z-ground-hl"><function><product><value>-1</value><product><property>aero/qbar-psf</property><value>66.667</value><property>prop/hl/on</property></product><table><independentVar lookup="row">bu/h-b</independentVar><independentVar lookup="column">aero/alpha-deg</independentVar><independentVar lookup="table">ctl/flap-deg</independentVar><tableData breakPoint="10">
         -2 2 8 10
-0.180828 -0.0692774 0.00575946 -0.0223496 -0.0409735
-0.247552 -0.0567389 0.000448266 -0.0335351 -0.0395868
+0.180828 -0.0535525 0.00575946 -0.0223496 -0.0409735
+0.247552 -0.0443825 0.000448266 -0.0335351 -0.0395868
 0.49231 -0.0107449 -0.00492143 -0.022389 -0.0345
 0.986255 -0.0016264 -0.00356063 -0.0209525 -0.0134929
 1.5 0 0 0 0
@@ -21122,8 +21122,8 @@
 1.5 0 0 0 0
 </tableData></table></product></sum><sum><product><value>12.89975</value><property>bu/fit/Z-ground-hl</property></product><product><product><property>aero/qbar-psf</property><value>66.667</value><property>prop/hl/on</property></product><value>2.13</value><table><independentVar lookup="row">bu/h-b</independentVar><independentVar lookup="column">aero/alpha-deg</independentVar><independentVar lookup="table">ctl/flap-deg</independentVar><tableData breakPoint="10">
         -2 2 8 10
-0.180828 0.0396989 -0.0590375 0.0569634 0.124819
-0.247552 0.0312077 -0.0197414 0.093062 0.109676
+0.180828 -0.0223237 -0.0590375 0.0569634 0.124819
+0.247552 -0.0175288 -0.0197414 0.093062 0.109676
 0.49231 6.00055e-05 0.0100077 0.025519 0.0541304
 0.986255 -0.0245097 0.0117654 0.0156746 0.0125831
 1.5 0 0 0 0

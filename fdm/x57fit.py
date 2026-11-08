@@ -91,6 +91,8 @@ def ground_at(f, h, flap, a, V=170.0, mode=0, rpm=0):
     f['ctl/one-aileron'] = 0
     al = math.radians(a)
     f['ic/h-sl-ft'] = 2500.0
+    if not f['inertia/cg-z-in']:             # it reads 0 until the model first runs, which put the first point's wing almost on the ground
+        f.run_ic()
     f['ic/terrain-elevation-ft'] = 2500.0 - (h - (87.5 - f['inertia/cg-z-in']) / 12)
     f['ic/psi-true-rad'], f['ic/theta-rad'], f['ic/phi-rad'] = 0, al, 0
     f['ic/u-fps'], f['ic/v-fps'], f['ic/w-fps'] = V * math.cos(al), 0, V * math.sin(al)
@@ -131,7 +133,6 @@ def ground_fit():
     ground, and differently by flap. What is left, on wing height, incidence and flap, from the CFD's power-off ground planes"""
     import phase1_checks as K
     f = H.load('mod3')
-    ground_at(f, 900.0, 10, 0.0)
     pts, hb = {}, {}
     for r in K.L('poweroff_ground'):
         if r['alpha'] > 10 or r['flap'] not in (10, 30):

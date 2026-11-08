@@ -290,6 +290,17 @@ var instruments = func {
 var instruments_timer = maketimer(0, instruments);       # every frame: the needles move smoothly
 instruments_timer.start();
 
+# A runway start puts the flaps at takeoff, 10 deg [ICD slide 58: TO 10], already there: on the ground with no parking position named.
+# The flight model keeps the flap motor's position in a property for this; set at a parking position or in the air, they start up
+var runway_start = func {
+    if (!getprop("/sim/presets/onground")) return;
+    var park = getprop("/sim/presets/parkpos");
+    if (park != nil and park != "") return;
+    setprop("/controls/flight/flaps", 10 / 30);
+    setprop(J ~ "ctl/flap-moving", 10);
+};
+setlistener("/sim/signals/fdm-initialized", func(n) { if (n.getBoolValue()) runway_start(); }, 0, 0);
+
 var timer = nil;
 var ready_l = setlistener("/sim/signals/fdm-initialized", func(n) {
     if (n.getBoolValue()) {

@@ -12,8 +12,8 @@ mod3 on the wheels: pitch 0.03 deg, height of the centre of gravity 3.99 ft, wei
   30 deg bank for 25 s: heading moved 103 deg, 1.14 g, 133.4 KCAS, sideslip 0.5 deg
   wings level again: bank -0.5 deg, 131.8 KCAS
   approach, flaps 30: 85.0 KCAS (aiming 94), alpha 2.7, stabilator 0.8, -947 ft/min
-mod4 on the wheels: pitch -0.25 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
-  lift-off after 12.3 s at 83 KCAS, in 1193 ft
+mod4 on the wheels: pitch -0.26 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
+  lift-off after 12.3 s at 83 KCAS, in 1192 ft
   500 ft after 42.8 s at 98 KCAS, 1035 ft/min
   cruise, trimmed (aileron 0.024, rudder -0.001), hands off for 60 s: 133.7 KCAS, height changed -3 ft, bank -0.5 deg, pitch 0.8 deg
   30 deg bank for 25 s: heading moved 103 deg, 1.14 g, 133.2 KCAS, sideslip 0.5 deg

@@ -52,6 +52,8 @@ def ground(f3, f4):
         f['ctl/one-aileron'] = 0
         al = math.radians(a)
         f['ic/h-sl-ft'] = 2500.0
+        if not f['inertia/cg-z-in']:         # it reads 0 until the model first runs, which put the first point's wing almost on the ground
+            f.run_ic()
         f['ic/terrain-elevation-ft'] = 2500.0 - (height - (Z_LE - f['inertia/cg-z-in']) / 12)
         f['ic/psi-true-rad'], f['ic/theta-rad'], f['ic/phi-rad'] = 0, al, 0
         f['ic/u-fps'], f['ic/v-fps'], f['ic/w-fps'] = V * math.cos(al), 0, V * math.sin(al)

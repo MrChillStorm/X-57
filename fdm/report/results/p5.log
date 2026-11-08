@@ -7,21 +7,21 @@ JSBSim startup beginning ...
 
 
 Ground effect against the CFD, up to 10 deg
-  flaps 10, power off: RMS CL 0.019, Cm 0.039; outside the limit 1 and 1 of 10
-  flaps 10, power off, worst dCL                         0.060   target 0.000    MISS (limit 0.05)
-  flaps 10, power off, worst dCm                         0.123   target 0.000    MISS (limit 0.05)
+  flaps 10, power off: RMS CL 0.000, Cm 0.000; outside the limit 0 and 0 of 10
+  flaps 10, power off, worst dCL                         0.000   target 0.000    ok
+  flaps 10, power off, worst dCm                         0.000   target 0.000    ok
   flaps 30, power off: RMS CL 0.000, Cm 0.000; outside the limit 0 and 0 of 10
   flaps 30, power off, worst dCL                         0.001   target 0.000    ok
   flaps 30, power off, worst dCm                         0.000   target 0.000    ok
-  power on, LAVA, 111 points: RMS CL 0.027, Cm 0.072
-    flaps 10, 5.76 ft, -2 deg, 3545 rpm: dCm -0.616 against -0.305, dCL 0.129 against -0.011
+  power on, LAVA, 111 points: RMS CL 0.023, Cm 0.065
     flaps 30, 5.76 ft, 8 deg, 4702 rpm: dCm -1.419 against -1.596, dCL 0.251 against 0.253
     flaps 30, 5.76 ft, 8 deg, 3962 rpm: dCm -1.025 against -0.855, dCL 0.111 against 0.137
     flaps 30, 5.76 ft, 2 deg, 3962 rpm: dCm -0.421 against -0.578, dCL 0.129 against 0.145
     flaps 30, 5.76 ft, 8 deg, 3428 rpm: dCm -0.890 against -0.735, dCL 0.068 against 0.108
     flaps 30, 5.76 ft, 10 deg, 3545 rpm: dCm -2.006 against -2.155, dCL 0.280 against 0.252
-  power on, worst dCL                                    0.140   target 0.000    ok
-  power on, worst dCm                                    0.312   target 0.000    MISS (limit 0.15)
+    flaps 30, 5.76 ft, 8 deg, 4661 rpm: dCm -1.677 against -1.826, dCL 0.310 against 0.297
+  power on, worst dCL                                    0.089   target 0.000    ok
+  power on, worst dCm                                    0.177   target 0.000    MISS (limit 0.15)
 
 Rates of climb, gear down, takeoff flaps, 2,500 ft. High lift on NASA's propeller table, as its simulator
   full power: 144.2 kW, stabilator -2.8, alpha 4.3
@@ -131,4 +131,4 @@ The X-57 on its wheels, Mod III
     32.0 s,  86 KCAS,  878 m: 285 + 285 lbf, 2705 rpm, 255 Nm, pitch deg 18.4, tyres -157, gear x -10, aero x 208, wheels 1494, theta -0.1
     lift-off at 88 KCAS, 982 m, 34.3 s, pitch 7.1, heading 359.7
 
-9 misses: flaps 10, power off, worst dCL; flaps 10, power off, worst dCm; power on, worst dCm; Mod III, 97 KCAS, full power; Mod III, 2,400 rpm; DiTTo 97 KIAS, one motor out; DiTTo 97 KIAS, contactor out; DiTTo 84 KIAS; DiTTo 84 KIAS, contactor out
+7 misses: power on, worst dCm; Mod III, 97 KCAS, full power; Mod III, 2,400 rpm; DiTTo 97 KIAS, one motor out; DiTTo 97 KIAS, contactor out; DiTTo 84 KIAS; DiTTo 84 KIAS, contactor out
