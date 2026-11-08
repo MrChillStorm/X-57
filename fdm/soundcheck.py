@@ -431,6 +431,10 @@ def airframe(mod):
             waves[fn] = y.astype(np.float64) / 32768.0
         return waves[fn]
 
+    def mix(on):              # the files that play, each at its volume and to its own end, as FlightGear plays them: a gentle touchdown's are longer
+        n_ = max(len(wave(q)) for q, _ in on)
+        return sum(np.pad(w * wave(q), (0, n_ - len(wave(q)))) for q, w in on)
+
     def heard_db(x):          # A-weighted exposure of a waveform on the scale, as x57sound.file_level reads a file
         Y = np.fft.rfft(x)
         ya = np.fft.irfft(Y * 10 ** (X.a_weight_db(np.maximum(np.fft.rfftfreq(len(x), 1 / 48000.0), 1e-3)) / 20), len(x))
@@ -469,7 +473,7 @@ def airframe(mod):
                                 u = u0 * (u1 / u0) ** t
                                 Q = landed(g, inside, u, kk * 1.13)
                                 on = [(q, dv(q, Q)[0]) for q in L if dc(q, Q)[0]]
-                                x = sum(w * wave(q)[:min(len(wave(r)) for r, _ in on)] for q, w in on)
+                                x = mix(on)
                                 law0 = next(q['law_dba'] for q in ms if q['slip_kt'] == u0 and q['sink_fps'] == kk)
                                 d_ = abs(heard_db(x) - (law0 + 20 * np.log10(u / u0)))
                                 if d_ > worst_mid:
@@ -479,7 +483,7 @@ def airframe(mod):
                     for kk in np.geomspace(sinks[0], sinks[-1], 25):
                         Q = landed(g, inside, 60.0, kk)
                         on = [(q, dv(q, Q)[0]) for q in L if dc(q, Q)[0]]
-                        lv.append(heard_db(sum(w * wave(q)[:min(len(wave(r)) for r, _ in on)] for q, w in on)))
+                        lv.append(heard_db(mix(on)))
                     mono += int((np.diff(lv) < -0.05).sum())
     # all three wheels down at once, between nodes on both axes: the sources the touchdowns take then
     for inside in (1.0, 0.0):

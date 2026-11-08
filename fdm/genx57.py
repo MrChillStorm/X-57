@@ -286,7 +286,8 @@ def gear_xml():
     return '<ground_reactions>\n%s\n</ground_reactions>\n' % '\n'.join(u)
 
 
-def fdm(hl, built=False):
+def cg_in():
+    """the centre of gravity, in: at its published fraction of the wing's mean chord, its published offset and depth"""
     m = X.MASS
     w = GEO['wing']
     p0 = w['panels'][0]
@@ -294,7 +295,12 @@ def fdm(hl, built=False):
     ymac = p0['y1'] / 3 * (1 + 2 * lam) / (1 + lam)
     cm = p0['c0'] + (p0['c1'] - p0['c0']) * ymac / p0['y1']
     xle = w['origin_in'][0] + ymac * np.tan(np.radians(p0['sweep'])) + p0['loc'] * (p0['c0'] - cm)
-    cg = (xle + m['cg_mac'] * w['mac_in'], m['cg_y_in'], GEO['reference']['wing_le_in'][2] - m['cg_below_wing_le_in'])
+    return (xle + m['cg_mac'] * w['mac_in'], m['cg_y_in'], GEO['reference']['wing_le_in'][2] - m['cg_below_wing_le_in'])
+
+
+def fdm(hl, built=False):
+    m = X.MASS
+    cg = cg_in()
     k = X.SLUG_FT2
     gross = m['flight_weight_lb']['mod4' if hl else 'mod3'] if '--fg' in sys.argv else m['weight_lb']     # the harness flies NASA's simulator's
     return '''<?xml version="1.0"?>

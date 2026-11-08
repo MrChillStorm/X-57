@@ -4,8 +4,8 @@
     python3 mktouchdown.py [bank]        default ~/git/PyWopWop/out/x57; writes <bank>_touchdown
 
 Squeal: a wheel touches turning slower than the ground goes by and slides until friction spins it up, losing I (slip/r)^2 / 2 whatever the load;
-the load comes through the strut, its damping on the sink rate, then its spring, so a firm touchdown squeals short and a gentle one long, of the same
-energy. The sound's share of that loss and its spectrum come from recorded landings: the 6.00-6's from a P2006T's, the 5.00-5's from a glider's.
+the load comes through the strut, its damping on the rate it compresses and its spring, stopping the airframe's mass at the wheel as the wing sheds the
+weight onto it, so a firm touchdown squeals short and a gentle one long, of the same energy; the squeal follows the load, as the recorded one does. The sound's share of that loss and its spectrum come from recorded landings: the 6.00-6's from a P2006T's, the 5.00-5's from a glider's.
 Thump: the strut's damping force on the airframe at contact, from the same P2006T landing, where it was at the edge of hearing; written at its
 estimate, a firm one through a soft knee where it would pass the cockpit's full scale (the manifest's thump_knee_db, thump_drive), so firmer always
 thumps harder. Estimates both. Each wheel's files are one waveform under different envelopes, cross-faded by amplitude over the slip and sink rate.
@@ -25,7 +25,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(bank), '..'))
 sys.path.insert(0, HERE)
 from pywopwop import tyre as T
 from pywopwop.propeller import load_prop_aircraft
-from x57data import GEAR, MASS, WHEELS
+from x57data import GEAR, MASS, WHEELS, SLUG_FT2
+import genx57
 import mktyres
 
 LBF, LBFT = 4.4482216, 14.5939029          # N a lbf; N/m a lbf/ft (and N s/m a lbf s/ft)
@@ -42,10 +43,16 @@ main, nose = GEAR['main_load_share'] / 2, 1 - GEAR['main_load_share']
 for size, w in WHEELS.items():           # the flight model spins the wheels down with these: the same wheels as the squeal's spin-up
     assert abs(w['inertia_kgm2'] - T.wheel_inertia(size)) < 1e-4 and abs(w['radius_m'] - T.TYRE_TYPES[size]['rolling_radius_m']) < 1e-6, size
 at = {t['gear']: t['position'] for t in mktyres.tyres}
+# the airframe's mass as each strut stops it, at the design weight (PyWopWop's strut_mass): the mains together, rising and pitching about the centre
+# of gravity; the nose pivoting about the mains, already down
+M_KG, IYY = MASS['design_weight_lb'] * 0.45359237, MASS['Iyy_lbin2'] / SLUG_FT2 * 1.35581795
+x_cg, x_main = genx57.cg_in()[0], GEAR['main_x_in']
+x_nose = x_main - GEAR['wheelbase_in']
+at_mass = dict(main=T.strut_mass(M_KG, IYY, (x_main - x_cg) * 0.0254) / 2, nose=T.strut_mass(M_KG, IYY, (x_cg - x_nose) * 0.0254, (x_main - x_nose) * 0.0254))
 groups = []
 for name, size, share, gears in (('main', '6.00-6', main, (1, 2)), ('nose', '5.00-5', nose, (0,))):
     k, c, w = strut(share)
-    groups.append(dict(name=name, tyre_type=size, damping=c * LBFT, spring=k * LBFT, static_load_n=w, wheels=[dict(gear=g, position=at[g]) for g in gears]))
+    groups.append(dict(name=name, tyre_type=size, damping=c * LBFT, spring=k * LBFT, static_load_n=w, mass_kg=at_mass[name], wheels=[dict(gear=g, position=at[g]) for g in gears]))
 
 if __name__ == '__main__':
     gain = json.load(open(os.path.join(bank, 'manifest.json')))['gain_db']
