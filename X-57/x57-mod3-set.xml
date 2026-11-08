@@ -26,7 +26,7 @@
   <menubar><default><menu n="100"><label>X-57</label><enabled type="bool">true</enabled><item><label>Autostart</label><binding><command>nasal</command><script>x57cockpit.autostart();</script></binding></item><item><label>Autostop</label><binding><command>nasal</command><script>x57cockpit.autostop();</script></binding></item><item><label>Systems and failures</label><binding><command>dialog-show</command><dialog-name>x57-systems</dialog-name></binding></item><item><label>Tecnam cockpit lights (not on the X-57)</label><binding><command>dialog-show</command><dialog-name>x57-tecnam-lights</dialog-name></binding></item></menu></default></menubar>
  </sim>
  <controls>
-  <engines><engine n="0"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch></engine><engine n="1"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch></engine></engines>
+  <engines><engine n="0"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch><reverser type="bool">false</reverser><cutoff type="bool">false</cutoff></engine><engine n="1"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch><reverser type="bool">false</reverser><cutoff type="bool">false</cutoff></engine></engines>
   <electric><battery-switch type="bool">true</battery-switch></electric>
   <flight><elevator-trim type="double">0.3</elevator-trim></flight>
   <gear><brake-parking>1</brake-parking></gear>
@@ -38,5 +38,9 @@
  <engines><engine n="0"><rpm type="double">2400</rpm></engine><engine n="1"><rpm type="double">2400</rpm></engine></engines>
  <nasal><doors><file>Aircraft/X-57/Nasal/doors.nas</file></doors><x57lights><file>Aircraft/X-57/Nasal/lights.nas</file></x57lights><x57hdr><file>Aircraft/X-57/Nasal/hdr.nas</file></x57hdr><x57displays><file>Aircraft/X-57/Nasal/displays.nas</file></x57displays><x57cockpit><file>Aircraft/X-57/Nasal/cockpit.nas</file></x57cockpit><x57tecnam><file>Aircraft/X-57/Nasal/tecnam.nas</file></x57tecnam><x57pilot><file>Aircraft/X-57/Nasal/pilot.nas</file></x57pilot></nasal>
  <input><keyboard>
+  <key n="127"><name>Delete</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+    <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
+  <key n="8"><name>Backspace, a Mac's delete key</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+    <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
  </keyboard></input>
 </PropertyList>

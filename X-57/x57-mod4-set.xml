@@ -26,7 +26,7 @@
   <menubar><default><menu n="100"><label>X-57</label><enabled type="bool">true</enabled><item><label>Autostart</label><binding><command>nasal</command><script>x57cockpit.autostart();</script></binding></item><item><label>Autostop</label><binding><command>nasal</command><script>x57cockpit.autostop();</script></binding></item><item><label>Systems and failures</label><binding><command>dialog-show</command><dialog-name>x57-systems</dialog-name></binding></item><item><label>Tecnam cockpit lights (not on the X-57)</label><binding><command>dialog-show</command><dialog-name>x57-tecnam-lights</dialog-name></binding></item></menu></default></menubar>
  </sim>
  <controls>
-  <engines><engine n="0"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch></engine><engine n="1"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch></engine></engines>
+  <engines><engine n="0"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch><reverser type="bool">false</reverser><cutoff type="bool">false</cutoff></engine><engine n="1"><throttle>0</throttle><propeller-pitch>0.685</propeller-pitch><reverser type="bool">false</reverser><cutoff type="bool">false</cutoff></engine></engines>
   <electric><battery-switch type="bool">true</battery-switch></electric>
   <flight><elevator-trim type="double">0.3</elevator-trim></flight>
   <gear><brake-parking>1</brake-parking></gear>
@@ -42,5 +42,9 @@
     <binding><command>property-toggle</command><property>/sim/model/x57/hl-arm</property></binding></key>
   <key n="89"><name>Y</name><desc>High-lift quick disarm, the yoke switch</desc>
     <binding><command>property-assign</command><property>/sim/model/x57/hl-yoke</property><value>1</value></binding></key>
+  <key n="127"><name>Delete</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+    <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
+  <key n="8"><name>Backspace, a Mac's delete key</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+    <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
  </keyboard></input>
 </PropertyList>

@@ -51,8 +51,35 @@ var sequence = func(steps, i, done) {
 var levers_idle = func {
     setprop("/controls/engines/engine[0]/throttle", 0);
     setprop("/controls/engines/engine[1]/throttle", 0);
+    regen_set(0);
     setprop(X ~ "hl-arm", 0);
 };
+
+# ---------------------------------------------------------------- regeneration by FlightGear's reverser
+# The real torque lever reaches regeneration past the idle detent, with a finger lift [20240006533]. FlightGear's throttle stops at idle, so its
+# reverser stands in for the finger lift: on, the throttles run from idle at 0 to full regeneration at 1 (Systems/x57-rules.xml). Delete or
+# Backspace toggles it, and so does a joystick's reverser button. FlightGear's own reverser-all hands its value to the engines as an axis
+# would (on gives them 0, off 0.5), so it is read here and set right.
+var REV = "/controls/engines/engine[%d]/reverser";
+var regen_set = func(on) {
+    foreach (var e; [0, 1]) setprop(sprintf(REV, e), on ? 1 : 0);
+};
+var regen_toggle = func { regen_set(!get(sprintf(REV, 0))); };
+setlistener("/controls/engines/reverser-all", func(n) { regen_set(get("/controls/engines/reverser-all") > 0.5); }, 0, 0);
+setlistener(sprintf(REV, 0), func(n) {
+    gui.popupTip(n.getBoolValue() ? "Regeneration: the throttles now run from idle to full regeneration" : "Regeneration off: the throttles drive the cruise motors");
+}, 0, 0);
+
+# A Warthog throttle's idle switches (FlightGear's own binding, buttons 28 and 29) set an engine's cutoff while its lever is lifted past the
+# idle detent: the X-57's finger lift. Where the lever crossed the detent is kept, and the travel below it runs to full regeneration at the
+# stop (Systems/x57-rules.xml); held at the detent with no travel below it, the switch gives full regeneration.
+var watch_detent = func(e) {
+    setlistener("/controls/engines/engine[" ~ e ~ "]/cutoff", func(n) {
+        if (n.getBoolValue()) setprop(X ~ "regen-detent[" ~ e ~ "]", get("/controls/engines/engine[" ~ e ~ "]/throttle"));
+    }, 0, 0);
+};
+watch_detent(0);
+watch_detent(1);
 
 var autostart = func {
     if (running) return;

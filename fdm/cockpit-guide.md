@@ -16,6 +16,7 @@ Mod III carries the high-lift motors on its wing, but they're inactive with the 
 | Key | Action |
 |---|---|
 | Page Up / Page Down | Torque levers |
+| Delete or Backspace | Regeneration: the throttles then run from idle, at the bottom, to full regeneration at the top. Again to go back |
 | G | Landing gear |
 | V | Cycle the views, among them the Battery View (the aft cabin's batteries, their control modules and vent) and, after it, the Pilot Face View (the pilot's face, headset and sunglasses, from over the yoke) |
 | [ and ] | Flaps |
@@ -74,7 +75,7 @@ If a cruise motor fails after takeoff, the aircraft rolls and yaws about three t
 
 | Lever | Position | Effect |
 |---|---|---|
-| Torque | `REGEN` | Below idle. Negative torque, recharging the battery |
+| Torque | `REGEN` | Below idle, past a detent. Negative torque: the cruise propellers windmill, adding drag and recharging the battery |
 | | `IDLE` | 8 Nm per controller |
 | | `FULL` | 127.5 Nm per controller, 255 Nm per motor |
 | | `OVERDRIVE` | Up to 175 Nm, for one controller left. Past a detent |
@@ -85,7 +86,7 @@ If a cruise motor fails after takeoff, the aircraft rolls and yaws about three t
 | Parking brake | Out | Set: holds the brakes on. A round knob at the foot of the pedestal, as on the P2006T: click it, or press `B`. Set when the aircraft loads. The brakes, set or pedalled, hold the aircraft to about half torque at 2700 rpm: more and it slides |
 | | In | Released |
 
-FlightGear's throttle stops at idle and full, so tick Overdrive and Regeneration in **X-57 menu > Systems and failures** to reach those regions.
+FlightGear's throttle stops at idle and full. For regeneration press Delete (Backspace on a Mac): the throttles then run from idle to full regeneration, and the levers on the pedestal move back past idle. A joystick's reverser button does the same. On a Thrustmaster Warthog throttle, lift a lever over its idle detent as on the X-57: with FlightGear's own Warthog binding that motor goes to full regeneration, or, if the axis is calibrated to keep reading past the detent, more the further back the lever goes. Overdrive, and regeneration in the throttle's bottom tenth, are ticked in **X-57 menu > Systems and failures**.
 
 ## Left panel
 

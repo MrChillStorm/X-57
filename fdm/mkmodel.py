@@ -869,6 +869,23 @@ FAILS = (('Motor power', 'motor-on-%s', 1), ('Controller A', 'cmc-%sa', 1), ('Co
          ('Instant feather', 'feather-now-%s', 0), ('Torque command stuck', 'cmd-stuck-%s', 0), ('Runaway to fine', 'hub-fine-%s', 0))
 
 
+def lever_extra(e):
+    """the property-rule expression for ctl/lever-extra: the torque lever less the throttle (Systems/x57-rules.xml's header)"""
+    c = lambda n: '<property>/controls/engines/engine[%d]/%s</property>' % (e, n)
+    val = lambda x: '<value>%g</value>' % x
+    tag = lambda t, *a: '<%s>%s</%s>' % (t, ''.join(a), t)
+    neg = lambda x: tag('product', val(-1), x)
+    det = '<property>/sim/model/x57/regen-detent[%d]</property>' % e
+    normal = tag('sum', tag('product', '<property>/fdm/jsbsim/ctl/overdrive</property>', tag('table', c('throttle'), '<entry><ind>0.9</ind><dep>0</dep></entry><entry><ind>1</ind><dep>0.66</dep></entry>')),
+                 tag('product', val(-1), '<property>/fdm/jsbsim/ctl/regen</property>', tag('table', c('throttle'), '<entry><ind>0</ind><dep>0.174</dep></entry><entry><ind>0.1</ind><dep>0</dep></entry>')))
+    # below the detent, 0 at it to 1 at the stop; 1 throughout when the detent sits at the axis's end
+    frac = tag('max', val(0), tag('min', val(1), tag('max', tag('div', tag('sum', det, neg(c('throttle'))), tag('max', det, val(0.02))), tag('sum', val(1), tag('product', val(-50), det)))))
+    off = lambda n: tag('sum', val(1), neg(c(n)))
+    return tag('sum', tag('product', off('reverser'), off('cutoff'), normal),
+               tag('product', c('reverser'), off('cutoff'), val(-1.174), c('throttle')),
+               tag('product', c('cutoff'), tag('sum', neg(c('throttle')), tag('product', val(-0.174), frac))))
+
+
 def dialog(out):
     """NASA's failure list and the systems the overhead holds: a window from the X-57 menu"""
     d = os.path.join(out, 'gui', 'dialogs')
@@ -888,13 +905,19 @@ def dialog(out):
     rows += [tx(n + 3, 0, 'Essential battery failed'), cb(n + 3, 1, 'fail/ess-batt', '')]
     with open(os.path.join(d, 'x57-systems.xml'), 'w') as f:
         f.write('<?xml version="1.0"?>\n<PropertyList><name>x57-systems</name><layout>vbox</layout><text><label>X-57 systems and NASA\'s failures</label></text><hrule/><group><layout>table</layout>%s</group><hrule/>'
-                '<text><label>Cruise rpm: the propeller lever. Feather: the same lever, back through its gate.</label></text><button><legend>Close</legend><default>true</default><key>Esc</key><binding><command>dialog-close</command></binding></button></PropertyList>\n' % ''.join(rows))
+                '<text><label>Cruise rpm: the propeller lever. Feather: the same lever, back through its gate.</label></text>'
+                '<text><label>Regeneration over the whole throttle: Delete or Backspace, or a joystick\'s reverser. A Warthog throttle: each lever past its idle detent.</label></text><button><legend>Close</legend><default>true</default><key>Esc</key><binding><command>dialog-close</command></binding></button></PropertyList>\n' % ''.join(rows))
     with open(os.path.join(out, 'Systems', 'x57-rules.xml'), 'w') as f:
         f.write('''<?xml version="1.0"?>
 <!-- the cockpit's levers to the flight model: written by fdm/mkmodel.py -->
+<!-- The torque lever is the throttle plus lever-extra. Normally: overdrive in the throttle's last tenth, and regeneration in its first when the menu
+     ticks it. With the engine's reverser on (Delete, or a joystick's reverser button: Nasal/cockpit.nas), the whole throttle runs through the regeneration
+     region, idle at 0 to full regeneration, -17.4 percent of the lever [SIM], at 1. With its cutoff on (a Warthog throttle's lever lifted past its idle
+     detent), regeneration runs from where the lever crossed the detent, /sim/model/x57/regen-detent, to full at the stop; full at once if the axis
+     doesn't move past the detent -->
 <PropertyList>
 %s
 </PropertyList>
 ''' % ('\n'.join('''<filter><type>gain</type><gain>1</gain><input><expression><table><property>/controls/engines/engine[%(e)d]/propeller-pitch</property><entry><ind>0.3</ind><dep>1700</dep></entry><entry><ind>1</ind><dep>2700</dep></entry></table></expression></input><output>/fdm/jsbsim/ctl/cruise-rpm-%(s)s</output></filter>
 <filter><type>gain</type><gain>1</gain><input><expression><table><property>/controls/engines/engine[%(e)d]/propeller-pitch</property><entry><ind>0.14</ind><dep>1</dep></entry><entry><ind>0.16</ind><dep>0</dep></entry></table></expression></input><output>/fdm/jsbsim/ctl/feather-%(s)s</output></filter>
-<filter><type>gain</type><gain>1</gain><input><expression><sum><product><property>/fdm/jsbsim/ctl/overdrive</property><table><property>/controls/engines/engine[%(e)d]/throttle</property><entry><ind>0.9</ind><dep>0</dep></entry><entry><ind>1</ind><dep>0.66</dep></entry></table></product><product><value>-1</value><property>/fdm/jsbsim/ctl/regen</property><table><property>/controls/engines/engine[%(e)d]/throttle</property><entry><ind>0</ind><dep>0.174</dep></entry><entry><ind>0.1</ind><dep>0</dep></entry></table></product></sum></expression></input><output>/fdm/jsbsim/ctl/lever-extra-%(s)s</output></filter>''' % dict(e=e, s=s) for e, s in ((0, 'l'), (1, 'r')))))
+<filter><type>gain</type><gain>1</gain><input><expression>%(extra)s</expression></input><output>/fdm/jsbsim/ctl/lever-extra-%(s)s</output></filter>''' % dict(e=e, s=s, extra=lever_extra(e)) for e, s in ((0, 'l'), (1, 'r')))))
