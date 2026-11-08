@@ -40,8 +40,8 @@ ok   overspeed held near 2750 rpm  peak 2368
 ok   the governor brings rpm back  2250 rpm
      hub fixed, lever back: right 2110 rpm, left 2250 rpm
 ok   a fixed hub lets the rpm go, the other governs
-Idle, 75 KCAS, high lift Fixed: trim 1965 rpm, 2.8 lbf a side; flown 1966 rpm, 2.8 lbf, pitch 14.0
-ok   on the fine stop the trim's rpm is where the rotor settles  1965, 1966
+Idle, 75 KCAS, high lift Fixed: trim 1966 rpm, 2.8 lbf a side; flown 1966 rpm, 2.8 lbf, pitch 14.0
+ok   on the fine stop the trim's rpm is where the rotor settles  1966, 1966
 High-lift motors, standing: armed Fixed: 95 % in 0.33 s, 4776 rpm, 19.8 Nm, 9.9 kW, 64.7 lbf a disc (NASA run-up 10 kW, 120 kW all twelve)
 ok   Fixed run-up power near NASA's 10 kW a disc  9.9 kW
 ok   disarmed, the discs stop  in 0.5 s
@@ -64,11 +64,11 @@ ok   hottest pack within 5 C of NASA's 57.9  59.3 C
 Planning powers
      Mod III setup, 120 KCAS, 6,000 ft, clean               cruise 67 kW (NASA 90), high lift 0 (0), system 78; alpha 2.3
      Mod III setup, the same, gear down                     cruise 123 kW (NASA 90), high lift 0 (0), system 140; alpha 2.1
-     Mod III pattern, 105 KCAS, 3,800 ft, clean             cruise 59 kW (NASA 60), high lift 0 (0), system 69; alpha 4.8
+     Mod III pattern, 105 KCAS, 3,800 ft, clean             cruise 59 kW (NASA 60), high lift 0 (0), system 68; alpha 4.8
      Mod III pattern, the same, gear down                   cruise 101 kW (NASA 60), high lift 0 (0), system 115; alpha 4.6
      Mod III climb, 100 KCAS, 2,800 ft, 500 ft/min, clean   cruise 98 kW (NASA 120), high lift 0 (0), system 112; alpha 5.9
      Mod III climb, the same, gear down                     cruise 123 kW (NASA 120), high lift 0 (0), system 140; alpha 5.8
-     Mod IV hold, 63 KCAS, 6,000 ft, flaps 30, gear down    cruise -7 kW (NASA 10), high lift 114 (115), system 122; alpha 6.4
+     Mod IV hold, 63 KCAS, 6,000 ft, flaps 30, gear down    cruise -7 kW (NASA 10), high lift 114 (115), system 122; alpha 6.3
 ok   the efficiency chain is NASA's  system 121.6 kW from 29.5 + 78.3 shaft
      (NASA's ground roll: 96 + 108 kW shaft gives 229.2 kW by this chain; its table says 229.2)
 

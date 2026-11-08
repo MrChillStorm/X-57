@@ -33,7 +33,8 @@ def coef(f):
 
 def setrow(f, r, V, hl_mode=0, flap=None):
     H.configure(f, flap=r['flap'] if flap is None else flap, gear=0, lever=0.0, stab=r['stab'], hl_mode=hl_mode)
-    f['fcs/rudder-cmd-norm'] = r['rud'] / 28.0
+    f['ctl/one-rudder'] = 1
+    f['ctl/one-rudder-deg'] = r['rud']
     f['ctl/one-aileron'] = 1
     f['ctl/one-aileron-deg'] = r['ail']
     H.air(f, V, r['alpha'], r['beta'], hp=2500.0)

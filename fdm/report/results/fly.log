@@ -6,16 +6,16 @@
 JSBSim startup beginning ...
 
 mod3 on the wheels: pitch 0.03 deg, height of the centre of gravity 3.99 ft, weight on wheels 1
-  lift-off after 38.9 s at 90 KCAS, in 3836 ft
-  500 ft after 90.6 s at 93 KCAS, 600 ft/min
-  cruise, trimmed (aileron 0.024, rudder -0.001), hands off for 60 s: 133.8 KCAS, height changed -4 ft, bank -0.5 deg, pitch 0.8 deg
-  30 deg bank for 25 s: heading moved 103 deg, 1.14 g, 133.4 KCAS, sideslip 0.5 deg
-  wings level again: bank -0.5 deg, 131.8 KCAS
-  approach, flaps 30: 85.0 KCAS (aiming 94), alpha 2.7, stabilator 0.8, -947 ft/min
-mod4 on the wheels: pitch -0.26 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
+  lift-off after 38.9 s at 90 KCAS, in 3838 ft
+  500 ft after 90.5 s at 93 KCAS, 601 ft/min
+  cruise, trimmed (aileron 0.030, rudder -0.001), hands off for 60 s: 133.7 KCAS, height changed -3 ft, bank -0.6 deg, pitch 0.8 deg
+  30 deg bank for 25 s: heading moved 103 deg, 1.13 g, 133.3 KCAS, sideslip 0.5 deg
+  wings level again: bank -0.6 deg, 131.8 KCAS
+  approach, flaps 30: 85.0 KCAS (aiming 94), alpha 2.7, stabilator 0.8, -946 ft/min
+mod4 on the wheels: pitch -0.28 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
   lift-off after 12.3 s at 83 KCAS, in 1192 ft
-  500 ft after 42.8 s at 98 KCAS, 1035 ft/min
-  cruise, trimmed (aileron 0.024, rudder -0.001), hands off for 60 s: 133.7 KCAS, height changed -3 ft, bank -0.5 deg, pitch 0.8 deg
-  30 deg bank for 25 s: heading moved 103 deg, 1.14 g, 133.2 KCAS, sideslip 0.5 deg
-  wings level again: bank -0.5 deg, 131.7 KCAS
-  approach, flaps 30: 75.1 KCAS (aiming 75), alpha 4.0, stabilator 0.2, -267 ft/min, high lift 4287 rpm, 5.1 kW a disc
+  500 ft after 42.7 s at 98 KCAS, 1038 ft/min
+  cruise, trimmed (aileron 0.030, rudder -0.001), hands off for 60 s: 133.7 KCAS, height changed -3 ft, bank -0.6 deg, pitch 0.8 deg
+  30 deg bank for 25 s: heading moved 103 deg, 1.13 g, 133.2 KCAS, sideslip 0.5 deg
+  wings level again: bank -0.6 deg, 131.6 KCAS
+  approach, flaps 30: 75.1 KCAS (aiming 75), alpha 3.9, stabilator 0.4, -264 ft/min, high lift 4289 rpm, 5.2 kW a disc

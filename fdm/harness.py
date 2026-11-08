@@ -66,6 +66,8 @@ def configure(f, flap=0.0, gear=0.0, hl_mode=0, rpm=2250.0, lever=0.0, stab=None
     f['fcs/elevator-cmd-norm'] = elev if stab is None else (stab + 5.0) / 10.0
     f['fcs/aileron-cmd-norm'] = ail
     f['fcs/rudder-cmd-norm'] = rud
+    if f.get_property_manager().hasNode('ctl/one-rudder'):
+        f['ctl/one-rudder'] = 0       # the pedals' again, after a check that set the rudder itself
 
 
 def state(f, u, v, w, p=0.0, q=0.0, r=0.0, phi=0.0, theta=0.0, hp=2500.0):

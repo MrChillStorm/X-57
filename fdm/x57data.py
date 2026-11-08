@@ -10,6 +10,8 @@ Sources:
   [PROP] ANLYS-CEPT-023, High-Lift Propeller Operating Conditions, NTRS 20240014295
   [TEST] High-Lift Propeller Testing and Model Development, NTRS 20210016834
   [CHIN] Chin et al., Battery Performance Modeling on Maxwell X-57, 2019
+  [GROUND] X-57 Mod II ground dynamics and handling, NTRS 20220005440
+  [AFM]  Tecnam P2006T Aircraft Flight Manual, 912S3, 4th edition
 """
 SLUG_FT2 = 32.174 * 144      # lb in2 per slug ft2
 
@@ -24,11 +26,13 @@ MASS = dict(weight_lb=3075.0, design_weight_lb=3000.0, flight_weight_lb=dict(mod
             cg_mac=0.286, cg_y_in=-1.19, cg_below_wing_le_in=21.2)
 
 # Control surfaces, deg. Stabilator and aileron positive trailing edge down, rudder positive trailing edge left [TM].
-# Stabilator travel [SIM]. Aileron, rudder and tab: the full deflection ranges the CFD swept [TM table 4], aileron for the
-# right surface alone, rudder to one side by symmetry. The tab was swept at flaps 0 only. The P2006T's flight manual
-# gives ailerons up 20, down 17, rudder 26 each way, and the stabilator's trailing edge up 4, down 15, the opposite way
-# round to NASA's; NASA's figures are used.
-SURFACES = dict(stabilator=(-15.0, 5.0), aileron=(-25.0, 18.0), rudder=(-28.0, 28.0), tab=(-12.0, 11.0),
+# Stabilator travel [SIM]. Aileron and tab: the full deflection ranges the CFD swept [TM table 4], aileron for the right
+# surface alone. The tab was swept at flaps 0 only. The rudder 26 each way: the P2006T's flight manual (26, tolerance 2
+# [AFM]), NASA's ground-handling simulation (+-26 [GROUND]) and its Mod III simulator, whose pilots hold it at 26 after
+# a motor failure [ASYM fig. 14]; the tail is the P2006T's on every Mod. The CFD swept it to 28, the tolerance's far end. The
+# flight manual gives ailerons up 20, down 17, and the stabilator's trailing edge up 4, down 15, the opposite way round
+# to NASA's; NASA's figures are used.
+SURFACES = dict(stabilator=(-15.0, 5.0), aileron=(-25.0, 18.0), rudder=(-26.0, 26.0), tab=(-12.0, 11.0),
                 flaps=(0.0, 10.0, 30.0))         # 20 deg also has 11 power-off cases
 
 # Speeds, KCAS unless marked. Mod III [SIM, ASYM, PERF]; Mod IV with high lift on [SIM]; takeoff [DITTO, KIAS]

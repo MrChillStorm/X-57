@@ -21,6 +21,7 @@ import numpy as np
 from xmlfun import *
 import x57data as X
 import propulsion as PR
+import tyreforce as TF
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 T = json.load(open(os.path.join(HERE, 'data', 'aero_tables.json')))
@@ -60,6 +61,8 @@ def controls(hl):
     f.declare('ctl/gear-drag-ft2', X.GEAR_DRAG_AREA_FT2)
     f.declare('ctl/one-aileron', 0)
     f.declare('ctl/one-aileron-deg', 0)
+    f.declare('ctl/one-rudder', 0)              # the harness: the rudder where the CFD put it, 28 deg past its travel included
+    f.declare('ctl/one-rudder-deg', 0)
     f.declare('bu/test/alphadot', 0)
     f.declare('bu/test/hl-thrust', -999)
     f.declare('bu/test/hl-torque', 0)
@@ -76,8 +79,9 @@ def controls(hl):
     f.fn('ctl/ail-left-deg', IFTHEN(GT(test, v(0)), v(0), IFTHEN(GT(a, v(0)), M(v(dn), a), M(v(up), a))),
          desc='left aileron, trailing edge down positive')
     f.fn('ctl/yaw-cmd', S(p('fcs/rudder-cmd-norm'), p('fcs/yaw-trim-cmd-norm')), clip=('-1', '1'))
-    f.fn('ctl/rud-deg', M(v(X.SURFACES['rudder'][1]), p('ctl/yaw-cmd')), desc='trailing edge left positive: left pedal')
+    f.fn('ctl/rud-deg', IFTHEN(GT(p('ctl/one-rudder'), v(0)), p('ctl/one-rudder-deg'), M(v(X.SURFACES['rudder'][1]), p('ctl/yaw-cmd'))), desc='trailing edge left positive: left pedal')
     f.fn('x57/rudder-norm', M(v(1 / 15.0), p('ctl/rud-deg')), desc='for the 3-D model')
+    TF.nose_steering(f, X.GEAR['main_x_in'] - X.GEAR['wheelbase_in'])
     f.fn('x57/pos-rudder', p('fcs/rudder-cmd-norm'), out='fcs/rudder-pos-norm')
     f.fn('x57/pos-elevator', p('ctl/pitch-cmd'), out='fcs/elevator-pos-norm')
     f.fn('x57/pos-left-aileron', M(v(1 / 25.0), p('ctl/ail-left-deg')), out='fcs/left-aileron-pos-norm')
@@ -271,12 +275,13 @@ def gear_xml():
   <static_friction>0.72</static_friction><dynamic_friction>0.5</dynamic_friction><rolling_friction>0.005</rolling_friction>
   <spring_coeff unit="LBS/FT">%.0f</spring_coeff><damping_coeff unit="LBS/FT/SEC">%.0f</damping_coeff>
   <max_steer unit="DEG">%g</max_steer><brake_group>%s</brake_group><retractable>1</retractable>
-</contact>''' % ((name, x, yy, zz) + strut(load) + (steer, brake)))
+  %s
+</contact>''' % ((name, x, yy, zz) + strut(load) + (steer, brake, TF.table_xml('5.00-5' if steer else '6.00-6', load))))
 
     main = W * G['main_load_share'] / 2
     nose = W * (1 - G['main_load_share'])
     zc = z - G['sag_in']
-    u = [unit('NOSE', xn, 0, nose, 20, 'NONE', zc), unit('LEFT_MAIN', xm, -y, main, 0, 'LEFT', zc), unit('RIGHT_MAIN', xm, y, main, 0, 'RIGHT', zc)]
+    u = [unit('NOSE', xn, 0, nose, TF.MAX_STEER_DEG, 'NONE', zc), unit('LEFT_MAIN', xm, -y, main, 0, 'LEFT', zc), unit('RIGHT_MAIN', xm, y, main, 0, 'RIGHT', zc)]
     tip = GEO['wing']['span_in'] / 2
     for n, x, yy, zz in (('LEFT_TIP', 150, -tip, 86), ('RIGHT_TIP', 150, tip, 86), ('TAIL', 345, 0, 38), ('BELLY', 150, 0, 38),
                          ('NOSE_TIP', 30, 0, 60), ('LEFT_PROP', 138, -tip, 58), ('RIGHT_PROP', 138, tip, 58)):

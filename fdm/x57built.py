@@ -13,7 +13,6 @@ What's fitted, all to the CFD and none to NASA's simulator but the rates:
   jet_keep         the part of the angle a jet doesn't straighten out, on how the lift grows with incidence
   jet_turn         the flap turns the jet by this share of its own angle. The thrust's lost axial part is the drag the flaps-30 runs show and flaps 10 don't
   k_tail_jet       the slipstream at the stabilator, on its power with the propellers on
-  k_ail, k_ail_cm  the aileron's roll and pitch on a plain flap's section
 """
 import json, math, os
 import numpy as np
@@ -43,8 +42,7 @@ REF = GEO['reference']
 FIT_FILE = os.path.join(HERE, 'data', 'x57_section_fit.json')
 
 FLAPS = [dict(deg=10.0, dcl0=0.45, dclmax=0.30, dcm=-0.07, dcd=0.006), dict(deg=30.0, dcl0=1.05, dclmax=0.70, dcm=-0.17, dcd=0.03)]
-FIT = dict(clmax_k=1.10, cd_misc=0.0, k_jet=1.0, k_sat=0.70, contraction=0.9, ring_wake=1, k_tail_jet=0.5, jet_turn=0.75, jet_keep=0.3, jet_out=1.0, k_jet_roll=0.03,
-           k_ail=1.5, k_ail_cm=2.0)         # aileron: the CFD's roll and pitch, on a plain flap's section
+FIT = dict(clmax_k=1.10, cd_misc=0.0, k_jet=1.0, k_sat=0.70, contraction=0.9, ring_wake=1, k_tail_jet=0.5, jet_turn=0.75, jet_keep=0.3, jet_out=1.0, k_jet_roll=0.03)
 FIT.update(json.loads(os.environ.get('X57_FIT', '{}')))
 
 
@@ -113,11 +111,24 @@ def tables():
     xy[:, 0] -= xy[:, 0].min()
     k = FIT['clmax_k']
     base = SEC.table(xy, re(0.65), clmax_k=k, **kw)
+    # The aileron, a plain flap: what each deflection adds to lift, drag and moment is NeuralFoil's at the section's own zero lift, held across the
+    # attached range and handed back to NeuralFoil's own by 14 deg, where the plain section's lift peaks. Read at the strip's angle instead, it faded
+    # where the lifting line takes an up aileron's strips, 7 to 8 deg up: NeuralFoil's plain section loses lift slope from about 4 deg and the
+    # up-deflected one doesn't. NASA's CFD has the aileron linear from -25 to +5 deg and nearly the same at 2 and 8 deg [TM sec. 4.1.3]. At zero lift
+    # NeuralFoil's up and down increments are nearly alike, as in thin-airfoil theory; at the strips' cruise angle the down one is two-thirds of the up.
+    # Nothing scales them: gains of 1.5 on lift and 2.0 on moment were there before, and steepened a deflected section's lift slope to 0.18 per degree
     ail = SEC.table(xy, re(0.6), hinge=AIL_HINGE, deltas=(-25.0, -15.0, -10.0, -5.0, 0.0, 5.0, 10.0, 18.0), clmax_k=k, **kw)
     j0 = ail['delta'].index(0.0)
-    for n, g in (('cl', FIT['k_ail']), ('cd', FIT['k_ail']), ('cm', FIT['k_ail_cm'])):
+    aa = np.array(ail['alpha'])
+    c0 = np.array(ail['cl'])[:, j0]
+    near = (aa > -15) & (aa < 5)
+    a_zero = float(np.interp(0.0, c0[near], aa[near]))
+    w = np.clip((14.0 - np.abs(aa)) / 6.0, 0, 1)[:, None]
+    for n in ('cl', 'cd', 'cm'):
         v = np.array(ail[n])
-        ail[n] = (v[:, [j0]] + g * (v - v[:, [j0]])).tolist()
+        d = v - v[:, [j0]]
+        held = np.array([[np.interp(a_zero, aa, d[:, j]) for j in range(d.shape[1])]])
+        ail[n] = (v[:, [j0]] + w * held + (1 - w) * d).tolist()
     T = dict(w0=corrected(base, [0.0]), wf=corrected(SEC.slotted(base, FLAPS), [0.0, 10.0, 30.0]), wa=corrected(ail, [0.0] * 8))
     T['w0'] = dict(T['w0'], delta=[0.0], cl=np.array(T['w0']['cl'])[:, :1].tolist(), cd=np.array(T['w0']['cd'])[:, :1].tolist(), cm=np.array(T['w0']['cm'])[:, :1].tolist())
     T.update(P.tail_tables(re, kw))
@@ -158,7 +169,7 @@ def config(hl):
     a_sec = 6.2
     k_ind = BU.fit_k_ind(rows, lambda y: chord(y / IN) * IN, HALF * IN, a_sec)
     ysplit = Y_FLAP[1] * IN
-    gt, gi, go = BU.loads(rows, a_sec, k_ind, S, ysplit)
+    gt = BU.loads(rows, a_sec, k_ind, S)
     zw = Z_WING * IN
     fus = P.fuselage()
     mid = le(0) + 0.5 * C0
@@ -190,7 +201,8 @@ def config(hl):
     c['disc_upwash'] = {}
     st = P.stabilator()
     hs = [-1.5, -1.1, -0.8, -0.5, -0.25, 0.0, 0.25, 0.5, 0.8, 1.1, 1.5, 2.0]
-    Ei, Eo = BU.eps_tables(rows, st, gi, go, zw, hs)
+    Lw = BU.lumps(rows, ysplit)
+    Es = BU.eps_lumps(rows, st, zw, hs, S, gt, Lw)
     fn = P.fin()
     sweep = math.atan2(fn['strips'][-1]['x4'] - fn['strips'][0]['x4'], fn['strips'][-1]['z'] - fn['strips'][0]['z'])
     fn.update(AR_eff=1.55 * fn['h'] ** 2 / fn['S'], cos_sweep=math.cos(sweep))
@@ -201,7 +213,7 @@ def config(hl):
     # the propellers' in-plane force at incidence, up on the mode; the high-lift set shares one figure, spread by its hubs
     al = xf.p('aero/alpha-rad')
     c['flex_forces'] = {sd: [xf.M(xf.p('prop/%s/inplane-lbs' % s), al)] + ([xf.M(xf.v(sum(FX.phi_at(c['flex'], h[1] / 12.0) for h in HUBS) / 12.0), xf.p('prop/hl/inplane-lbs'), al)] if hl else []) for sd, s in (('L', 'l'), ('R', 'r'))}
-    c.update(stab=st, eps_h=hs, eps_in=Ei, eps_out=Eo, e_tail=0.74, a_tail=a_sec, eta_tail=P.FIT['eta_tail'], stab_zero=0.0, fin=fn, sidewash=P.FIT['sidewash'])
+    c.update(stab=st, eps_h=hs, eps_lumps=Lw, eps_lump=Es, e_tail=0.74, a_tail=a_sec, eta_tail=P.FIT['eta_tail'], stab_zero=0.0, fin=fn, sidewash=P.FIT['sidewash'])
     area = BU.wetted_drag(fus['length'], fus['wet'], 1 + 60 / (fus['length'] / fus['d_eq']) ** 3 + fus['length'] / fus['d_eq'] / 400)
     area += 2 * BU.wetted_drag(tip['length'], tip['wet'], 1.3)
     area += 2 * 6 * BU.wetted_drag(hln['length'], hln['wet'], 1.3)

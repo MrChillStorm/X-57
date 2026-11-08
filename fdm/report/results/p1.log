@@ -6,53 +6,53 @@
 JSBSim startup beginning ...
 
 Power off: model less the solvers, RMS (typical solver spread)
-  neutral curves            CD 0.0004 (0.0205) CL 0.0020 (0.0746) Cm 0.0055 (0.0713)
-  one input                 CD 0.0145 (0.0023) CL 0.0723 (0.0142) CY 0.0153 (0.0037) Cl 0.0033 (0.0015) Cm 0.0812 (0.0223) Cn 0.0013 (0.0014)  n 130
-  combined                  CD 0.0054 (0.0015) CL 0.0174 (0.0083) CY 0.0142 (0.0013) Cl 0.0044 (0.0004) Cm 0.0485 (0.0123) Cn 0.0026 (0.0006)  n 54
-  one input past stall      CD 0.0228 (0.0025) CL 0.0947 (0.0090) CY 0.0187 (0.0046) Cl 0.0072 (0.0012) Cm 0.1011 (0.0181) Cn 0.0014 (0.0017)  n 57
+  neutral curves            CD 0.0004 (0.0205) CL 0.0019 (0.0746) Cm 0.0043 (0.0713)
+  one input                 CD 0.0143 (0.0023) CL 0.0728 (0.0142) CY 0.0153 (0.0037) Cl 0.0040 (0.0015) Cm 0.0806 (0.0223) Cn 0.0009 (0.0014)  n 130
+  combined                  CD 0.0057 (0.0015) CL 0.0172 (0.0083) CY 0.0142 (0.0013) Cl 0.0042 (0.0004) Cm 0.0471 (0.0123) Cn 0.0023 (0.0006)  n 54
+  one input past stall      CD 0.0228 (0.0025) CL 0.0950 (0.0090) CY 0.0187 (0.0046) Cl 0.0061 (0.0012) Cm 0.0998 (0.0181) Cn 0.0011 (0.0017)  n 57
   rows where a symmetric case shows an uneven stall: 12, left out
 MISS neutral, below stall: reproduces the solvers' mean
-MISS one input: its increment reproduced  CD 0.0145 CL 0.0723 CY 0.0153 Cl 0.0033 Cm 0.0812 Cn 0.0013
-MISS combined inputs: cross terms stay small  CD 0.005 CL 0.017 CY 0.014 Cl 0.004 Cm 0.049 Cn 0.003
+MISS one input: its increment reproduced  CD 0.0143 CL 0.0728 CY 0.0153 Cl 0.0040 Cm 0.0806 Cn 0.0009
+MISS combined inputs: cross terms stay small  CD 0.006 CL 0.017 CY 0.014 Cl 0.004 Cm 0.047 Cn 0.002
 High lift on: model less the solvers, RMS (typical solver spread)
-  combined, 58-90 KCAS      CD 0.0054 (0.0008) CL 0.0272 (0.0096) CY 0.0214 (0.0010) Cl 0.0059 (0.0016) Cm 0.0475 (0.0070) Cn 0.0039 (0.0005)  n 96
-  effect of the props, 58-90 KCASCD 0.0577 (0.0292) CL 0.1576 (0.2461) Cm 0.0630 (0.1366)  n 104
-  effect of the props, other speedsCD 0.0888 (0.0362) CL 0.2286 (0.1616) Cm 0.1005 (0.1117)  n 72
-  one input, 58-90 KCAS     CD 0.0236 (0.0040) CL 0.1614 (0.0165) CY 0.0181 (0.0052) Cl 0.0096 (0.0029) Cm 0.3487 (0.0239) Cn 0.0055 (0.0018)  n 371
-  one input, other speeds   CD 0.0258 (0.0069) CL 0.1140 (0.0246) CY 0.0250 (0.0044) Cl 0.0087 (0.0020) Cm 0.2878 (0.0591) Cn 0.0051 (0.0021)  n 100
-MISS the props' effect, 58-90 KCAS: inside the solvers' spread  CD 0.058 CL 0.158 Cm 0.063
-MISS one input with the props on, 58-90 KCAS: within 0.05 in lift and pitch  CL 0.161 Cm 0.349
-MISS Mod IV, 58 KCAS, flaps 30: peak CL within 0.05 of NASA's 4.40-4.58  CL 4.28 at 14 deg
+  combined, 58-90 KCAS      CD 0.0061 (0.0008) CL 0.0262 (0.0096) CY 0.0215 (0.0010) Cl 0.0052 (0.0016) Cm 0.0444 (0.0070) Cn 0.0035 (0.0005)  n 96
+  effect of the props, 58-90 KCASCD 0.0573 (0.0292) CL 0.1533 (0.2461) Cm 0.0539 (0.1366)  n 104
+  effect of the props, other speedsCD 0.0872 (0.0362) CL 0.2196 (0.1616) Cm 0.0805 (0.1117)  n 72
+  one input, 58-90 KCAS     CD 0.0234 (0.0040) CL 0.1624 (0.0165) CY 0.0181 (0.0052) Cl 0.0092 (0.0029) Cm 0.3487 (0.0239) Cn 0.0055 (0.0018)  n 371
+  one input, other speeds   CD 0.0253 (0.0069) CL 0.1133 (0.0246) CY 0.0251 (0.0044) Cl 0.0094 (0.0020) Cm 0.3009 (0.0591) Cn 0.0051 (0.0021)  n 100
+MISS the props' effect, 58-90 KCAS: inside the solvers' spread  CD 0.057 CL 0.153 Cm 0.054
+MISS one input with the props on, 58-90 KCAS: within 0.05 in lift and pitch  CL 0.162 Cm 0.349
+MISS Mod IV, 58 KCAS, flaps 30: peak CL within 0.05 of NASA's 4.40-4.58  CL 4.29 at 14 deg
 Trimmed stall, Mod III, 3,000 lb: model, NASA
   flaps  0: trimmed CLmax 1.94 at alpha 15.0, stabilator -10.5: 82.8 KCAS (NASA 88); untrimmed CFD peaks 2.13-2.34
-  flaps 10: trimmed CLmax 2.06 at alpha 15.5, stabilator -11.0: 80.3 KCAS (NASA 80); untrimmed CFD peaks 2.28-2.53
+  flaps 10: trimmed CLmax 2.06 at alpha 15.5, stabilator -10.9: 80.3 KCAS (NASA 80); untrimmed CFD peaks 2.28-2.53
   flaps 30: trimmed CLmax 2.66 at alpha 12.0, stabilator -6.7: 70.7 KCAS (NASA 73); untrimmed CFD peaks 2.76-3.03
 MISS stall speeds within 5 KCAS of NASA's  worst 5.2 KCAS
-Cruise, 8,000 ft, 3,000 lb: 149.8 KTAS, CL 0.748, CD 0.0527, L/D 14.2 (NASA 13.5), alpha 0.87, stabilator -0.07, 82.1 kW, thrust 210 lbf
+Cruise, 8,000 ft, 3,000 lb: 149.8 KTAS, CL 0.748, CD 0.0527, L/D 14.2 (NASA 13.5), alpha 0.87, stabilator -0.08, 82.1 kW, thrust 210 lbf
 ok   L/D at 150 KTAS within 1 of NASA's 13.5
-  peak L/D 15.6 (NASA 15.9) at 110 KCAS, CL 1.08
+  peak L/D 15.7 (NASA 15.9) at 110 KCAS, CL 1.08
 ok   peak L/D within 1.5 of NASA's 15.9
 mod3: model (NASA)
-   80  zeta phugoid 0.101 (0.111)  short 0.287 (0.363)  dutch 0.060 (0.111)  roll 0.96 s (1.24)  w 0.32 (0.30) 3.79 (3.91) 1.17 (1.18)  [NASA's stall speed]
-   88  zeta phugoid 0.098 (0.104)  short 0.369 (0.374)  dutch 0.128 (0.118)  roll 0.89 s (1.03)  w 0.30 (0.27) 3.83 (4.15) 1.22 (1.28)
-   96  zeta phugoid 0.104 (0.116)  short 0.420 (0.382)  dutch 0.143 (0.136)  roll 0.74 s (0.83)  w 0.27 (0.25) 3.97 (4.41) 1.27 (1.35)
-  104  zeta phugoid 0.108 (0.112)  short 0.452 (0.420)  dutch 0.165 (0.150)  roll 0.65 s (0.73)  w 0.25 (0.23) 4.16 (4.49) 1.33 (1.44)
-  112  zeta phugoid 0.121 (0.122)  short 0.466 (0.439)  dutch 0.181 (0.158)  roll 0.58 s (0.66)  w 0.24 (0.22) 4.39 (4.74) 1.44 (1.58)
-   worst: damping ratio phugoid 0.012, short period 0.038, Dutch roll 0.023; roll 14 %; frequency phugoid 10 %, short 10 %, Dutch 9 %
+   80  zeta phugoid 0.101 (0.111)  short 0.287 (0.363)  dutch 0.060 (0.111)  roll 0.96 s (1.24)  w 0.32 (0.30) 3.80 (3.91) 1.17 (1.18)  [NASA's stall speed]
+   88  zeta phugoid 0.098 (0.104)  short 0.367 (0.374)  dutch 0.128 (0.118)  roll 0.89 s (1.03)  w 0.30 (0.27) 3.86 (4.15) 1.23 (1.28)
+   96  zeta phugoid 0.104 (0.116)  short 0.418 (0.382)  dutch 0.143 (0.136)  roll 0.74 s (0.83)  w 0.27 (0.25) 3.98 (4.41) 1.27 (1.35)
+  104  zeta phugoid 0.108 (0.112)  short 0.452 (0.420)  dutch 0.166 (0.150)  roll 0.65 s (0.73)  w 0.25 (0.23) 4.15 (4.49) 1.33 (1.44)
+  112  zeta phugoid 0.121 (0.122)  short 0.467 (0.439)  dutch 0.184 (0.158)  roll 0.58 s (0.66)  w 0.24 (0.22) 4.37 (4.74) 1.43 (1.58)
+   worst: damping ratio phugoid 0.012, short period 0.036, Dutch roll 0.025; roll 14 %; frequency phugoid 10 %, short 10 %, Dutch 9 %
 mod4_fixed: model (NASA)
-   75  zeta phugoid 0.140 (0.123)  short 0.374 (0.366)  dutch 0.231 (0.150)  roll 1.08 s (1.34)  w 0.28 (0.24) 3.23 (3.77) 0.91 (1.13)
-   80  zeta phugoid 0.160 (0.164)  short 0.384 (0.378)  dutch 0.212 (0.145)  roll 0.97 s (1.18)  w 0.27 (0.26) 3.53 (3.86) 0.98 (1.14)
-   88  zeta phugoid 0.180 (0.190)  short 0.406 (0.372)  dutch 0.201 (0.127)  roll 0.79 s (1.00)  w 0.25 (0.23) 3.84 (4.22) 1.08 (1.25)
-   96  zeta phugoid 0.210 (0.207)  short 0.420 (0.386)  dutch 0.216 (0.147)  roll 0.71 s (0.81)  w 0.24 (0.22) 4.16 (4.41) 1.18 (1.34)
-  104  zeta phugoid 0.228 (0.228)  short 0.449 (0.418)  dutch 0.214 (0.154)  roll 0.64 s (0.72)  w 0.23 (0.20) 4.29 (4.51) 1.29 (1.44)
-  112  zeta phugoid 0.227 (0.228)  short 0.458 (0.439)  dutch 0.228 (0.152)  roll 0.58 s (0.68)  w 0.22 (-) 4.50 (4.68) 1.40 (1.57)
-   worst: damping ratio phugoid 0.017, short period 0.034, Dutch roll 0.081; roll 21 %; frequency phugoid 19 %, short 14 %, Dutch 20 %
+   75  zeta phugoid 0.141 (0.123)  short 0.374 (0.366)  dutch 0.218 (0.150)  roll 1.08 s (1.34)  w 0.28 (0.24) 3.24 (3.77) 0.92 (1.13)
+   80  zeta phugoid 0.163 (0.164)  short 0.381 (0.378)  dutch 0.206 (0.145)  roll 0.96 s (1.18)  w 0.27 (0.26) 3.56 (3.86) 0.99 (1.14)
+   88  zeta phugoid 0.181 (0.190)  short 0.409 (0.372)  dutch 0.199 (0.127)  roll 0.79 s (1.00)  w 0.25 (0.23) 3.82 (4.22) 1.09 (1.25)
+   96  zeta phugoid 0.210 (0.207)  short 0.421 (0.386)  dutch 0.214 (0.147)  roll 0.71 s (0.81)  w 0.24 (0.22) 4.15 (4.41) 1.19 (1.34)
+  104  zeta phugoid 0.228 (0.228)  short 0.451 (0.418)  dutch 0.216 (0.154)  roll 0.64 s (0.72)  w 0.23 (0.20) 4.27 (4.51) 1.28 (1.44)
+  112  zeta phugoid 0.228 (0.228)  short 0.454 (0.439)  dutch 0.230 (0.152)  roll 0.58 s (0.68)  w 0.22 (-) 4.54 (4.68) 1.39 (1.57)
+   worst: damping ratio phugoid 0.018, short period 0.037, Dutch roll 0.078; roll 21 %; frequency phugoid 19 %, short 14 %, Dutch 19 %
 mod4_airspeed: model (NASA)
-   75  zeta phugoid 0.262 (0.271)  short 0.309 (0.360)  dutch 0.203 (0.170)  roll 1.09 s (1.40)  w 0.26 (0.26) 3.68 (3.82) 0.93 (1.12)
-   80  zeta phugoid 0.266 (0.269)  short 0.369 (0.376)  dutch 0.200 (0.132)  roll 0.99 s (1.19)  w 0.25 (0.24) 3.42 (3.87) 0.97 (1.17)
-   88  zeta phugoid 0.249 (0.288)  short 0.376 (0.374)  dutch 0.185 (0.127)  roll 0.89 s (1.03)  w 0.26 (0.19) 3.85 (4.16) 1.09 (1.29)
-   96  zeta phugoid 0.103 (0.116)  short 0.428 (0.380)  dutch 0.185 (0.141)  roll 0.73 s (0.83)  w 0.27 (0.25) 3.94 (4.43) 1.18 (1.36)
-   worst: damping ratio phugoid 0.038, short period 0.051, Dutch roll 0.069; roll 22 %; frequency phugoid 33 %, short 12 %, Dutch 17 %
+   75  zeta phugoid 0.263 (0.271)  short 0.312 (0.360)  dutch 0.192 (0.170)  roll 1.08 s (1.40)  w 0.26 (0.26) 3.63 (3.82) 0.94 (1.12)
+   80  zeta phugoid 0.266 (0.269)  short 0.365 (0.376)  dutch 0.191 (0.132)  roll 0.98 s (1.19)  w 0.25 (0.24) 3.47 (3.87) 0.99 (1.17)
+   88  zeta phugoid 0.250 (0.288)  short 0.376 (0.374)  dutch 0.178 (0.127)  roll 0.88 s (1.03)  w 0.25 (0.19) 3.86 (4.16) 1.10 (1.29)
+   96  zeta phugoid 0.103 (0.116)  short 0.429 (0.380)  dutch 0.183 (0.141)  roll 0.73 s (0.83)  w 0.27 (0.25) 3.93 (4.43) 1.19 (1.36)
+   worst: damping ratio phugoid 0.037, short period 0.049, Dutch roll 0.059; roll 23 %; frequency phugoid 33 %, short 11 %, Dutch 16 %
 MISS Mod III modes match NASA's (damping within 0.02, frequency and roll within 8 %, stall speed aside)
 MISS Mod IV airspeed mode: damping within 0.05, frequency and roll within 20 %
 MISS Mod IV fixed mode: damping within 0.05, frequency and roll within 25 %

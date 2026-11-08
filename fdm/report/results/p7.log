@@ -32,7 +32,7 @@ High voltage
   Wing Avionics A off: LA and RA gone, LB and RB stay                                       ok
 
 Propeller modes
-  MAN: blades stay without a switch                                  21.52 deg              ok
+  MAN: blades stay without a switch                                  21.53 deg              ok
   FEATHER held: coarser                                              21.5 to 22.5 deg       ok
   START held: finer                                                  21.5 deg               ok
   the lever's aft stop overrides MAN                                 21.5 to 22.5 deg       ok

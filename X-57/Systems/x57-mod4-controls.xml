@@ -5,6 +5,8 @@
 <property value="4">ctl/gear-drag-ft2</property>
 <property value="0">ctl/one-aileron</property>
 <property value="0">ctl/one-aileron-deg</property>
+<property value="0">ctl/one-rudder</property>
+<property value="0">ctl/one-rudder-deg</property>
 <property value="0">bu/test/alphadot</property>
 <property value="-999">bu/test/hl-thrust</property>
 <property value="0">bu/test/hl-torque</property>
@@ -21,8 +23,10 @@
 <fcs_function name="ctl/ail-right-deg"><description>right aileron, trailing edge down positive</description><function><ifthen><gt><property>ctl/one-aileron</property><value>0</value></gt><property>ctl/one-aileron-deg</property><ifthen><gt><property>ctl/roll-cmd</property><value>0</value></gt><product><value>-25</value><property>ctl/roll-cmd</property></product><product><value>-18</value><property>ctl/roll-cmd</property></product></ifthen></ifthen></function></fcs_function>
 <fcs_function name="ctl/ail-left-deg"><description>left aileron, trailing edge down positive</description><function><ifthen><gt><property>ctl/one-aileron</property><value>0</value></gt><value>0</value><ifthen><gt><property>ctl/roll-cmd</property><value>0</value></gt><product><value>18</value><property>ctl/roll-cmd</property></product><product><value>25</value><property>ctl/roll-cmd</property></product></ifthen></ifthen></function></fcs_function>
 <fcs_function name="ctl/yaw-cmd"><function><sum><property>fcs/rudder-cmd-norm</property><property>fcs/yaw-trim-cmd-norm</property></sum></function><clipto><min>-1</min><max>1</max></clipto></fcs_function>
-<fcs_function name="ctl/rud-deg"><description>trailing edge left positive: left pedal</description><function><product><value>28</value><property>ctl/yaw-cmd</property></product></function></fcs_function>
+<fcs_function name="ctl/rud-deg"><description>trailing edge left positive: left pedal</description><function><ifthen><gt><property>ctl/one-rudder</property><value>0</value></gt><property>ctl/one-rudder-deg</property><product><value>26</value><property>ctl/yaw-cmd</property></product></ifthen></function></fcs_function>
 <fcs_function name="x57/rudder-norm"><description>for the 3-D model</description><function><product><value>0.066666667</value><property>ctl/rud-deg</property></product></function></fcs_function>
+<fcs_function name="gear/nws-pedal-deg"><description>where the pedals put the nose wheel</description><function><product><value>20</value><property>fcs/steer-cmd-norm</property></product></function></fcs_function>
+<fcs_function name="gear/nws-deg"><description>trailing within the play either side of the pedals' angle</description><function><min><sum><property>gear/nws-pedal-deg</property><value>2</value></sum><max><difference><property>gear/nws-pedal-deg</property><value>2</value></difference><product><value>57.29578</value><atan2><sum><property>velocities/v-fps</property><product><property>velocities/r-rad_sec</property><difference><quotient><property>inertia/cg-x-in</property><value>12</value></quotient><value>4.8191667</value></difference></product></sum><max><property>velocities/u-fps</property><value>1</value></max></atan2></product></max></min></function><output>fcs/steer-pos-deg</output></fcs_function>
 <fcs_function name="x57/pos-rudder"><function><property>fcs/rudder-cmd-norm</property></function><output>fcs/rudder-pos-norm</output></fcs_function>
 <fcs_function name="x57/pos-elevator"><function><property>ctl/pitch-cmd</property></function><output>fcs/elevator-pos-norm</output></fcs_function>
 <fcs_function name="x57/pos-left-aileron"><function><product><value>0.04</value><property>ctl/ail-left-deg</property></product></function><output>fcs/left-aileron-pos-norm</output></fcs_function>

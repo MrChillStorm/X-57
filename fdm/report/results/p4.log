@@ -9,56 +9,56 @@ JSBSim startup beginning ...
 Power off, neutral, against the solvers' mean. Linear range
 ok   flaps  0: CL within 0.044, Cm within 0.058 (fitted)  worst 0.002, 0.002, CD 0.0004
 ok   flaps 10: CL within 0.093, Cm within 0.087 (fitted)  worst 0.001, 0.001, CD 0.0003
-  flaps 20, not fitted, between 10 and 30: worst CL 0.054, Cm 0.017, CD 0.0083 over 4 points
+  flaps 20, not fitted, between 10 and 30: worst CL 0.054, Cm 0.016, CD 0.0084 over 4 points
 ok   flaps 20: within the widest limits, 0.09 and 0.09
-ok   flaps 30: CL within 0.060, Cm within 0.054 (fitted)  worst 0.001, 0.024, CD 0.0004
+ok   flaps 30: CL within 0.060, Cm within 0.054 (fitted)  worst 0.001, 0.018, CD 0.0004
 
 Past stall: shape only. The solvers differ by 0.2-0.4 in CL here
   flaps  0: peak CL 2.18 at 16 deg (the table: 2.18 at 16); past it, worst difference 0.01
 ok   flaps 0: the peak within 1 deg of the table's
   flaps 10: peak CL 2.28 at 16 deg (the table: 2.29 at 16); past it, worst difference 0.01
 ok   flaps 10: the peak within 1 deg of the table's
-  flaps 30: peak CL 2.80 at 12 deg (the table: 2.81 at 12); past it, worst difference 0.02
+  flaps 30: peak CL 2.80 at 12 deg (the table: 2.81 at 12); past it, worst difference 0.03
 ok   flaps 30: the peak within 1 deg of the table's
 
-Each input's increment, below stall, against the same solver's neutral case: RMS error (RMS of the increment itself). None of these is fitted but the aileron's gain
+Each input's increment, below stall, against the same solver's neutral case: RMS error (RMS of the increment itself). None of these is fitted
 ok   beta  CY   error 0.0240 of 0.3150: 8 %
 ok   beta  Cn   error 0.0000 of 0.0364: 0 %
 ok   beta  Cl   error 0.0000 of 0.0276: 0 %
-ok   stab  CL   error 0.0415 of 0.2655: 16 %
-ok   stab  Cm   error 0.1177 of 1.7192: 7 %
-ok   ail   Cl   error 0.0051 of 0.0296: 17 %
-ok   ail   CL   error 0.0168 of 0.0832: 20 %
-MISS ail   Cm   error 0.0170 of 0.0325: 52 %
+ok   stab  CL   error 0.0416 of 0.2655: 16 %
+ok   stab  Cm   error 0.1175 of 1.7192: 7 %
+ok   ail   Cl   error 0.0062 of 0.0296: 21 %
+ok   ail   CL   error 0.0190 of 0.0832: 23 %
+MISS ail   Cm   error 0.0098 of 0.0325: 30 %
 ok   rud   CY   error 0.0000 of 0.1351: 0 %
 ok   rud   Cn   error 0.0000 of 0.0640: 0 %
 ok   rud   Cl   error 0.0013 of 0.0087: 14 %
 
 Mod IV with the CFD's own thrust through the slipstreams
-ok   58 KCAS, flaps 30: CLmax 4.40-4.58  CL 4.53 at 14 deg
-  dCL, model (STAR-CCM+): 2: 1.23 (1.14) 4: 1.31 (1.27) 8: 1.42 (1.45) 10: 1.46 (1.50) 12: 1.51 (1.52) 14: 1.65 (1.62) 15: 1.63 (1.67)
-  dCm, model (STAR-CCM+): 2: +0.57 (+0.60) 4: +0.62 (+0.58) 8: +0.60 (+0.45) 10: +0.40 (+0.33) 12: +0.10 (+0.13) 14: +0.08 (+0.12) 15: +0.09 (+0.09)
-ok   dCL +1.1 to +1.7 between 2 and 15 deg  from 1.23 to 1.63
-ok   dCm +0.6 falling to +0.1  from +0.57 to +0.09
-ok   the props' CL, 35-75 KCAS, below stall: inside the solvers' spread  error 0.079, spread 0.078
-ok   the props' Cm, 35-75 KCAS, below stall: inside the solvers' spread  error 0.022, spread 0.136
-ok   the props' CD, 35-75 KCAS, below stall: inside the solvers' spread  error 0.026, spread 0.030
-ok   power on: ail   Cl   error 0.0059 of 0.0382: 16 %
-ok   power on: stab  CL   error 0.0632 of 0.3336: 19 %
-ok   power on: stab  Cm   error 0.3209 of 2.1051: 15 %
+ok   58 KCAS, flaps 30: CLmax 4.40-4.58  CL 4.54 at 14 deg
+  dCL, model (STAR-CCM+): 2: 1.24 (1.14) 4: 1.33 (1.27) 8: 1.44 (1.45) 10: 1.48 (1.50) 12: 1.53 (1.52) 14: 1.67 (1.62) 15: 1.64 (1.67)
+  dCm, model (STAR-CCM+): 2: +0.57 (+0.60) 4: +0.62 (+0.58) 8: +0.61 (+0.45) 10: +0.41 (+0.33) 12: +0.11 (+0.13) 14: +0.09 (+0.12) 15: +0.10 (+0.09)
+ok   dCL +1.1 to +1.7 between 2 and 15 deg  from 1.24 to 1.64
+ok   dCm +0.6 falling to +0.1  from +0.57 to +0.10
+ok   the props' CL, 35-75 KCAS, below stall: inside the solvers' spread  error 0.085, spread 0.078
+ok   the props' Cm, 35-75 KCAS, below stall: inside the solvers' spread  error 0.023, spread 0.136
+ok   the props' CD, 35-75 KCAS, below stall: inside the solvers' spread  error 0.024, spread 0.030
+ok   power on: ail   Cl   error 0.0069 of 0.0382: 18 %
+ok   power on: stab  CL   error 0.0702 of 0.3336: 21 %
+ok   power on: stab  Cm   error 0.3855 of 2.1051: 18 %
 ok   power on: rud   CY   error 0.0099 of 0.1410: 7 %
 ok   power on: rud   Cn   error 0.0045 of 0.0664: 7 %
-ok   power on: beta  CY   error 0.0310 of 0.3484: 9 %
-ok   power on: beta  Cn   error 0.0031 of 0.0409: 7 %
-ok   power on: beta  Cl   error 0.0079 of 0.0349: 23 %
+ok   power on: beta  CY   error 0.0311 of 0.3484: 9 %
+ok   power on: beta  Cn   error 0.0031 of 0.0409: 8 %
+MISS power on: beta  Cl   error 0.0092 of 0.0349: 26 %
 
 Mod III, one cruise propeller at the CFD's thrust, against the CFD's power-off run
   41 cases; skipped 20 the motor can't reach or below 30 ft/s: 10.7 KCAS 142 N m, 10.7 KCAS 194 N m, 10.7 KCAS 242 N m, 10.7 KCAS 285 N m, 42.8 KCAS 311 N m, 64.3 KCAS 331 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 85.7 KCAS 317 N m, 98.5875 KCAS 334 N m, 118.35 KCAS 264 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 128.24 KCAS 379 N m, 123.78 KCAS 268 N m, 125.76 KCAS 278 N m, 141.61 KCAS -85 N m, 141.61 KCAS 284 N m
 ok   one cruise propeller: CD   error 0.0012 of 0.0025: 48 %, the model's 1.01 of the CFD's
-ok   one cruise propeller: CL   error 0.0064 of 0.0440: 15 %, the model's 1.07 of the CFD's
+ok   one cruise propeller: CL   error 0.0066 of 0.0440: 15 %, the model's 1.08 of the CFD's
 ok   one cruise propeller: CY   error 0.0021 of 0.0021: 100 %, the model's 0.00 of the CFD's
 ok   one cruise propeller: Cl, the strips' own  error 0.0029 of 0.0176: 17 %, the model's 1.03 of the CFD's
-ok   one cruise propeller: Cm   error 0.0036 of 0.0168: 21 %, the model's 0.88 of the CFD's
-ok   one cruise propeller: Cn   error 0.0014 of 0.0013: 112 %, the model's 1.14 of the CFD's
+ok   one cruise propeller: Cm   error 0.0034 of 0.0168: 20 %, the model's 1.00 of the CFD's
+ok   one cruise propeller: Cn   error 0.0014 of 0.0013: 113 %, the model's 1.15 of the CFD's
 
-1 misses: ail   Cm 
+2 misses: ail   Cm ; power on: beta  Cl 

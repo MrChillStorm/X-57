@@ -186,6 +186,8 @@ The places come from the P2006T's flight manual and a model of its overhead cons
 The gear is the P2006T's, electro-hydraulic, and takes about 6 seconds. It runs on the Essential Bus. \ann{TRANS} shows it moving, and \ann{GEAR PUMP ON} the pump running. The flaps have one electric motor on the Essential Bus, at 3 degrees a second: 10 for takeoff, 30 for landing.
 On the ground the gear stays down whatever the lever says, and comes up as the wheels leave the ground if the lever is up. That guard is a simulator choice: sources disagree on a squat switch.
 
+The pedals move the rudder, 26 degrees each way, and steer the nose wheel with it in proportion, to 20. The linkage has some play: within 2 degrees either side of where the pedals put it, the nose wheel trails. How much play the real aircraft has isn't published; this figure is fitted to NASA's ground simulation. At speed the nose wheel bites hard. In a 15\,kt crosswind from behind, about 3 degrees of nose wheel holds the line; 5 or more above 20\,kt leans the aircraft onto a wingtip propeller.
+
 \chapter{Operating limitations}
 \begin{table}[H]\centering\small
 \caption{Limits.}
@@ -286,7 +288,7 @@ NASA's emergency procedures aren't public. Those here come from its papers where
 \subsection{A cruise motor lost}
 The motor at the wingtip has a long arm. Left alone, in the model the aircraft rolls past 79 degrees in 3 seconds at 95\,KCAS, with a peak roll rate of 49 degrees a second: about three times as hard as a Mod II.
 \begin{warning}
-Below minimum control speed (Mod III 85\,KCAS, the model 81.7) full rudder won't hold the aircraft at full power on the good side. Pull the torque lever back to cut the asymmetry.
+Below minimum control speed (Mod III 85\,KCAS, the model 84.1) full rudder won't hold the aircraft at full power on the good side. Pull the torque lever back to cut the asymmetry.
 \end{warning}
 \begin{enumerate}
 \item Aileron and rudder against the roll, at once.

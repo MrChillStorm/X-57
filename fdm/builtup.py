@@ -34,28 +34,72 @@ def fit_k_ind(rows, chord, y_tip, a_sec, n=400):
     return k
 
 
-def loads(rows, a_sec, k_ind, S, y_split):
-    """the wing's circulation per unit lift, whole, and inboard and outboard of y_split by their own lift"""
+def loads(rows, a_sec, k_ind, S):
+    """the wing's circulation per unit lift"""
     cl = LL.solve(rows, np.ones(len(rows)), a_sec, k_ind)[0]
     area = np.array([r['area'] for r in rows])
     c = np.array([r['c'] for r in rows])
-    inner = np.array([abs(r['ym']) <= y_split for r in rows])
-    g = 0.5 * c * cl
-    return g / ((cl * area).sum() / S), g * inner / ((cl * area)[inner].sum() / S), g * ~inner / ((cl * area)[~inner].sum() / S)
+    return 0.5 * c * cl / ((cl * area).sum() / S)
 
 
-def eps_tables(rows, stab, gi, go, z_wing, hs):
-    """downwash at each tail strip per unit of the wing's inboard and outboard lift, by the strip's height over the wake"""
-    Ei, Eo = [], []
-    for h in stab['strips']:
-        E = [[], []]
-        for hh in hs:
-            dz = h['z'] - z_wing - hh
-            for k, g in enumerate((gi, go)):
-                E[k].append(float(np.mean([-LL.field(rows, g, h['x4'], yy, h['z'], dz) for yy in (h['y'], -h['y'])])))
-        Ei.append(E[0])
-        Eo.append(E[1])
-    return Ei, Eo
+def lumps(rows, y_split):
+    """The wing in six lumps for the tail's downwash, three a side by |y|: inboard, the flap's outer part, outboard of the flap's end. The middle one
+    starts an aileron's span inboard of the flap's end (at the nearest strip edge), where an aileron's own lifting line moves the load: lumped with the
+    inboard wing, a right aileron's loss there and its lift lost outboard all but cancelled at the tail, and its pitch came to half the CFD's. Each lump
+    is shaped as the plain wing's loading inside it. Finer is no better: strip by strip, the blown flap's ends and the slipstreams' edges shed
+    vortices that this straight, rigid wake carries at full strength beside the tail, and at 35 KCAS single tail strips sat 25 deg up or down"""
+    pos = [r for r in rows if r['side'] > 0]
+    ail = [r for r in pos if r.get('aileron')]
+    e1 = y_split - (max(r['yb'] for r in ail) - min(r['ya'] for r in ail))
+    e1 = min({r['yb'] for r in pos if r['kind'] == 'wing'}, key=lambda e: abs(e - e1))
+    out = []
+    for side, tag in ((-1, 'L'), (1, 'R')):
+        for k, (a, b) in enumerate(((-1.0, e1), (e1, y_split), (y_split, 1e9))):
+            out.append(dict(name=tag + str(k), side=side, members=[j for j, r in enumerate(rows) if r['side'] == side and a < abs(r['ym']) <= b]))
+    return out
+
+
+def eps_lumps(rows, stab, z_wing, hs, S, gt, L):
+    """downwash at each tail strip, left and right, per unit of each lump's lift coefficient, by the tail strip's height over the wake:
+    {'L': [tail strip][lump][height], 'R': ...}. Each is the mean across the tail strip's span, which is what a strip of tail flies in"""
+    gx, gw = np.polynomial.legendre.leggauss(12)
+    c = np.array([r['c'] for r in rows])
+    area = np.array([r['area'] for r in rows])
+    unit = []
+    for lp in L:
+        m = np.zeros(len(rows), bool)
+        m[lp['members']] = True
+        g = np.where(m, gt, 0.0)
+        unit.append(g / ((g / (0.5 * c) * area).sum() / S))
+    out = {}
+    for side, tag in ((-1, 'L'), (1, 'R')):
+        per = []
+        for h in stab['strips']:
+            y1, y2 = side * h['y'] - 0.5 * h['dy'], side * h['y'] + 0.5 * h['dy']
+            per.append([[float(sum(-mean_field(rows[j], g[j], h['x4'], y1, y2, h['z'], h['z'] - z_wing - hh, gx, gw) for j in lp['members'])) for hh in hs]
+                        for lp, g in zip(L, unit)])
+        out[tag] = per
+    return out
+
+
+def mean_field(r, g, x, y1, y2, z, dz, gx, gw):
+    """liftline.field's upward speed from one strip's horseshoe, its circulation g, averaged over y1..y2 at x, z. A trailing leg gives
+    s g/4pi (1 + ax/sqrt(ax2 + r2)) ay/r2: ay/r2 integrates across to half the log of r2, and the first factor, near 2 this far behind, is taken
+    where the span is nearest the leg. The bound vortex is smooth there and is sampled (Gauss points gx, weights gw on -1..1)"""
+    ax = x - r['x4']
+    w = 0.0
+    for ye, ze, s in ((r['yb'], r['zb'], 1.0), (r['ya'], r['za'], -1.0)):
+        az2 = (z - ze - dz) ** 2
+        near = max(y1 - ye, ye - y2, 0.0) ** 2 + az2
+        f = 1 + ax / math.sqrt(ax * ax + near)
+        w += s * g / (4 * math.pi) * f * 0.5 * (math.log((y2 - ye) ** 2 + az2 + 1e-12) - math.log((y1 - ye) ** 2 + az2 + 1e-12)) / (y2 - y1)
+    ys = 0.5 * (y1 + y2) + 0.5 * (y2 - y1) * gx
+    az = z - 0.5 * (r['za'] + r['zb']) - dz
+    rho = math.hypot(ax, az)
+    c1 = (r['yb'] - ys) / np.hypot(r['yb'] - ys, rho)
+    c2 = (r['ya'] - ys) / np.hypot(r['ya'] - ys, rho)
+    w -= float(np.sum(0.5 * gw * g / (4 * math.pi * rho) * (c1 - c2) * ax / rho))
+    return w
 
 
 def ground_tables(rows, gt, stab, z_wing, b):
@@ -429,6 +473,8 @@ class Aero:
         s.CLi = s.fn('bu/CLw-in', Q(part(lambda r: abs(r['ym']) <= ysplit), slow), 'the wing\'s lift inboard of the flap\'s end')
         s.CLo = s.fn('bu/CLw-out', Q(part(lambda r: abs(r['ym']) > ysplit), slow))
         s.CLw = s.fn('bu/CLw', S(s.CLi, s.CLo), 'the wing\'s lift coefficient, on the reference area')
+        s.CLlump = [s.fn('bu/CLw-lump-%s' % lp['name'], Q(S(*[M(p(info[j]['nm'] + '/cl'), info[j]['V2'], v(info[j]['r']['area'] * F * F / ref)) for j in lp['members']]), slow),
+                         'a lump of it, for the tail\'s downwash' if lp['name'] == 'L0' else None) for lp in c.get('eps_lumps', [])]
         inner = [d for d in info if d['r']['kind'] == 'wing' and abs(d['r']['ym']) < ysplit and d['r']['ym'] > 0]
         s.cdw = s.fn('bu/cd-inner', M(v(1.0 / len(inner)), S(*[p(d['nm'] + '/cd') for d in inner])))
         s.winfo = info
@@ -472,9 +518,9 @@ class Aero:
                 nm = 'bu/h%s%d' % ('L' if side < 0 else 'R', h['i'])
                 x4, x34, y, z = h['x4'] * F, h['x34'] * F, side * h['y'] * F, h['z'] * F
                 hw, loss = s.wake_loss(nm, h['x4'], h['z'], xte, zte, cref, cd, tanw, c['k_wake'])
-                Ei, Eo = c['eps_in'][h['i']], c['eps_out'][h['i']]
+                E = c['eps_lump']['L' if side < 0 else 'R'][h['i']]
                 dist = (h['x4'] - xte) * F
-                eps = s.fn(nm + '/eps', D(M(S(M(T1(nm + '/hw', dh, Ei), s.CLi), M(T1(nm + '/hw', dh, Eo), s.CLo)), s.get),
+                eps = s.fn(nm + '/eps', D(M(S(*[M(T1(nm + '/hw', dh, e), cl) for e, cl in zip(E, s.CLlump)]), s.get),
                                           M(v(lag * dist), Q(ad, MAX(s.Vt, v(10))))), 'downwash (rad), with its lag')
                 jet = []
                 for d in s.D:

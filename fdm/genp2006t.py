@@ -11,6 +11,7 @@ from xmlfun import *
 import builtup as BU
 import liftline as LL
 import p2006t as P
+import tyreforce as TF
 
 F = 1 / 0.3048
 IN = 0.0254
@@ -53,6 +54,7 @@ def controls(k_main=None):
     f.fn('ctl/ail-right-deg', IFTHEN(GT(a, v(0)), M(v(-up), a), M(v(-dn), a)), desc='trailing edge down positive')
     f.fn('ctl/ail-left-deg', IFTHEN(GT(a, v(0)), M(v(dn), a), M(v(up), a)))
     f.fn('ctl/rud-deg', M(v(P.SURFACES['rudder']), p('fcs/rudder-cmd-norm')), desc='trailing edge left positive: left pedal')
+    TF.nose_steering(f, 172.0 - 2.9 / 0.0254)
     f.fn('ctl/flap-want', S(p('ctl/flap-cmd-deg'), M(v(40), p('/controls/flight/flaps'))))
     f.actuator('ctl/flap-moving', 'ctl/flap-want', rate=4.0, clip=('0', '40'))
     f.fn('ctl/flap-deg', IFTHEN(GT(p('ctl/instant'), v(0)), p('ctl/flap-want'), p('ctl/flap-moving')))
@@ -105,10 +107,7 @@ def config(tunnel=False, tail=True, nacelles=True):
     cl, ai, CL, CDi = LL.solve(rows, np.ones(len(rows)), a_sec, k_ind)
     c = np.array([r['c'] for r in rows])
     ysplit = P.WING['y_break']
-    inner = np.array([abs(r['ym']) <= ysplit for r in rows])
     gam = 0.5 * c * cl
-    CLi, CLo = (cl * area)[inner].sum() / S, (cl * area)[~inner].sum() / S
-    gi, go = gam * inner / CLi, gam * ~inner / CLo
     CLtot = CL / S
     gt = gam / CLtot
     zw = P.WING['z'] * IN
@@ -149,17 +148,10 @@ def config(tunnel=False, tail=True, nacelles=True):
         st = P.stabilator()
         hs = np.array([-1.5, -1.1, -0.8, -0.5, -0.25, 0.0, 0.25, 0.5, 0.8, 1.1, 1.5, 2.0])
         cfg['eps_h'] = hs.tolist()
-        Ei, Eo = [], []
-        for h in st['strips']:
-            E = [[], []]
-            for hh in hs:
-                dz = h['z'] - zw - hh
-                for k, g in enumerate((gi, go)):
-                    E[k].append(np.mean([-LL.field(rows, g, h['x4'], yy, h['z'], dz) for yy in (h['y'], -h['y'])]))
-            Ei.append(E[0])
-            Eo.append(E[1])
+        Lw = BU.lumps(rows, ysplit)
+        Es = BU.eps_lumps(rows, st, zw, hs.tolist(), S, gt, Lw)
         # Helmbold's lifting surface: a line overstates a surface of aspect ratio 4
-        cfg.update(stab=st, eps_in=Ei, eps_out=Eo, e_tail=0.74, a_tail=a_sec, eta_tail=fit['eta_tail'], stab_zero=0.0 if tunnel else fit['stab_zero'])
+        cfg.update(stab=st, eps_lumps=Lw, eps_lump=Es, e_tail=0.74, a_tail=a_sec, eta_tail=fit['eta_tail'], stab_zero=0.0 if tunnel else fit['stab_zero'])
         fn = P.fin()
         hgt = fn['h']
         AR = hgt ** 2 / fn['S']
@@ -198,8 +190,9 @@ def gear_xml(kg, cgx=None):
   <static_friction>0.72</static_friction><dynamic_friction>0.5</dynamic_friction><rolling_friction>0.005</rolling_friction>
   <spring_coeff unit="LBS/FT">%.0f</spring_coeff><damping_coeff unit="LBS/FT/SEC">%.0f</damping_coeff>
   <max_steer unit="DEG">%g</max_steer><brake_group>%s</brake_group><retractable>1</retractable>
-</contact>''' % (name, x, yy, z, k, 0.6 * k ** 0.5 * (load / 32.174) ** 0.5 * 2, steer, brake))
-    return '<ground_reactions>\n%s\n</ground_reactions>\n' % '\n'.join((unit('NOSE', xn, 0, W * nose, 25, 'NONE'), unit('LEFT_MAIN', xm, -y, W * (1 - nose) / 2, 0, 'LEFT'), unit('RIGHT_MAIN', xm, y, W * (1 - nose) / 2, 0, 'RIGHT')))
+  %s
+</contact>''' % (name, x, yy, z, k, 0.6 * k ** 0.5 * (load / 32.174) ** 0.5 * 2, steer, brake, TF.table_xml('5.00-5' if steer else '6.00-6', load)))
+    return '<ground_reactions>\n%s\n</ground_reactions>\n' % '\n'.join((unit('NOSE', xn, 0, W * nose, TF.MAX_STEER_DEG, 'NONE'), unit('LEFT_MAIN', xm, -y, W * (1 - nose) / 2, 0, 'LEFT'), unit('RIGHT_MAIN', xm, y, W * (1 - nose) / 2, 0, 'RIGHT')))
 
 
 def fdm(aero, kg, cg_mac):

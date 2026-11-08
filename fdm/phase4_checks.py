@@ -72,7 +72,7 @@ def stall(f):
 
 
 def controls(f):
-    print('Each input\'s increment, below stall, against the same solver\'s neutral case: RMS error (RMS of the increment itself). None of these is fitted but the aileron\'s gain')
+    print('Each input\'s increment, below stall, against the same solver\'s neutral case: RMS error (RMS of the increment itself). None of these is fitted')
     rows = [r for r in C.L('poweroff')['rows'] if r['flap'] in (0, 10, 30) and not r['tab'] and r['alpha'] <= STALL[r['flap']] - 2]
     base = {(r['flap'], r['alpha']): r for r in rows if not any(r[k] for k in ('beta', 'stab', 'ail', 'rud'))}
     show = dict(beta=('CY', 'Cn', 'Cl'), stab=('CL', 'Cm'), ail=('Cl', 'CL', 'Cm'), rud=('CY', 'Cn', 'Cl'))
