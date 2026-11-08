@@ -68,8 +68,8 @@ ok   doors: only outside loops come through a door
 ok   doors: the outside's loops are heard outside
 ok   doors: shut, the cockpit hears none of the outside's loops  0
 ok   doors: open, the outside's loops come in by how far, the rear door at 0.5  worst 0
-mod4 on the wheels: pitch -0.28 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
-  lift-off after 12.3 s at 83 KCAS, in 1192 ft
+mod4 on the wheels: pitch -0.35 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
+  lift-off after 12.2 s at 83 KCAS, in 1182 ft
   500 ft after 42.7 s at 98 KCAS, 1038 ft/min
   cruise, trimmed (aileron 0.030, rudder -0.001), hands off for 60 s: 133.7 KCAS, height changed -3 ft, bank -0.6 deg, pitch 0.8 deg
   30 deg bank for 25 s: heading moved 103 deg, 1.13 g, 133.2 KCAS, sideslip 0.5 deg
@@ -77,10 +77,10 @@ mod4 on the wheels: pitch -0.28 deg, height of the centre of gravity 4.02 ft, we
   approach, flaps 30: 75.1 KCAS (aiming 75), alpha 3.9, stabilator 0.4, -264 ft/min, high lift 4289 rpm, 5.2 kW a disc
      952 samples along the flight
      cockpit: at most 42 at once, 23 on average
-     cockpit: 3 of 22324 sources held under -60 dB, 115 under -40 dB
+     cockpit: 3 of 22316 sources held under -60 dB, 107 under -40 dB
 ok   cockpit: under 1 % of the sources held are under -60 dB
      outside: at most 42 at once, 23 on average
-     outside: 17 of 22324 sources held under -60 dB, 379 under -40 dB
+     outside: 9 of 22316 sources held under -60 dB, 366 under -40 dB
 ok   outside: under 1 % of the sources held are under -60 dB
 ok   the propellers are heard once under way
 ok   parked, everything off: no loop runs  0

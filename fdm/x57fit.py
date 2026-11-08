@@ -105,7 +105,8 @@ def ground_at(f, h, flap, a, V=170.0, mode=0, rpm=0):
 
 
 def ground_table(pts, hb):
-    """on height over span, incidence and flap, nil at 1.5 spans. The CFD has fewer incidences at some heights"""
+    """on height over span, incidence and flap, nil at 1.5 spans. The CFD has fewer incidences at some heights. A point's third value, when
+    it has one, is what the cell scales with: the cell is then the least-squares factor on it, not the mean"""
     flaps = [10.0, 30.0]
     hs = sorted(hb)
     al = sorted({k[2] for k in pts})
@@ -115,9 +116,13 @@ def ground_table(pts, hb):
         for fl in flaps:
             T = np.full((len(hs), len(al)), np.nan)
             for (f_, h, a), e in pts.items():
-                v = [q[n] for q in e if q[n] is not None]
-                if f_ == fl and v:
-                    T[hs.index(h), al.index(a)] = np.mean(v)
+                q_ = [q for q in e if q[n] is not None]
+                if f_ == fl and q_:
+                    if len(q_[0]) > 2:
+                        sc = np.array([q[2] for q in q_])
+                        T[hs.index(h), al.index(a)] = float(sc @ np.array([q[n] for q in q_]) / max(sc @ sc, 1e-12))
+                    else:
+                        T[hs.index(h), al.index(a)] = np.mean([q[n] for q in q_])
             for j in range(len(al)):
                 ok = np.isfinite(T[:, j])
                 T[:, j] = np.interp(x, x[ok], T[ok, j]) if ok.any() else np.nan
@@ -148,7 +153,10 @@ def ground_fit():
 
 
 def ground_hl_fit():
-    """The same with the high-lift propellers on, over what the power-off fit already gives: LAVA's ground planes less its free air, speeds averaged"""
+    """The same with the high-lift propellers on, over what the power-off fit already gives: LAVA's ground planes less its free air, per unit of
+    the discs' thrust coefficient (bu/hl-tc). Without it the model's own ground effect is right at 65-90 KCAS and falls short as the blowing
+    grows: at 35 KCAS, flaps 30, the CFD's change sits at the tail and the blown wing gains far less lift than the wake's image gives it, which
+    reads as the slipstreams meeting the ground. Averaged over the speeds, the fit moved error from the slow cases onto the fast ones"""
     import phase1_checks as K
     f = H.load('mod4')
     sets = {s['rpm']: s for s in K.L('highlift_settings')}
@@ -163,12 +171,13 @@ def ground_hl_fit():
             continue
         f['bu/test/hl-thrust'], f['bu/test/hl-torque'] = s['T_lbf'], s['Q_lbft']
         l, m, h = ground_at(f, r['height_ft'], r['flap'], r['alpha'], s['v_fts'], 3, r['rpm'])
+        tc = f['bu/hl-tc']
         l0, m0, _ = ground_at(f, 900.0, r['flap'], r['alpha'], s['v_fts'], 3, r['rpm'])
-        pts.setdefault((float(r['flap']), r['height_ft'], r['alpha']), []).append((r['lava']['on']['CL'] - b['lava']['on']['CL'] - (l - l0), r['lava']['on']['Cm'] - b['lava']['on']['Cm'] - (m - m0)))
+        pts.setdefault((float(r['flap']), r['height_ft'], r['alpha']), []).append((r['lava']['on']['CL'] - b['lava']['on']['CL'] - (l - l0), r['lava']['on']['Cm'] - b['lava']['on']['Cm'] - (m - m0), tc))
         hb[r['height_ft']] = h
     f['bu/test/hl-thrust'] = -999
     out = ground_table(pts, hb)
-    print('ground left with the propellers on: worst CL %.3f, Cm %.3f' % (np.abs(out['CL']).max(), np.abs(out['Cm']).max()))
+    print('ground left with the propellers on, per unit thrust coefficient: worst CL %.3f, Cm %.3f' % (np.abs(out['CL']).max(), np.abs(out['Cm']).max()))
     return out
 
 

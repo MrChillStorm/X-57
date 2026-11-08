@@ -227,6 +227,7 @@ class Aero:
     # propellers
     def discs(s):
         s.D = []
+        s.hlT = []
         gated = False
         for d in s.c['discs']:
             if d.get('test') and not gated and hasattr(s.g, 'fcs'):       # the high-lift discs: at rest while they're stopped, as their motors' channel
@@ -244,6 +245,7 @@ class Aero:
                     on = GT(p('bu/test/hl-thrust'), v(-900))
                     w = p(d['test'])          # a failed disc stays failed
                     T, q = IFTHEN(on, M(p('bu/test/hl-thrust'), w), T), IFTHEN(on, M(p('bu/test/hl-torque'), w), q)
+                    s.hlT.append((MAX(T, v(0)), Dm))
                 a = s.fn('bu/disc/%s/a-fps' % d['name'], M(v(0.5), D(SQ(S(SQR(uh), Q(M(v(2 / A), MAX(T, v(0))), s.RHO))), uh)), 'axial speed added at the disc')
                 nm = 'bu/disc/' + d['name']
                 s.fn(nm + '/vt-fps', Q(MAX(q, v(0)), M(s.RHO, S(uh, a), v(A * 0.7 * Dm / 2))), 'swirl at 0.7 R')
@@ -664,7 +666,12 @@ class Aero:
         if b:
             k = M(p('aero/qbar-psf'), v(s.c['coef']['S'] * s.c['coef']['c']))
             s.add('fit', 0.0, 0.0, 0.0, My=s.fn('bu/fit/M', M(k, T2('aero/alpha-deg', 'ctl/flap-deg', b['alpha'], b['flaps'], b['Cm']))))
-        for key, tag, on in (('ground_fit', 'ground', None), ('ground_hl_fit', 'ground-hl', 'prop/hl/on')):
+        if s.hlT:
+            # the high-lift discs' thrust coefficient, T over rho V^2 D^2, their mean: what the power-on ground fit scales with. Nil with
+            # them stopped, and at rest, where the dynamic pressure it multiplies goes as V^2 and V^2 here is floored at 30 ft/s
+            Dm = s.hlT[0][1]
+            s.fn('bu/hl-tc', Q(M(v(1.0 / len(s.hlT)), S(*[t for t, _ in s.hlT])), M(s.RHO, MAX(s.V2, v(900)), v(Dm * Dm))), 'the high-lift discs\' thrust coefficient')
+        for key, tag, on in (('ground_fit', 'ground', None), ('ground_hl_fit', 'ground-hl', 'bu/hl-tc')):
             g = s.c.get(key)
             if g:
                 cf = s.c['coef']

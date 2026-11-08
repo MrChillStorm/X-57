@@ -8,7 +8,7 @@ JSBSim startup beginning ...
 
 ok   mod3: no NaN
 ok   mod3: the two fly the same through 36 s  worst 0.00e+00 of velocities/u-aero-fps
-mod4: 7975 reads a step unoptimised, 7424 optimised, 6302 with the high-lift channels at rest
+mod4: 8025 reads a step unoptimised, 7474 optimised, 6352 with the high-lift channels at rest
 ok   mod4: no NaN
 ok   mod4: the two fly the same through 36 s  worst 0.00e+00 of velocities/u-aero-fps
 ok   mod4: the high-lift channels ran and rested  on for 14.5 s of 36
