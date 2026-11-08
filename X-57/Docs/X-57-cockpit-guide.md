@@ -82,7 +82,7 @@ If a cruise motor fails after takeoff, the aircraft rolls and yaws about three t
 | | Cruise | 2,250 rpm |
 | | Low | 1,700 rpm |
 | | Aft stop | `FEATHER`: drives the blades to feather, overriding MAN and AUTO |
-| Parking brake | Out | Set: holds the brakes on. A round knob at the foot of the pedestal, as on the P2006T: click it, or press `B`. Set when the aircraft loads |
+| Parking brake | Out | Set: holds the brakes on. A round knob at the foot of the pedestal, as on the P2006T: click it, or press `B`. Set when the aircraft loads. The brakes, set or pedalled, hold the aircraft to about half torque at 2700 rpm: more and it slides |
 | | In | Released |
 
 FlightGear's throttle stops at idle and full, so tick Overdrive and Regeneration in **X-57 menu > Systems and failures** to reach those regions.
@@ -214,7 +214,7 @@ Outside the Cockpit View a pilot sits in the left seat. His left hand rides the 
 - Motor and controller temperatures aren't modelled. Battery temperature is.
 - NASA's controllers limit how fast torque changes, but the limit isn't published. The sim takes one second for the full range, which is an estimate. The rotors' inertias are estimates too, 0.65 kg m² for a cruise rotor and 0.0085 for a high-lift one: neither is published.
 - Aural alerts are one tone in place of NASA's six spoken messages, whose wording isn't published.
-- The gear pump, flap motor, gear locks, tyres, touchdown and switch clicks are stock samples, at levels that are estimates. The propellers, motors, wind and the gear in the airflow are computed. Nobody has heard these aircraft, so none of it is checked against a recording.
+- The gear pump, flap motor, gear locks and switch clicks are stock samples, at levels that are estimates. The propellers, motors, wind, the gear in the airflow, the tyres rolling and each wheel's touchdown are computed. Nobody has heard these aircraft: only the tyres' cockpit levels come from a recording, of a landing in a P2006T's cabin, and the nose tyre's squeal from a glider's. A touchdown's squeal follows the sink rate as that wheel's weight came on and its slip, the ground speed less the speed the wheel was still turning at: a gentle one is long, a firm one short, and a wheel back down after a hop is quiet. Each strut thumps by its sink rate.
 - Controller lights cover failures and arming without traction voltage, not internal faults.
 - The cabin fan and most breakers have no effect.
 - FlightGear's controls can't lock a switch, so the lever locks aren't modelled.

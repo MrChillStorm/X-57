@@ -95,6 +95,40 @@ def controls(hl):
           '<setting><position>0</position><time>0</time></setting><setting><position>1</position><time>6</time></setting>'
           '</traverse></kinematic>')
     f.fn('gear/gear-pos-norm', IFTHEN(GT(p('ctl/instant'), v(0)), p('gear/gear-cmd-norm'), p('gear/gear-moving')), out='gear/unit[0]/pos-norm')
+    # the P2006T's brakes, fitted to its manual's landing roll: Mods II-IV kept its gear [SIM]. Each main strut as gear_xml sets it
+    from genp2006t import brakes
+    brakes(f, X.MASS['weight_lb'] * X.GEAR['main_load_share'] / 2 / 0.25)
+    # Each wheel's spin, as the speed its rim turns at. On the ground friction spins it up, its sliding grip times the strut's force (spring and damping,
+    # as the gear's own), until it rolls at the ground speed: a wheel that only brushes the runway between two of FlightGear's frames, unheard,
+    # keeps most of its slip for the touchdown that follows. In the air it spins down, its brake's pads and its bearings dragging, and a main
+    # wheel's pedal stops it at once. Then each wheel's sink rate and slip, the ground speed less its rim's, as its weight
+    # comes on, held till it lifts: what its touchdown sounds read (x57sound.py, mktouchdown.py). A wheel touching down still turning loses
+    # I (slip / r)^2 / 2 spinning up, so a hop of a second is silent and a touchdown after a flight squeals in full. The wheel's own speed downwards:
+    # the airplane's, with its roll and pitch about the centre of gravity, so a nose that comes down by pitching counts
+    f.channel('touchdown')
+    G = X.GEAR
+    brake_nm = 4.4482216 * 6.9 * 0.0254                      # N m a lbf of ctl/brake-lbf, the force at the 6.00-6's static loaded radius (p2006t.py)
+    for n, x, y in ((0, G['main_x_in'] - G['wheelbase_in'], 0.0), (1, G['main_x_in'], -G['track_in'] / 2), (2, G['main_x_in'], G['track_in'] / 2)):
+        g = 'gear/unit[%d]/' % n
+        w = X.WHEELS['5.00-5' if n == 0 else '6.00-6']
+        dx = Q(D(p('inertia/cg-x-in'), v(x)), v(12.0))         # ahead of the CG, ft
+        dy = Q(D(v(y), p('inertia/cg-y-in')), v(12.0))         # right of it
+        f.fn(g + 'sink-now-fps', S(p('velocities/v-down-fps'), M(p('velocities/p-rad_sec'), dy), M(v(-1), p('velocities/q-rad_sec'), dx)),
+             desc='the wheel\'s own speed downwards')
+        down = GT(p(g + 'WOW'), v(0.5))
+        k = w['radius_m'] / w['inertia_kgm2'] / 0.514444           # kt/s of rim speed a N m of torque takes away
+        torque = v(w['drag_nm']) if n == 0 else S(v(w['drag_nm']), M(MAX(p('/controls/gear/brake-' + ('left' if n == 1 else 'right')),
+                                                                           p('/controls/gear/brake-parking')), p('ctl/brake-lbf'), v(brake_nm)))
+        kt = M(p('velocities/vg-fps'), v(0.592484))
+        sk, sc = strut(X.MASS['weight_lb'] * (1 - G['main_load_share'] if n == 0 else G['main_load_share'] / 2))
+        load = MAX(v(0), S(M(v(sk), p(g + 'compression-ft')), M(v(sc), p(g + 'compression-velocity-fps'))))       # lbf
+        up = 0.5 * 4.4482216 * w['radius_m'] ** 2 / w['inertia_kgm2'] / 0.514444     # kt/s of rim speed a lbf of load gives, sliding at 0.5
+        f.fn(g + 'slip-now-kt', MAX(v(0), D(kt, p(g + 'spin-kt'))), desc='the ground speed less the rim\'s')
+        f.fn(g + 'spin-kt', IFTHEN(down, MIN(kt, S(p(g + 'spin-kt'), M(v(up), load, p('simulation/channel-dt')))),
+                                   MAX(v(0), D(p(g + 'spin-kt'), M(v(k), torque, p('simulation/channel-dt'))))),
+             desc='the rim\'s speed: spun up by the runway, rolling, spinning down in the air')
+        f.fn(g + 'touchdown-sink-fps', IFTHEN(down, p(g + 'touchdown-sink-fps'), p(g + 'sink-now-fps')), desc='as the weight came on, held')
+        f.fn(g + 'touchdown-slip-kt', IFTHEN(down, p(g + 'touchdown-slip-kt'), p(g + 'slip-now-kt')), desc='likewise')
     return f
 
 
@@ -214,6 +248,13 @@ def built_aero(hl):
     return a.build()
 
 
+def strut(load):
+    """spring (lbf/ft) and damping (lbf s/ft) of a strut carrying this load (lbf): it sits about 3 in down on its strut and tyre, damped at 0.6 of
+    critical on its load, twice; rounded as the gear's XML writes them"""
+    k = load / 0.25
+    return float(round(k)), float(round(0.6 * k ** 0.5 * (load / 32.174) ** 0.5 * 2))
+
+
 def gear_xml():
     G = X.GEAR
     z = G['ground_z_in']
@@ -223,13 +264,12 @@ def gear_xml():
     y = G['track_in'] / 2
 
     def unit(name, x, yy, load, steer, brake, zz):
-        k = load / 0.25                 # sits about 3 in down on its strut and tyre
         return ('''<contact type="BOGEY" name="%s">
   <location unit="IN"><x>%.2f</x><y>%.2f</y><z>%.2f</z></location>
   <static_friction>0.72</static_friction><dynamic_friction>0.5</dynamic_friction><rolling_friction>0.005</rolling_friction>
   <spring_coeff unit="LBS/FT">%.0f</spring_coeff><damping_coeff unit="LBS/FT/SEC">%.0f</damping_coeff>
   <max_steer unit="DEG">%g</max_steer><brake_group>%s</brake_group><retractable>1</retractable>
-</contact>''' % (name, x, yy, zz, k, 0.6 * k ** 0.5 * (load / 32.174) ** 0.5 * 2, steer, brake))
+</contact>''' % ((name, x, yy, zz) + strut(load) + (steer, brake)))
 
     main = W * G['main_load_share'] / 2
     nose = W * (1 - G['main_load_share'])

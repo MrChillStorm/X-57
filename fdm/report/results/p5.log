@@ -7,126 +7,129 @@ JSBSim startup beginning ...
 
 
 Ground effect against the CFD, up to 10 deg
-  flaps 10, power off: RMS CL 0.020, Cm 0.039; outside the limit 1 and 1 of 10
-  flaps 10, power off, worst dCL                         0.063   target 0.000    MISS (limit 0.05)
+  flaps 10, power off: RMS CL 0.019, Cm 0.039; outside the limit 1 and 1 of 10
+  flaps 10, power off, worst dCL                         0.060   target 0.000    MISS (limit 0.05)
   flaps 10, power off, worst dCm                         0.123   target 0.000    MISS (limit 0.05)
   flaps 30, power off: RMS CL 0.000, Cm 0.000; outside the limit 0 and 0 of 10
   flaps 30, power off, worst dCL                         0.001   target 0.000    ok
   flaps 30, power off, worst dCm                         0.000   target 0.000    ok
-  power on, LAVA, 111 points: RMS CL 0.028, Cm 0.066
-    flaps 10, 5.76 ft, -2 deg, 3545 rpm: dCm -0.601 against -0.305, dCL 0.141 against -0.011
-    flaps 30, 5.76 ft, 8 deg, 4702 rpm: dCm -1.446 against -1.596, dCL 0.253 against 0.253
-    flaps 30, 5.76 ft, -2 deg, 3428 rpm: dCm -0.082 against -0.227, dCL 0.034 against 0.074
-    flaps 30, 5.76 ft, 2 deg, 3962 rpm: dCm -0.435 against -0.578, dCL 0.130 against 0.145
-    flaps 30, 7.87 ft, 8 deg, 4661 rpm: dCm -0.951 against -0.815, dCL 0.209 against 0.157
-    flaps 30, 5.76 ft, 2 deg, 4661 rpm: dCm -0.955 against -0.826, dCL 0.256 against 0.242
-  power on, worst dCL                                    0.152   target 0.000    MISS (limit 0.15)
-  power on, worst dCm                                    0.296   target 0.000    MISS (limit 0.15)
+  power on, LAVA, 111 points: RMS CL 0.026, Cm 0.072
+    flaps 10, 5.76 ft, -2 deg, 3545 rpm: dCm -0.618 against -0.305, dCL 0.127 against -0.011
+    flaps 30, 5.76 ft, 8 deg, 4702 rpm: dCm -1.419 against -1.596, dCL 0.251 against 0.253
+    flaps 30, 5.76 ft, 8 deg, 3962 rpm: dCm -1.025 against -0.855, dCL 0.111 against 0.137
+    flaps 30, 5.76 ft, 2 deg, 3962 rpm: dCm -0.421 against -0.578, dCL 0.129 against 0.145
+    flaps 30, 5.76 ft, 8 deg, 3428 rpm: dCm -0.890 against -0.735, dCL 0.068 against 0.108
+    flaps 30, 5.76 ft, 8 deg, 4661 rpm: dCm -1.677 against -1.826, dCL 0.310 against 0.297
+  power on, worst dCL                                    0.138   target 0.000    ok
+  power on, worst dCm                                    0.313   target 0.000    MISS (limit 0.15)
 
 Rates of climb, gear down, takeoff flaps, 2,500 ft. High lift on NASA's propeller table, as its simulator
   full power: 144.2 kW, stabilator -2.9, alpha 4.5
-  Mod III, 97 KCAS, full power                             515   target 430      MISS (limit 60)
-  one motor out, zero sideslip: left disc -27 lbf, right 255, rudder -0.65, aileron 0.48, bank 5.7, residual 4e-12
-  windmilling, at zero sideslip: -549 ft/min
+  Mod III, 97 KCAS, full power                             514   target 430      MISS (limit 60)
+  one motor out, zero sideslip: left disc -27 lbf, right 255, rudder -0.64, aileron 0.48, bank 5.6, residual 7e-12
+  windmilling, at zero sideslip: -554 ft/min
   feathered: left disc 3 lbf, rudder -0.57, aileron 0.49, bank 5.1
-  Mod III, one motor out, feathered                       -437   target -450     ok
-  Mod III, a traction bus out                             -352   target -300     ok
-  Mod III, 2,400 rpm                                       344   target 270      MISS (limit 60)
+  Mod III, one motor out, feathered                       -441   target -450     ok
+  Mod III, a traction bus out                             -354   target -300     ok
+  Mod III, 2,400 rpm                                       343   target 270      MISS (limit 60)
   DiTTo, 97 KIAS: 48.1 kW a motor, each disc 18.6 lbf
-  DiTTo 97 KIAS                                            712   target 720      ok
+  DiTTo 97 KIAS                                            709   target 720      ok
   one motor out, feathered: left disc 3 lbf, right 173, rudder -0.39, bank 3.5
-  DiTTo 97 KIAS, one motor out                              69   target 360      MISS (limit 80)
+  DiTTo 97 KIAS, one motor out                              67   target 360      MISS (limit 80)
   DiTTo 97 KIAS, contactor out                             523   target 480      ok
-  DiTTo 97 KIAS, a traction bus out                       -208   target -100     MISS (limit 80)
+  DiTTo 97 KIAS, a traction bus out                       -209   target -100     MISS (limit 80)
   DiTTo, 84 KIAS: 48.1 kW a motor, each disc 28.2 lbf
   DiTTo 84 KIAS                                           1068   target 1000     ok
-  one motor out, feathered: left disc 2 lbf, right 193, rudder -0.60, bank 4.0
-  DiTTo 84 KIAS, one motor out                             435   target 530      MISS (limit 80)
-  DiTTo 84 KIAS, contactor out                             809   target 740      ok
-  DiTTo 84 KIAS, a traction bus out                         51   target 100      ok
+  one motor out, feathered: left disc 2 lbf, right 193, rudder -0.59, bank 4.0
+  DiTTo 84 KIAS, one motor out                             432   target 530      MISS (limit 80)
+  DiTTo 84 KIAS, contactor out                             808   target 740      ok
+  DiTTo 84 KIAS, a traction bus out                         49   target 100      ok
 
 Minimum control speed, Mod III, takeoff flaps, gear down, full power on the right, left disc windmilling, zero sideslip
-  120 KCAS: pedal 0.38 of full, bank 5.2, residual 1e-11
-  105 KCAS: pedal 0.52 of full, bank 5.4, residual 4e-13
-  97 KCAS: pedal 0.65 of full, bank 5.7, residual 3e-12
-  92 KCAS: pedal 0.74 of full, bank 5.8, residual 2e-13
-  88 KCAS: pedal 0.84 of full, bank 6.0, residual 8e-13
-  85 KCAS: pedal 0.92 of full, bank 6.1, residual 4e-12
-  82 KCAS: pedal 1.00 of full, bank 6.1, residual 8e-02
-  78 KCAS: pedal 0.99 of full, bank 5.7, residual 2e+00
-  minimum control speed, KCAS                             81.7   target 85.0     ok
+  120 KCAS: pedal 0.38 of full, bank 5.2, residual 2e-13
+  105 KCAS: pedal 0.52 of full, bank 5.4, residual 5e-13
+  97 KCAS: pedal 0.64 of full, bank 5.6, residual 3e-12
+  92 KCAS: pedal 0.74 of full, bank 5.8, residual 4e-13
+  88 KCAS: pedal 0.84 of full, bank 6.0, residual 4e-13
+  85 KCAS: pedal 0.93 of full, bank 6.1, residual 9e-13
+  82 KCAS: pedal 1.00 of full, bank 6.1, residual 1e-01
+  78 KCAS: pedal 0.97 of full, bank 5.6, residual 1e+00
+  minimum control speed, KCAS                             81.8   target 85.0     ok
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 0, gear up [20240006682 figs. 6-9]
   trim: alpha 8.1 (NASA 8.4), lever 0.51, 68 kW, 119 lbf a motor
-  left disc after 3 s: -39 lbf at 2058 rpm; alpha 8.0 to 9.7
-  bank at 3 s                                              -79   target -87      ok
-  pitch at 3 s                                           -10.8   target -11.5    ok
-  heading at 3 s                                         -23.2   target -23.0    ok
-  peak roll rate, deg/s                                    -49   target -47      ok
-  peak sideslip                                           10.4   target 9.1      ok
-  sink at 3 s, ft/s                                       20.6   target 24.5     ok
+  left disc after 3 s: -37 lbf at 2011 rpm; alpha 8.1 to 9.7
+  bank at 3 s                                              -75   target -87      ok
+  pitch at 3 s                                           -10.1   target -11.5    ok
+  heading at 3 s                                         -23.3   target -23.0    ok
+  peak roll rate, deg/s                                    -46   target -47      ok
+  peak sideslip                                           10.3   target 9.1      ok
+  sink at 3 s, ft/s                                       19.3   target 24.5     ok
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 10, gear down [20240006682 figs. 6-9]
-  trim: alpha 5.3 (NASA 8.4), lever 0.76, 102 kW, 179 lbf a motor
-  left disc after 3 s: -33 lbf at 1813 rpm; alpha 5.1 to 8.2
-  at 3 s: bank -90 (-87), pitch -19.0 from 5.3 (-11.5 from 8), heading -22.0 (-23), roll rate -56 (-47), sideslip 16.5 (9.1), sink 27.1 (24.5)
+  trim: alpha 5.3 (NASA 8.4), lever 0.77, 102 kW, 179 lbf a motor
+  left disc after 3 s: -32 lbf at 1775 rpm; alpha 5.3 to 8.1
+  at 3 s: bank -84 (-87), pitch -18.3 from 5.3 (-11.5 from 8), heading -22.8 (-23), roll rate -52 (-47), sideslip 16.4 (9.1), sink 25.1 (24.5)
 
 Contactor failure on the right wing, 58 KCAS, flaps 30, the CFD's thrust [TM figs. 47-51, read by eye]
-  failure A, alpha 2: dCL -0.296, Cl +0.048, Cn -0.0085, CY +0.000, dCm -0.132; 0.75 of the discs working
-  failure A, alpha 8: dCL -0.344, Cl +0.064, Cn -0.0054, CY +0.000, dCm -0.152; 0.75 of the discs working
-  failure B, alpha 2: dCL -0.346, Cl +0.050, Cn -0.0095, CY +0.000, dCm -0.202; 0.75 of the discs working
-  failure B, alpha 8: dCL -0.388, Cl +0.063, Cn -0.0070, CY +0.000, dCm -0.219; 0.75 of the discs working
-  failure A, dCL at 2 deg                               -0.296   target -0.300   ok
-  failure A, dCL at 8 deg                               -0.344   target -0.350   ok
-  failure A, Cl at 2 deg                                 0.048   target 0.052    ok
-  failure A, Cl at 8 deg                                 0.064   target 0.065    ok
-  failure B, Cl at 8 deg                                 0.063   target 0.060    ok
-  failure A, Cn at 8 deg, inside the solvers           -0.0054   target 0.0000   ok
+  failure A, alpha 2: dCL -0.288, Cl +0.046, Cn -0.0087, CY +0.000, dCm -0.134; 0.75 of the discs working
+  failure A, alpha 8: dCL -0.343, Cl +0.062, Cn -0.0055, CY +0.000, dCm -0.121; 0.75 of the discs working
+  failure B, alpha 2: dCL -0.342, Cl +0.050, Cn -0.0096, CY +0.000, dCm -0.203; 0.75 of the discs working
+  failure B, alpha 8: dCL -0.388, Cl +0.062, Cn -0.0072, CY +0.000, dCm -0.191; 0.75 of the discs working
+  failure A, dCL at 2 deg                               -0.288   target -0.300   ok
+  failure A, dCL at 8 deg                               -0.343   target -0.350   ok
+  failure A, Cl at 2 deg                                 0.046   target 0.052    ok
+  failure A, Cl at 8 deg                                 0.062   target 0.065    ok
+  failure B, Cl at 8 deg                                 0.062   target 0.060    ok
+  failure A, Cn at 8 deg, inside the solvers           -0.0055   target 0.0000   ok
 
 NASA's failure list [20240006496 table 1], Mod III at 97 KCAS, full power, 4 s after each
-  Controller fails, half power                 torque 255 to 128 Nm, thrust 255 to 111 lbf, 2697 rpm, pitch 20.3 to 16.4  ok
-  Motor fails, propeller forces remain         torque 255 to 0 Nm, thrust 255 to -42 lbf, 1978 rpm, pitch 20.3 to 16.3  ok
+  Controller fails, half power                 torque 255 to 128 Nm, thrust 255 to 112 lbf, 2658 rpm, pitch 20.3 to 16.3  ok
+  Motor fails, propeller forces remain         torque 255 to 0 Nm, thrust 255 to -41 lbf, 1906 rpm, pitch 20.3 to 16.3  ok
   Motor fails, no propeller forces             torque 255 to 0 Nm, thrust 255 to -0 lbf, 1732 rpm, pitch 20.3 to 16.4  ok
-  Fixed pitch, lever to half                   torque 255 to 127 Nm, thrust 255 to 115 lbf, 2211 rpm, pitch 20.3 to 20.3  ok
-  Half power, hub frozen                       torque 255 to 128 Nm, thrust 255 to 106 lbf, 2290 rpm, pitch 20.3 to 20.3  ok
-  Zero power, hub frozen                       torque 255 to 0 Nm, thrust 255 to -26 lbf, 1699 rpm, pitch 20.3 to 20.3  ok
-  Instant feather                              torque 255 to 255 Nm, thrust 255 to 27 lbf, 1593 rpm, pitch 20.3 to 85.0  ok
+  Fixed pitch, lever to half                   torque 255 to 127 Nm, thrust 255 to 115 lbf, 2202 rpm, pitch 20.3 to 20.3  ok
+  Half power, hub frozen                       torque 255 to 128 Nm, thrust 255 to 109 lbf, 2254 rpm, pitch 20.3 to 20.3  ok
+  Zero power, hub frozen                       torque 255 to 0 Nm, thrust 255 to -26 lbf, 1638 rpm, pitch 20.3 to 20.3  ok
+  Instant feather                              torque 255 to 255 Nm, thrust 255 to 27 lbf, 1594 rpm, pitch 20.3 to 85.0  ok
   Command stuck, one motor, lever to half      left 255 to 255 Nm, right 255 to 127  ok
   Command stuck, both, lever to half           left 255 to 255 Nm, right 255 to 255  ok
-  Runaway to feather                           torque 255 to 255 Nm, thrust 255 to 226 lbf, 2316 rpm, pitch 20.3 to 24.3  ok
-  Runaway to fine                              torque 255 to 255 Nm, thrust 255 to 162 lbf, 2849 rpm, pitch 20.3 to 16.3  ok
+  Runaway to feather                           torque 255 to 255 Nm, thrust 255 to 227 lbf, 2309 rpm, pitch 20.3 to 24.3  ok
+  Runaway to fine                              torque 255 to 255 Nm, thrust 255 to 170 lbf, 2847 rpm, pitch 20.3 to 16.3  ok
   Mod IV, 75 KCAS, flaps 30, high lift on
-  3 high-lift motors, same wing                3 discs down, on the left: [2, 4, 6], thrust left 86, right 186 lbf  ok
-  6 high-lift motors, same wing                6 discs down, on the left: [1, 2, 3, 4, 5, 6], thrust left -14, right 188 lbf  ok
+  3 high-lift motors, same wing                3 discs down, on the left: [2, 4, 6], thrust left 87, right 184 lbf  ok
+  6 high-lift motors, same wing                6 discs down, on the left: [1, 2, 3, 4, 5, 6], thrust left -13, right 184 lbf  ok
 
-The P2006T on a paved runway, 1180 kg, sea level
+The P2006T on a paved runway, 1180 kg, sea level, and its landing on grass
   parked: pitch -0.2, centre of gravity 3.91 ft up
      4.0 s,  26 KIAS,   28 m: thrust 903 lbf, tyres -109 lbf, wheels carry 2243 lbf, pitch -0.4
      8.0 s,  44 KIAS,  101 m: thrust 796 lbf, tyres -168 lbf, wheels carry 2030 lbf, pitch -0.2
     12.0 s,  56 KIAS,  204 m: thrust 716 lbf, tyres -181 lbf, wheels carry 1723 lbf, pitch 0.9
   lift-off at 64 KIAS after 14.9 s
   takeoff run, m                                           294   target 273      ok
-  stopped in 8.1 s
-  landing roll, m                                          138   target 209      MISS (limit 20 %)
+  landing, paved: stopped in 14.7 s; brakes 237 lbf a wheel at full pedal, fitted to this roll
+  landing roll, m                                          209   target 209      ok
+  on grass, its grip 0.39 [NASA's estimate from Tecnam's runs], the manual's own table: stopped in 14.6 s, 1.00 of the paved roll (manual 1.02)
+  landing roll on grass, m                                 208   target 213      ok
 
 The X-57 on its wheels, Mod III
   parked: strut compression nose 0.25, mains 0.26, 0.24 ft; wing height 5.72 ft
   parked pitch                                            0.03   target 0.00     ok
-  parked bank                                            -0.17   target 0.00     MISS (limit 0.1)
+  centre of gravity 1.19 in left, 3.99 ft up; mains 5228 lbf/ft each: the statics give -0.17 deg
+  parked bank                                            -0.17   target -0.17    ok
   propeller tip 42.3 in above the wheels, 150.4 in outboard of them
   bank to the tip: 14.6 deg at rest, 13.2 with the struts at 2.3 g, 10.5 at 2.3 g with flat tyres (7.5 in)
   bank to the tip, as NASA figures it                     10.5   target 9.6      ok
-  takeoff from rest, flaps 10, full power, 88 KCAS rotation as NASA's pilots, 2,500 ft runway height left at sea level
-    held on the brakes: pitch -2.5, 2691 rpm, 506 lbf a motor
-     4.0 s,  20 KCAS,   21 m: 450 + 454 lbf, 2709 rpm, 255 Nm, pitch deg 15.8, tyres -110, gear x -59, aero x 770, wheels 2930, theta -0.9
-     8.0 s,  36 KCAS,   79 m: 409 + 409 lbf, 2704 rpm, 255 Nm, pitch deg 15.8, tyres -188, gear x -54, aero x 579, wheels 2752, theta -0.8
-    12.0 s,  48 KCAS,  167 m: 379 + 379 lbf, 2703 rpm, 255 Nm, pitch deg 16.2, tyres -236, gear x -48, aero x 437, wheels 2562, theta -0.8
-    16.0 s,  58 KCAS,  277 m: 355 + 355 lbf, 2705 rpm, 255 Nm, pitch deg 16.5, tyres -249, gear x -40, aero x 346, wheels 2377, theta -0.7
-    20.0 s,  66 KCAS,  405 m: 334 + 334 lbf, 2705 rpm, 255 Nm, pitch deg 16.9, tyres -229, gear x -31, aero x 297, wheels 2187, theta -0.5
-    24.0 s,  73 KCAS,  547 m: 317 + 317 lbf, 2705 rpm, 255 Nm, pitch deg 17.3, tyres -209, gear x -23, aero x 256, wheels 1997, theta -0.4
-    28.0 s,  78 KCAS,  702 m: 303 + 303 lbf, 2705 rpm, 255 Nm, pitch deg 17.8, tyres -190, gear x -17, aero x 223, wheels 1813, theta -0.3
-    32.0 s,  83 KCAS,  869 m: 291 + 291 lbf, 2705 rpm, 255 Nm, pitch deg 18.2, tyres -172, gear x -13, aero x 196, wheels 1637, theta -0.2
-    36.0 s,  88 KCAS, 1046 m: 281 + 281 lbf, 2705 rpm, 255 Nm, pitch deg 18.5, tyres -154, gear x -9, aero x 174, wheels 1470, theta -0.1
-    lift-off at 89 KCAS, 1080 m, 36.8 s, pitch 7.2, heading 359.7
+  on full brakes, 2700 rpm: held to lever 0.5, 247 lbf a motor; past that it slides
+  takeoff from rest, flaps 10: brakes off, then full power, as NASA's pilots set it for DiTTo [DITTO 4.1]; 88 KCAS rotation as theirs, 2,500 ft runway height left at sea level
+     4.0 s,  18 KCAS,   16 m: 460 + 460 lbf, 2740 rpm, 255 Nm, pitch deg 15.6, tyres -99, gear x -60, aero x 801, wheels 2950, theta -0.9
+     8.0 s,  35 KCAS,   71 m: 413 + 413 lbf, 2702 rpm, 255 Nm, pitch deg 15.8, tyres -182, gear x -55, aero x 596, wheels 2775, theta -0.9
+    12.0 s,  47 KCAS,  156 m: 382 + 382 lbf, 2704 rpm, 255 Nm, pitch deg 16.1, tyres -232, gear x -48, aero x 451, wheels 2586, theta -0.8
+    16.0 s,  57 KCAS,  263 m: 357 + 357 lbf, 2705 rpm, 255 Nm, pitch deg 16.4, tyres -252, gear x -41, aero x 352, wheels 2401, theta -0.7
+    20.0 s,  65 KCAS,  389 m: 336 + 336 lbf, 2705 rpm, 255 Nm, pitch deg 16.8, tyres -232, gear x -32, aero x 302, wheels 2212, theta -0.5
+    24.0 s,  72 KCAS,  530 m: 319 + 319 lbf, 2705 rpm, 255 Nm, pitch deg 17.3, tyres -212, gear x -24, aero x 260, wheels 2022, theta -0.4
+    28.0 s,  78 KCAS,  684 m: 304 + 304 lbf, 2705 rpm, 255 Nm, pitch deg 17.7, tyres -193, gear x -18, aero x 226, wheels 1838, theta -0.3
+    32.0 s,  83 KCAS,  849 m: 293 + 293 lbf, 2705 rpm, 255 Nm, pitch deg 18.1, tyres -174, gear x -13, aero x 199, wheels 1661, theta -0.2
+    36.0 s,  87 KCAS, 1025 m: 282 + 282 lbf, 2705 rpm, 255 Nm, pitch deg 18.5, tyres -157, gear x -9, aero x 175, wheels 1493, theta -0.1
+    lift-off at 88 KCAS, 1080 m, 37.2 s, pitch 7.1, heading 359.7
 
-11 misses: flaps 10, power off, worst dCL; flaps 10, power off, worst dCm; power on, worst dCL; power on, worst dCm; Mod III, 97 KCAS, full power; Mod III, 2,400 rpm; DiTTo 97 KIAS, one motor out; DiTTo 97 KIAS, a traction bus out; DiTTo 84 KIAS, one motor out; landing roll, m; parked bank
+8 misses: flaps 10, power off, worst dCL; flaps 10, power off, worst dCm; power on, worst dCm; Mod III, 97 KCAS, full power; Mod III, 2,400 rpm; DiTTo 97 KIAS, one motor out; DiTTo 97 KIAS, a traction bus out; DiTTo 84 KIAS, one motor out

@@ -379,17 +379,17 @@ def centred(psi):
 def field():
     """the P2006T's takeoff and landing rolls, 1180 kg, sea level, ISA. Paved, by the manual's own corrections. Lift-off 65 KIAS by its table; landing flaps, idle, a touchdown at 58 KIAS and 2 s before the brakes come on, both assumed"""
     import p3sim as P3
-    print('\nThe P2006T on a paved runway, 1180 kg, sea level')
+    print('\nThe P2006T on a paved runway, 1180 kg, sea level, and its landing on grass')
     f = P3.load(kg=1180.0, cg=0.25)
     f['bu/test/frozen'] = 0
     f['ctl/hold-now'] = 0
     P3.configure(f, 20.0, 1.0, -8.0, (0.0, 0.0))
-    f['fcs/left-brake-cmd-norm'] = f['fcs/right-brake-cmd-norm'] = 1
+    f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 1
     park(f, z_in=26.6)
     for _ in range(int(5 * H.HZ)):
         f.run()
     print('  parked: pitch %.1f, centre of gravity %.2f ft up' % (f['attitude/theta-deg'], f['position/h-agl-ft']))
-    f['fcs/left-brake-cmd-norm'] = f['fcs/right-brake-cmd-norm'] = 0
+    f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 0
     P3.configure(f, 20.0, 1.0, -8.0, (1.0, 1.0))
     x = 0.0
     t = 0.0
@@ -406,7 +406,24 @@ def field():
             break
     print('  lift-off at %.0f KIAS after %.1f s' % (f['velocities/vc-kts'], t))
     check('takeoff run, m', x * 0.3048, 273.0, 0.2, '%.0f', True)
+    x, t = landing(f)
+    print('  landing, paved: stopped in %.1f s; brakes %.0f lbf a wheel at full pedal, fitted to this roll' % (t, f['ctl/brake-lbf']))
+    check('landing roll, m', x, 209.0, 0.2, '%.0f', True)
+    xg, tg = landing(f, GRASS)
+    print('  on grass, its grip %.2f [NASA\'s estimate from Tecnam\'s runs], the manual\'s own table: stopped in %.1f s, %.2f of the paved roll (manual 1.02)' % (0.72 * GRASS, tg, xg / x))
+    check('landing roll on grass, m', xg, 213.0, 0.2, '%.0f', True)
+
+
+GRASS = 0.3875 / 0.72       # NASA's grass grip, 0.3875 of the wheel load [20220005440], over the tyre's 0.72 on asphalt
+
+
+def landing(f, grip=1.0):
+    """the P2006T's landing roll, m and s: flaps full, idle, a touchdown at 58 KIAS and full pedal 2 s later, both assumed"""
+    import p3sim as P3
     P3.configure(f, 40.0, 1.0, -5.0, (0.0, 0.0))
+    f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 0
+    f['fcs/steer-cmd-norm'] = 0
+    f['ground/static-friction-factor'] = grip
     park(f, z_in=26.6)
     f['ic/u-fps'] = 58 * 1.6878
     f.run_ic()
@@ -418,9 +435,27 @@ def field():
         t += 1 / H.HZ
         x += f['velocities/u-fps'] / H.HZ
         if t > 2:
-            f['fcs/left-brake-cmd-norm'] = f['fcs/right-brake-cmd-norm'] = 1
-    print('  stopped in %.1f s' % t)
-    check('landing roll, m', x * 0.3048, 209.0, 0.2, '%.0f', True)
+            f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 1
+    f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 0
+    f['ground/static-friction-factor'] = 1.0
+    return x * 0.3048, t
+
+
+def brakefit():
+    """the brakes' force at full pedal that gives the manual's paved landing roll, 209 m: the value for p2006t.BRAKE_LBF"""
+    import p3sim as P3
+    from scipy.optimize import brentq
+    f = P3.load(kg=1180.0, cg=0.25)
+    f['bu/test/frozen'] = 0
+    f['ctl/hold-now'] = 0
+
+    def roll(lbf):
+        f['ctl/brake-lbf'] = lbf
+        x = landing(f)[0]
+        print('  %.1f lbf a wheel: %.1f m' % (lbf, x))
+        return x - 209.0
+    lbf = brentq(roll, 150.0, 1500.0, xtol=0.5)
+    print('brakes: %.0f lbf a wheel at full pedal' % lbf)
 
 
 def gear(f):
@@ -430,14 +465,21 @@ def gear(f):
     clear(f)
     H.configure(f, 0, 1, 0, 2250.0, 0.0, stab=0.0)
     f['ctl/hold-props'] = 0
-    f['fcs/left-brake-cmd-norm'] = f['fcs/right-brake-cmd-norm'] = 1
+    f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 1
     park(f, z_in=X.GEAR['ground_z_in'] - 3.0)
     for _ in range(int(8 * H.HZ)):
         f.run()
     ld = [f['gear/unit[%d]/compression-ft' % i] for i in range(3)]
     print('  parked: strut compression nose %.2f, mains %.2f, %.2f ft; wing height %.2f ft' % (ld[0], ld[1], ld[2], f['bu/h-b'] * 31.623))
     check('parked pitch', f['attitude/theta-deg'], 0.0, 1.0, '%.2f')
-    check('parked bank', f['attitude/phi-deg'], 0.0, 0.1, '%.2f')
+    # NASA's CG sits 1.19 in left [SIM], so the airplane leans left on its mains: their roll stiffness, k t^2 / 2, against the weight's offset and, once
+    # leaning, its height. The nose wheel is on the centre line and takes no part. What's tested is that the gear holds it as the statics say
+    import xml.etree.ElementTree as ET
+    k = float(next(c for c in ET.parse(os.path.join(H.root(f.mod), 'aircraft', 'x57', 'x57.xml')).getroot().iter('contact') if c.get('name') == 'LEFT_MAIN').find('spring_coeff').text)
+    W, y, h, t = f['inertia/weight-lbs'], f['inertia/cg-y-in'] / 12, f['position/h-agl-ft'], X.GEAR['track_in'] / 12
+    lean = math.degrees(W * y / (k * t * t / 2 - W * h))
+    print('  centre of gravity %.2f in %s, %.2f ft up; mains %.0f lbf/ft each: the statics give %.2f deg' % (abs(y * 12), 'left' if y < 0 else 'right', h, k, lean))
+    check('parked bank', f['attitude/phi-deg'], lean, 0.1, '%.2f')
     hub = json.load(open(os.path.join(H.HERE, 'data', 'geometry.json')))['cruise']
     tip_z = hub['hub_in'][2] - hub['diameter_in'] / 2
     z = X.GEAR['ground_z_in'] - 3.0
@@ -445,12 +487,23 @@ def gear(f):
     print('  propeller tip %.1f in above the wheels, %.1f in outboard of them' % (tip_z - z, y))
     print('  bank to the tip: %.1f deg at rest, %.1f with the struts at 2.3 g, %.1f at 2.3 g with flat tyres (7.5 in)' % tuple(math.degrees(math.atan((tip_z - z - c) / y)) for c in (3.0, 6.9, 14.4)))
     check('bank to the tip, as NASA figures it', math.degrees(math.atan((tip_z - z - 14.4) / y)), 9.6, 1.5, '%.1f')
-    print('  takeoff from rest, flaps 10, full power, 88 KCAS rotation as NASA\'s pilots, 2,500 ft runway height left at sea level')
-    H.configure(f, 10, 1, 0, 2700.0, 1.0, stab=-2.0)
+    held = 0.0
+    for lever in np.arange(0.1, 1.01, 0.1):          # the P2006T's brakes don't hold full power: how much they do
+        H.configure(f, 10, 1, 0, 2700.0, float(lever), stab=-2.0)
+        park(f, z_in=X.GEAR['ground_z_in'] - 3.0)
+        for _ in range(int(3 * H.HZ)):
+            f.run()
+        if f['velocities/u-fps'] > 0.3:
+            break
+        held = (float(lever), f['prop/l/thrust-lbs'])
+    print('  on full brakes, 2700 rpm: held to lever %.1f, %.0f lbf a motor; past that it slides' % held if held else '  on full brakes: no power held')
+    print('  takeoff from rest, flaps 10: brakes off, then full power, as NASA\'s pilots set it for DiTTo [DITTO 4.1]; 88 KCAS rotation as theirs, 2,500 ft runway height left at sea level')
+    H.configure(f, 10, 1, 0, 2700.0, 0.0, stab=-2.0)
+    park(f, z_in=X.GEAR['ground_z_in'] - 3.0)
     for _ in range(int(3 * H.HZ)):
         f.run()
-    print('    held on the brakes: pitch %.1f, %.0f rpm, %.0f lbf a motor' % (f['attitude/theta-deg'], f['prop/l/rpm'], f['prop/l/thrust-lbs']))
-    f['fcs/left-brake-cmd-norm'] = f['fcs/right-brake-cmd-norm'] = 0
+    f['/controls/gear/brake-left'] = f['/controls/gear/brake-right'] = 0
+    H.configure(f, 10, 1, 0, 2700.0, 1.0, stab=-2.0)
     x = t = 0.0
     while t < 60:
         f.run()
@@ -474,6 +527,8 @@ def main():
     for w in what:
         if w in ('ground', 'climb', 'failures'):
             globals()[w](f3, f4)
+        elif w == 'brakefit':
+            brakefit()
         elif w == 'contactor':
             contactor(f4)
         else:

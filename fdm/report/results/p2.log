@@ -32,20 +32,20 @@ ok   windmilling speed inside the tunnel's measured range, or within 3 %  2640 r
      65 KCAS, 2,500 ft: failed disc 2370 rpm, +9 % on Table 7's 2184, J 1.53; a good disc 4694 rpm
      75 KCAS, 2,500 ft: failed disc 2740 rpm, +16 % on Table 7's 2357, J 1.52; a good disc 4273 rpm
      90 KCAS, 2,500 ft: failed disc 3293 rpm, +7 % on Table 7's 3065, J 1.52; a good disc 3763 rpm
-Cruise motor, 120 KCAS, 6,000 ft: lever 0.60, rpm 2250, pitch 26.3
+Cruise motor, 120 KCAS, 6,000 ft: lever 0.59, rpm 2250, pitch 26.3
 ok   steady before the step  2250.0 rpm
-     lever +0.25: rpm peak 2367, back to 2250 after 40 s; pitch 26.3 to 28.0 at up to 1.00 deg/s; thrust 148 lbf each
+     lever +0.25: rpm peak 2367, back to 2250 after 40 s; pitch 26.3 to 28.0 at up to 1.00 deg/s; thrust 147 lbf each
 ok   the hub keeps to 1 deg/s
 ok   overspeed held near 2750 rpm  peak 2367
 ok   the governor brings rpm back  2250 rpm
      hub fixed, lever back: right 2112 rpm, left 2250 rpm
 ok   a fixed hub lets the rpm go, the other governs
-Idle, 75 KCAS, high lift Fixed: trim 1966 rpm, 2.8 lbf a side; flown 1966 rpm, 2.8 lbf, pitch 14.0
-ok   on the fine stop the trim's rpm is where the rotor settles  1966, 1966
+Idle, 75 KCAS, high lift Fixed: trim 1965 rpm, 2.8 lbf a side; flown 1966 rpm, 2.8 lbf, pitch 14.0
+ok   on the fine stop the trim's rpm is where the rotor settles  1965, 1966
 High-lift motors, standing: armed Fixed: 95 % in 0.33 s, 4776 rpm, 19.8 Nm, 9.9 kW, 64.7 lbf a disc (NASA run-up 10 kW, 120 kW all twelve)
 ok   Fixed run-up power near NASA's 10 kW a disc  9.9 kW
 ok   disarmed, the discs stop  in 0.5 s
-Bus A lost: pack A 0.0 kW, pack B 51.3 (52.7 before); discs on A 2691 rpm, on B 4274; cruise 1 controller, 32 Nm
+Bus A lost: pack A 0.0 kW, pack B 51.4 (52.8 before); discs on A 2690 rpm, on B 4274; cruise 1 controller, 32 Nm
 ok   a lost bus takes half the discs, evenly, and one controller a motor
 ok   a lost bus draws nothing  0.0 kW
 Right motor off: windmilling at 1736 rpm; feathered: 0 rpm, pitch 85; left 2250 rpm
@@ -69,7 +69,7 @@ Planning powers
      Mod III climb, 100 KCAS, 2,800 ft, 500 ft/min, clean   cruise 104 kW (NASA 120), high lift 0 (0), system 119; alpha 6.1
      Mod III climb, the same, gear down                     cruise 123 kW (NASA 120), high lift 0 (0), system 140; alpha 5.9
      Mod IV hold, 63 KCAS, 6,000 ft, flaps 30, gear down    cruise -7 kW (NASA 10), high lift 114 (115), system 122; alpha 6.4
-ok   the efficiency chain is NASA's  system 122.6 kW from 30.3 + 78.3 shaft
+ok   the efficiency chain is NASA's  system 122.9 kW from 30.7 + 78.4 shaft
      (NASA's ground roll: 96 + 108 kW shaft gives 229.2 kW by this chain; its table says 229.2)
 
 ALL WITHIN LIMITS

@@ -205,6 +205,8 @@ def config(hl):
     if os.path.exists(FIT_FILE):
         d = json.load(open(FIT_FILE))
         c['body_fit'], c['rate_fit'] = d.get('body'), d.get('rates')
+        # with the high lift on the rates' correction holds its value from 2 deg under the CFD's power-off stall (as the checks' 'below stall'): blown, the sections don't stall
+        c['rate_hold'] = dict(flaps=[0.0, 10.0, 30.0], alpha=[13.0, 10.0, 10.0])
         c['beta_fit'] = d.get('beta')
         c['rud_fit'] = d.get('rud')
         if d.get('cruise'):

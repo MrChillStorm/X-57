@@ -1,11 +1,17 @@
-  17 functions dropped, 466 written into their readers
+  19 functions dropped, 478 written into their readers
 wrote X-57 x57-mod3
-  17 functions dropped, 448 written into their readers
+  23 functions dropped, 508 written into their readers
 wrote X-57 x57-mod4
   roof: surface fitted to 6 mm RMS
   roof: 30 old faces out, 11482 new in, edge 46 vertices, 2 mm off the surface at most
 painted 638841 texels of texture.png
-  28 instrument textures sharpened
+  30 instrument textures sharpened
   8 instrument faces redrawn
-  3 textures made full colour
+X57PANEL breakers-l: plate 156 x 132 mm, its centre (-2.659, -0.532, -0.343), heading 72.1
+X57PANEL breakers-r: plate 156 x 132 mm, its centre (-2.659, 0.532, -0.343), heading -72.1
+  clicks on 44 switches and 86 buttons
+  Tecnam cockpit lights: 6.94 and 6.94 cd floods, fitted from the menu
+  cabin: the pilot seat only, the pallet, the batteries and 213 parts
+  pilot: 24134 faces in 54 parts, his left wrist within 0.7 cm of the yoke; pedals: 17 parts
+  2 textures made full colour
 wrote X-57

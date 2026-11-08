@@ -1,11 +1,11 @@
 
 The beam against the vibration test [20240011864 tables 5, 9] and NASA's whole aircraft [20240007439 table 4]
   fitted: symmetric 2.25 (2.26), clean 6.55 (6.55), antisymmetric 2.14 (2.14)
-  clean, antisymmetric first bending, Hz                    6.05   target 5.76     ok
-  tip masses, symmetric second bending, Hz                 18.50   target 15.76    MISS (limit 10 %)
-  tip masses, antisymmetric second bending, Hz             17.06   target 14.82    MISS (limit 10 %)
-  clean, symmetric second bending, Hz                      27.75   target 26.36    ok
-  clean, antisymmetric second bending, Hz                  25.70   target 23.90    ok
+  clean, antisymmetric first bending, Hz                    6.06   target 5.76     MISS (limit 5 %)
+  tip masses, symmetric second bending, Hz                 17.00   target 15.76    ok
+  tip masses, antisymmetric second bending, Hz             15.90   target 14.82    ok
+  clean, symmetric second bending, Hz                      27.78   target 26.36    ok
+  clean, antisymmetric second bending, Hz                  25.76   target 23.90    ok
   free in the air, antisymmetric: 3.55, 3.89 Hz. NASA's table lists one first bending mode, without saying which; it sits nearest the symmetric
   Mod III, free in the air, Hz                              2.39   target 2.31     ok
   Mod IV, free in the air, Hz                               2.37   target 2.29     ok
@@ -18,30 +18,30 @@ JSBSim startup beginning ...
 
 
 Ringing with the air nearly gone: 300,000 ft, propellers parked
-  Mod III symmetric: 2.397 Hz (beam 2.395), damping 0.0055, kept 8 % after 12 s
-  Mod III, symmetric, Hz                                   2.397   target 2.395    ok
+  Mod III symmetric: 2.395 Hz (beam 2.391), damping 0.0055, kept 1 % after 12 s
+  Mod III, symmetric, Hz                                   2.395   target 2.391    ok
   Mod III, symmetric, damping                             0.0055   target 0.0057   ok
-  Mod III antisymmetric: 3.540 Hz (beam 3.553), damping 0.0056, kept 22 % after 12 s
-  Mod III, antisymmetric, Hz                               3.540   target 3.553    ok
-  Mod III, antisymmetric, damping                         0.0056   target 0.0057   ok
-  Mod IV symmetric: 2.377 Hz (beam 2.372), damping 0.0055, kept 36 % after 12 s
-  Mod IV, symmetric, Hz                                    2.377   target 2.372    ok
+  Mod III antisymmetric: 3.529 Hz (beam 3.548), damping 0.0057, kept 12 % after 12 s
+  Mod III, antisymmetric, Hz                               3.529   target 3.548    ok
+  Mod III, antisymmetric, damping                         0.0057   target 0.0057   ok
+  Mod IV symmetric: 2.374 Hz (beam 2.369), damping 0.0055, kept 36 % after 12 s
+  Mod IV, symmetric, Hz                                    2.374   target 2.369    ok
   Mod IV, symmetric, damping                              0.0055   target 0.0057   ok
-  Mod IV antisymmetric: 3.860 Hz (beam 3.895), damping 0.0057, kept 9 % after 12 s
-  Mod IV, antisymmetric, Hz                                3.860   target 3.895    ok
+  Mod IV antisymmetric: 3.841 Hz (beam 3.886), damping 0.0057, kept 14 % after 12 s
+  Mod IV, antisymmetric, Hz                                3.841   target 3.886    ok
   Mod IV, antisymmetric, damping                          0.0057   target 0.0057   ok
 
 In flight, trimmed level, 6,000 ft, a kick to each mode
-  Mod III            100 KCAS: alpha 6.6, tip +0.20 ft up; symmetric 2.39 Hz, damping 0.023; antisymmetric 3.54 Hz, 0.007  ok
-  Mod III            135 KCAS: alpha 0.9, tip +0.18 ft up; symmetric 2.39 Hz, damping 0.035; antisymmetric 3.55 Hz, 0.011  ok
-  Mod III            175 KCAS: alpha -1.5, tip +0.15 ft up; symmetric 2.40 Hz, damping 0.039; antisymmetric 3.55 Hz, 0.012  ok
-  Mod IV             100 KCAS: alpha 6.6, tip +0.18 ft up; symmetric 2.38 Hz, damping 0.022; antisymmetric 3.87 Hz, 0.006  ok
-  Mod IV             135 KCAS: alpha 0.9, tip +0.16 ft up; symmetric 2.38 Hz, damping 0.033; antisymmetric 3.87 Hz, 0.011  ok
-  Mod IV             175 KCAS: alpha -1.5, tip +0.14 ft up; symmetric 2.38 Hz, damping 0.037; antisymmetric 3.88 Hz, 0.013  ok
-  Mod IV, high lift   70 KCAS: alpha 4.9, tip +0.10 ft up; symmetric 2.38 Hz, damping 0.017; antisymmetric 3.87 Hz, 0.009  ok
+  Mod III            100 KCAS: alpha 6.6, tip +0.19 ft up; symmetric 2.39 Hz, damping 0.022; antisymmetric 3.54 Hz, 0.012  ok
+  Mod III            135 KCAS: alpha 0.9, tip +0.18 ft up; symmetric 2.39 Hz, damping 0.034; antisymmetric 3.55 Hz, 0.019  ok
+  Mod III            175 KCAS: alpha -1.4, tip +0.16 ft up; symmetric 2.39 Hz, damping 0.039; antisymmetric 3.56 Hz, 0.024  ok
+  Mod IV             100 KCAS: alpha 6.6, tip +0.18 ft up; symmetric 2.37 Hz, damping 0.021; antisymmetric 3.87 Hz, 0.012  ok
+  Mod IV             135 KCAS: alpha 0.9, tip +0.16 ft up; symmetric 2.37 Hz, damping 0.032; antisymmetric 3.87 Hz, 0.022  ok
+  Mod IV             175 KCAS: alpha -1.4, tip +0.15 ft up; symmetric 2.38 Hz, damping 0.037; antisymmetric 3.90 Hz, 0.028  ok
+  Mod IV, high lift   70 KCAS: alpha 5.0, tip +0.09 ft up; symmetric 2.37 Hz, damping 0.017; antisymmetric 3.86 Hz, 0.013  ok
 
 Dihedral effect, Mod III, 100 KCAS, flaps 0, bent to its 1 g shape against rigid
-  Cl beta -0.1476 rigid, -0.1634 bent; Cn beta 0.1118, 0.1076; tip 0.20 ft
+  Cl beta -0.1511 rigid, -0.1654 bent; Cn beta 0.1112, 0.1072; tip 0.19 ft
 
 On the gear, wings bending, nothing running
   standing, the pilot's g, spread                         0.0000   target 0.0000   ok
@@ -55,4 +55,4 @@ On the gear, wings bending, nothing running
   rolling at 10 kt, wing tip, ft, spread                  0.0004   target 0.0000   ok
   gear lever up on the ground: the gear stays down         1.000   target 1.000    ok
 
-2 misses: tip masses, symmetric second bending, Hz; tip masses, antisymmetric second bending, Hz
+1 misses: clean, antisymmetric first bending, Hz

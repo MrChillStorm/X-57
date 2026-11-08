@@ -221,13 +221,13 @@ Before starting a motor the blades must be at \ann{START}, because \ann{AUTO} on
 \subsection{Speeds}
 \Tab{speeds}
 \subsection{Mod III}
-Flaps 10, full torque, 2700\,rpm. Rotate at 88\,KIAS and climb at 96. Be ready for a long run: about 4300\,ft with the model's automated test pilot. Raise the gear and flaps at a safe height.
+Flaps 10, full torque, 2700\,rpm. The P2006T's brakes hold the aircraft only to about half torque, so let them off and push the levers up as it rolls. Rotate at 88\,KIAS and climb at 96. Be ready for a long run: about 4300\,ft with the model's automated test pilot. Raise the gear and flaps at a safe height.
 
 \subsection{Mod IV: Distributed Thrust Takeoff (DiTTo)}
 DiTTo is a technique for the pilot, not software. Nothing automatic mixes the motors or reacts to the rudder and ailerons. Holding the wingtip motors to about two thirds power keeps a motor failure controllable, and the high-lift motors make up the thrust.
 \begin{enumerate}
 \item During the run-up at raised torque, set the propeller levers to 1800\,rpm and leave them there.
-\item Line up, select \ann{FIXED} and move to \ann{ARM}. All twelve high-lift motors spin up to 4800\,rpm. \ann{RDY} goes out and \ann{RUN} turns green.
+\item Line up, select \ann{FIXED} and move to \ann{ARM}. All twelve high-lift motors spin up to 4800\,rpm. \ann{RDY} goes out and \ann{RUN} turns green. Their thrust alone, about 750\,lbf, is more than the model's brakes hold, so it starts rolling: arm on the runway, lined up.
 \item Push the torque levers to the \ann{FULL} detent, the top of the throttle unless Overdrive is ticked. That's 255\,Nm and about 48\,kW a motor, 67\,\% of rated power.
 \item Rotate at 77\,KIAS and climb at 84\,KIAS.
 \item At a safe height, accelerate to best rate of climb, then raise gear and flaps and disarm the high-lift motors.
@@ -358,8 +358,8 @@ Power for 150\,KTAS, 8000\,ft & 85\,kW \\
 NASA's slow-flight mission, energy drawn & 41.9\,kWh (41.9) of 51.2 usable, in 28 minutes \\
 Lowest voltage on that mission & 378\,V (370) \\
 Hottest pack on that mission & 59.3\,\textdegree C (57.9) \\
-Automated test pilot's takeoff, Mod III & lift-off after 42.7\,s, 4280\,ft, 90\,KCAS \\
-Automated test pilot's takeoff, Mod IV & lift-off after 12.8\,s, 1240\,ft, 83\,KCAS \\
+Automated test pilot's takeoff, Mod III & lift-off after 42.6\,s, 4280\,ft, 90\,KCAS \\
+Automated test pilot's takeoff, Mod IV & lift-off after 12.7\,s, 1240\,ft, 83\,KCAS \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -400,15 +400,16 @@ Sound & Cockpit & 30\,m & Where the level comes from \\
 Gear pump and jacks & 75 & 30 & estimate, from hydraulic power units' published 58 to 75 at 1\,m \\
 Gear locking down, up & 85, 82.5 & 55, 52.5 & estimate, as the ASK~21's airbrake lock \\
 Flap motor & 65 & 30 & estimate, from electric actuators' published 55 to 70 \\
-Tyres at 80\,km/h & 72 & 58 & outside from tyre and road data; inside an estimate. Grows as 30\,log$_{10}$ of the speed \\
-Touchdown at 70\,km/h & 82 & 75 & estimate, from the ASK~21's, for the load and two wheels. Grows with speed and sink rate \\
+Three tyres rolling at 60\,kt & 89.5 & 67 & computed: outside within 0.5\,dB of a towed light aircraft's; inside from a recorded P2006T landing, set against the wind, perhaps up to 3\,dB loud. Each wheel by its own speed \\
+A main wheel's touchdown squeal at 60\,kt of slip & 83 & 69 & computed: the energy the tyre loses spinning up, by physics; the share heard and its spectrum from a recorded P2006T landing. Sound exposure, as it's a short event: a firm touchdown is shorter, as loud. The nose wheel's is 79 and 67. A wheel still turning, after a hop, is quiet \\
+A main strut's thump, 0.25 to 1\,ft/s & 73--84 & & estimate: barely heard in the same landing. Plays at its estimate; a firmer one is held under full scale, 10\,dB under it at 4\,ft/s. Sound exposure \\
 Toggle or rocker switch & 78 & & estimate, the loudest 125\,ms \\
 Push button, breaker, knob & 72 & & estimate, a lighter mechanism \\
 Aural alert & 105 & & 15\,dB over the cockpit's noise at 100\,kt, after ISO~7731 \\
 \bottomrule
 \end{tabularx}
 \end{table}
-The propellers, motors, the wind and the gear in the airflow are computed by PyWopWop. The gear in the airflow is Fink's method, the same as for the ASK~21's fixed wheels: at 90\,kt, 73 in the cockpit and 67 at 30\,m. Nobody has heard these aircraft, so none of it has been checked against a recording, and the wind (91 at 110\,kt) and the motors are the least certain.
+The propellers, motors, the wind, the gear in the airflow, the tyres rolling and the touchdowns are computed by PyWopWop. The gear in the airflow is Fink's method, the same as for the ASK~21's fixed wheels: at 90\,kt, 73 in the cockpit and 67 at 30\,m. Nobody has heard these aircraft, so none of it has been checked against a recording of them; the tyres and touchdowns take their cockpit levels from a recorded P2006T landing. The wind (91 at 110\,kt) and the motors are the least certain.
 
 \chapter{Sources}
 \begin{itemize}

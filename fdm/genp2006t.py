@@ -16,7 +16,32 @@ F = 1 / 0.3048
 IN = 0.0254
 
 
-def controls():
+def brakes(f, k_main, mu_static=0.72, mu_rolling=0.005):
+    """The toe brakes as discs: the pedal sets a force at each main tyre, P.BRAKE_LBF at full pedal (ctl/brake-lbf), which JSBSim takes as a friction
+    coefficient on the wheel's load. So the pedal's force is shared out over the strut's load, k_main times its compression, and the surface's grip
+    factor, and the tyre's grip caps it. The pedal is FlightGear's own, the parking brake as much as a full pedal: FlightGear also writes the
+    command it reads, so this reads the controls, not its own output. The nose wheel has no brake"""
+    f.declare('ctl/brake-lbf', P.BRAKE_LBF)
+    for n in ('brake-left', 'brake-right', 'brake-parking'):
+        f.declare('/controls/gear/' + n, 0)
+    f.channel('brakes')
+    for side, i in (('left', 1), ('right', 2)):
+        g = 'gear/unit[%d]/' % i
+        pedal = MAX(p('/controls/gear/brake-' + side), p('/controls/gear/brake-parking'))
+        grip = MAX(D(M(v(mu_static), p(g + 'static-friction-factor')), M(v(mu_rolling), p(g + 'rolling_friction-factor'))), v(0.01))
+        load = MAX(M(v(k_main), p(g + 'compression-ft')), v(10.0))
+        f.fn('ctl/brake-%s' % side, Q(M(pedal, p('ctl/brake-lbf')), M(load, grip)), clip=('0', '1'), out='fcs/%s-brake-cmd-norm' % side,
+             desc='the %s brake: its force over what full grip would give' % side)
+
+
+def main_spring(kg, cg_mac):
+    """lbf/ft of each main strut, set for the load it carries, as gear_xml sets it"""
+    x = P.WING['le_x'] + cg_mac * P.REF['c_ft'] * 12
+    xm, xn = 172.0, 172.0 - 2.9 / IN
+    return kg * 2.20462 * (1 - (xm - x) / (xm - xn)) / 2 / 0.25
+
+
+def controls(k_main=None):
     f = FCS('p2006t-controls')
     for n, val in (('ctl/instant', 1), ('ctl/flap-cmd-deg', 0), ('/controls/flight/flaps', 0), ('/controls/engines/engine[0]/throttle', 0), ('/controls/engines/engine[1]/throttle', 0), ('bu/test/alphadot', 0), ('bu/test/frozen', 1), ('prop/l/run', 1), ('prop/r/run', 1), ('prop/l/rpm', P.PROP['rpm']), ('prop/r/rpm', P.PROP['rpm'])):
         f.declare(n, val)
@@ -42,6 +67,8 @@ def controls():
         lv = p('/controls/engines/engine[%d]/throttle' % i)
         f.fn('prop/%s/power-kw' % n, M(p('prop/%s/run' % n), S(v(e['idle_kw']), M(lv, D(avail, v(e['idle_kw']))))))
         f.fn('prop/%s/power-hp' % n, M(v(1 / 0.7457), p('prop/%s/power-kw' % n)))
+    if k_main:
+        brakes(f, k_main)
     return f
 
 
@@ -218,7 +245,7 @@ def write(out, tunnel=False, tail=True, nacelles=True, kg=1180.0, cg=0.25, cfg_e
     with open(os.path.join(out, 'p2006t.xml'), 'w') as f:
         f.write(fdm(_cache[key][0], kg, cg))
     with open(os.path.join(out, 'Systems', 'p2006t-controls.xml'), 'w') as f:
-        f.write('<?xml version="1.0"?>\n' + controls().xml())
+        f.write('<?xml version="1.0"?>\n' + controls(main_spring(kg, cg)).xml())
     return _cache[key][1]
 
 

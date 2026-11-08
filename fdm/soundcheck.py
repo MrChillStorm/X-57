@@ -11,10 +11,11 @@ SimGear reads them, over a sweep of states and along flights through the flight 
   - that no loop holds a source at nil volume, and none is cut off while it could be heard;
   - that nothing runs on a parked aircraft, or from a propeller that isn't turning;
   - that each group's loops add to one equal-power whole, so the bookkeeping hasn't lost a loop;
-  - that the airframe's sounds play at their stated levels, and the gear's loops at PyWopWop's, only with the gear out.
+  - that the airframe's sounds play at their stated levels, the gear's loops at PyWopWop's only with the gear out, the tyres' only rolling, and the touchdowns once a wheel.
 """
 import os, re, sys
 import numpy as np
+import scipy.io.wavfile as wav
 import xml.etree.ElementTree as ET
 
 os.environ.setdefault('X57_BUILT', '1')      # flown on what ships
@@ -80,6 +81,8 @@ def test(e, P):
     if t == 'property':
         return P[e.text.strip()] > 0.5
     a, b = list(e)
+    if a.tag not in ('property', 'value') or b.tag not in ('property', 'value'):
+        raise ValueError('SimGear refuses a comparison of %s and %s' % (a.tag, b.tag))
     if t == 'greater-than':
         return val(a, P) > val(b, P)
     if t == 'less-than':
@@ -137,7 +140,24 @@ def sweep(L, n=40000, seed=3):
     return P
 
 
+def loads(mod):
+    """what SimGear loads (props/condition.cxx): a condition of and, or, not, a property and comparisons, each comparing a property or a value.
+    Anything else and FlightGear drops the whole sound, saying so only in its log"""
+    CMP = ('greater-than', 'less-than', 'equals', 'greater-than-equals', 'less-than-equals', 'not-equals')
+
+    def ok(e):
+        if e.tag in ('and', 'or', 'not'):
+            return all(ok(c) for c in e)
+        if e.tag == 'property':
+            return True
+        return e.tag in CMP and len(e) == 2 and all(c.tag in ('property', 'value') for c in e)
+    root = ET.parse(os.path.join(S, 'Sounds', 'x57-%s-sound.xml' % mod)).getroot()
+    bad = [e.find('name').text for e in root.find('fx') if e.find('condition') is not None and not all(ok(c) for c in e.find('condition'))]
+    check('every sound\'s condition is one FlightGear loads', not bad, '%d refused, e.g. %s' % (len(bad), bad[:2]) if bad else '%d sounds' % len(root.find('fx')))
+
+
 def audit(mod):
+    loads(mod)
     L = loops(mod)
     print('%s: %d loops' % (mod, len(L)))
     check('every loop is looped, its file there', all(l['mode'] == 'looped' and os.path.exists(os.path.join(S, l['path'])) for l in L))
@@ -258,8 +278,8 @@ def parked(mod, L):
     f['ic/h-agl-ft'] = 5.0
     for k in ('ic/vt-fps', 'ic/theta-deg', 'ic/phi-deg', 'ic/psi-true-deg', 'ic/u-fps', 'ic/v-fps', 'ic/w-fps'):
         f[k] = 0.0
-    f['fcs/left-brake-cmd-norm'] = 1
-    f['fcs/right-brake-cmd-norm'] = 1
+    f['/controls/gear/brake-left'] = 1
+    f['/controls/gear/brake-right'] = 1
     f.run_ic()
 
     def count():
@@ -311,8 +331,7 @@ def airframe(mod):
         for inside, want in ((1.0, l_in), (0.0, l_out)):
             if want is None:
                 continue
-            ref = X.TYRE_REF_KT if name == 'rumble' else X.TOUCH_REF_KT
-            v = val(list(e.find('expression'))[0], {'sim/current-view/internal': inside, X.GS: ref, X.SINK: X.TOUCH_REF_FPS})
+            v = val(list(e.find('expression'))[0], {'sim/current-view/internal': inside})
             worst = max(worst, abs(full + lf + 20 * np.log10(v) - want))
     check('the airframe\'s sounds play at their stated levels', worst < 0.05, 'worst %.3f dB' % worst)
     G = [e for e in root if e.tag == 'gearair']
@@ -342,7 +361,147 @@ def airframe(mod):
             worst = max(worst, abs(full + lf + 10 * np.log10((V[:, i] ** 2 * C[:, i]).sum()) - m['dba']))
     check('gear loops: PyWopWop\'s levels at their speeds', worst < 0.1, 'worst %.3f dB' % worst)
     check('gear loops: none held at nil, none cut off, two at most', nil == 0 and cut == 0 and most <= 2, 'nil %d, cut %d, most %d' % (nil, cut, most))
+    # the tyres rolling: each wheel's loops on its own roll speed, only while it carries weight
+    T = [e for e in root if e.tag == 'tyre']
+    tman = json.load(open(os.path.join(bank + '_tyres', 'manifest.json')))
+    check('each view has its tyre loops, their files there', len(T) == len(tman['files']) and len(T) > 0
+          and all(os.path.exists(os.path.join(S, e.find('path').text)) for e in T))
+    kt = np.r_[0.0, np.linspace(0.05, 120.0, 2400) + 0.0013]      # off the windows' exact edges, where a 6-digit edge may hold a loop for an instant
+    one = np.ones_like(kt)
+    sag = {t['gear']: t['static_compression_ft'] for t in tman['tyres']}
 
+    def roll(wheels, inside, wow=1.0):
+        P = {'sim/current-view/internal': inside * one}
+        for g in range(3):
+            P['/gear/gear[%d]/rollspeed-ms' % g] = kt / 1.943846 if g in wheels else 0 * kt
+            P['/gear/gear[%d]/wow' % g] = wow * one
+            P['/gear/gear[%d]/compression-norm' % g] = sag[g] * one
+        return P
+    tc = lambda e, P: np.broadcast_to(test(list(e.find('condition'))[0], P), kt.shape)
+    tv = lambda e, P: np.broadcast_to(val(list(e.find('volume').find('expression'))[0], P), kt.shape)
+    still = sum(int(tc(e, roll((0, 1, 2), i))[0]) for e in T for i in (0.0, 1.0))
+    air = sum(int(tc(e, roll((0, 1, 2), i, wow=0.0)).sum()) for e in T for i in (0.0, 1.0))
+    check('tyres: none runs standing still or in the air', still == 0 and air == 0, 'standing %d, in the air %d' % (still, air))
+    worst, nil, cut, most = 0.0, 0, 0, 0
+    for inside, view in ((1.0, 'cockpit'), (0.0, 'side')):
+        P = roll((0, 1, 2), inside)
+        most = max(most, int(np.sum([tc(e, P) for e in T], axis=0).max()))
+        for t in tman['tyres']:
+            L = [e for e in T if ('-%s-' % t['name']) in e.find('name').text and e.find('name').text.endswith(view)]
+            C = np.array([tc(e, P) for e in L])
+            V = np.array([tv(e, P) for e in L])
+            nil += int((C & (V <= 1e-6)).sum())
+            cut += int(((~C) & (V > 0.01)).sum())
+            for m in (q for q in tman['files'] if q['view'] == view and q['tyre'] == t['name']):
+                i = int(np.argmin(np.abs(kt - m['groundspeed_kt'])))
+                lf = X.file_level(os.path.join(S, 'Sounds', 'pywopwop', m['file']))
+                worst = max(worst, abs(full + lf + 10 * np.log10((V[:, i] ** 2 * C[:, i]).sum()) - m['dba']))
+    check('tyre loops: PyWopWop\'s levels at their speeds', worst < 0.1, 'worst %.3f dB' % worst)
+    check('tyre loops: none held at nil, none cut off, six at most', nil == 0 and cut == 0 and most <= tman['max_sources'], 'nil %d, cut %d, most %d' % (nil, cut, most))
+    # the touchdowns, once each as a wheel's weight comes on: a cross-fade of each wheel's one-shots over the slip and sink rate the flight model
+    # latched then, up to four squeals and two thumps. Each wheel's files are one waveform under different envelopes (PyWopWop's tyre.py), so they
+    # blend by amplitude into one event: the summed waveform is what's heard, and its exposure is tested against the law
+    Dn = [e for e in root if e.tag == 'touchdown']
+    dman = json.load(open(os.path.join(bank + '_touchdown', 'touchdown.json')))
+    byfile = {q['file']: q for q in dman['files']}
+    check('each wheel has its touchdown sounds, their files there', len(Dn) == len(dman['files']) and len(Dn) > 0
+          and all(os.path.exists(os.path.join(S, e.find('path').text)) for e in Dn) and all(e.find('mode').text == 'once' for e in Dn))
+    flat = np.ones(1)
+
+    def landed(n, inside, slip, sink, wow=1.0):
+        slip, sink = np.atleast_1d(np.asarray(slip, float)), np.atleast_1d(np.asarray(sink, float))
+        P = {'sim/current-view/internal': inside * np.ones_like(slip)}
+        for g in range(3):
+            P['/gear/gear[%d]/wow' % g] = wow * np.ones_like(slip)
+            P['/fdm/jsbsim/gear/unit[%d]/touchdown-slip-kt' % g] = slip if g == n else 0 * slip
+            P['/fdm/jsbsim/gear/unit[%d]/touchdown-sink-fps' % g] = sink if g == n else 0 * sink
+        return P
+    dc = lambda e, P: np.broadcast_to(test(list(e.find('condition'))[0], P), next(iter(P.values())).shape)
+    dv = lambda e, P: np.broadcast_to(val(list(e.find('volume').find('expression'))[0], P), next(iter(P.values())).shape)
+    G, K = np.meshgrid(np.linspace(0.0, 130.0, 131), np.r_[0.0, np.geomspace(0.05, 8.0, 50)])
+    start = sum(int(dc(e, landed(g, i, 0.0, 0.0)).any()) for e in Dn for g in range(3) for i in (0.0, 1.0))
+    air = sum(int(dc(e, landed(g, i, G.ravel(), K.ravel(), wow=0.0)).any()) for e in Dn for g in range(3) for i in (0.0, 1.0))
+    check('touchdowns: none on a start with the weight on, none in the air', start == 0 and air == 0, 'start %d, air %d' % (start, air))
+    waves, peak = {}, 0
+
+    def wave(e):
+        fn = e.find('path').text
+        if fn not in waves:
+            fs_, y = wav.read(os.path.join(S, fn))
+            waves[fn] = y.astype(np.float64) / 32768.0
+        return waves[fn]
+
+    def heard_db(x):          # A-weighted exposure of a waveform on the scale, as x57sound.file_level reads a file
+        Y = np.fft.rfft(x)
+        ya = np.fft.irfft(Y * 10 ** (X.a_weight_db(np.maximum(np.fft.rfftfreq(len(x), 1 / 48000.0), 1e-3)) / 20), len(x))
+        return full + 10 * np.log10(np.sum(ya ** 2) / 48000.0 + 1e-30)
+    over, many, worst_node, worst_mid, mono, indep, mid_at = 0, 0, 0.0, 0.0, 0, 1.0, ''
+    for g in range(3):
+        for inside, view in ((1.0, 'cockpit'), (0.0, 'side')):
+            for kind in ('squeal', 'thump'):
+                L = [e for e in Dn if '_g%d_%s_' % (g, kind) in e.find('name').text and e.find('name').text.endswith('_' + view)]
+                if not L:
+                    continue
+                P = landed(g, inside, G.ravel(), K.ravel())
+                C = np.array([dc(e, P) for e in L])
+                V = np.array([dv(e, P) for e in L]) * C
+                over += int((V > 1.0 + 1e-9).sum())
+                many = max(many, int(C.sum(axis=0).max()))
+                # at each node its own file alone, at the manifest's level: the law for a squeal, the limited level for a thump
+                for e in L:
+                    m = byfile[os.path.basename(e.find('path').text)]
+                    Q = landed(g, inside, m.get('slip_kt', 60.0), m['sink_fps'])
+                    on = [q for q in L if dc(q, Q)[0]]
+                    if on != [e]:
+                        over += 1000
+                        continue
+                    want = m['played_dba'] if kind == 'thump' else m['law_dba']
+                    worst_node = max(worst_node, abs(heard_db(wave(e) * dv(e, Q)[0]) - want))
+                # between nodes: the blend, summed as heard, against the law between them (squeals: K + 20 log slip, from the two nodes'
+                # law; thumps: between the two nodes' played levels, rising with the sink rate)
+                ms = [byfile[os.path.basename(e.find('path').text)] for e in L]
+                axis = sorted({q.get('slip_kt') for q in ms if q.get('slip_kt')}) if kind == 'squeal' else [None]
+                sinks = sorted({q['sink_fps'] for q in ms})
+                if kind == 'squeal':
+                    for (u0, u1) in zip(axis, axis[1:]):
+                        for kk in sinks:
+                            for t in (0.25, 0.5, 0.75):
+                                u = u0 * (u1 / u0) ** t
+                                Q = landed(g, inside, u, kk * 1.13)
+                                on = [(q, dv(q, Q)[0]) for q in L if dc(q, Q)[0]]
+                                x = sum(w * wave(q)[:min(len(wave(r)) for r, _ in on)] for q, w in on)
+                                law0 = next(q['law_dba'] for q in ms if q['slip_kt'] == u0 and q['sink_fps'] == kk)
+                                d_ = abs(heard_db(x) - (law0 + 20 * np.log10(u / u0)))
+                                if d_ > worst_mid:
+                                    worst_mid, mid_at = d_, 'gear %d %s, %.1f kt, %.2f fps' % (g, view, u, kk * 1.13)
+                else:
+                    lv = []
+                    for kk in np.geomspace(sinks[0], sinks[-1], 25):
+                        Q = landed(g, inside, 60.0, kk)
+                        on = [(q, dv(q, Q)[0]) for q in L if dc(q, Q)[0]]
+                        lv.append(heard_db(sum(w * wave(q)[:min(len(wave(r)) for r, _ in on)] for q, w in on)))
+                    mono += int((np.diff(lv) < -0.05).sum())
+    # all three wheels down at once, between nodes on both axes: the sources the touchdowns take then
+    for inside in (1.0, 0.0):
+        n = sum(int(dc(e, landed(gg, inside, 47.0, 1.3))[0]) for gg in range(3) for e in Dn if '_g%d_' % gg in e.find('name').text)
+        peak = max(peak, n)
+    # the two mains are independent tyres: their files at one node don't add coherently
+    for e in Dn:
+        nm = e.find('name').text
+        if '_g1_squeal_' in nm and nm.endswith('_cockpit'):
+            twin = next((q for q in Dn if q.find('name').text == nm.replace('_g1_', '_g2_')), None)
+            if twin is not None:
+                a_, b_ = wave(e), wave(twin)
+                k_ = min(len(a_), len(b_))
+                indep = min(indep, 1.0 - abs(np.corrcoef(a_[:k_], b_[:k_])[0, 1]))
+    check('touchdowns: none over full volume, four squeals and two thumps at most a wheel', over == 0 and many <= 4, 'over %d, most %d a kind' % (over, many))
+    check('touchdowns: each node alone plays at PyWopWop\'s level', worst_node < 0.1, 'worst %.3f dB' % worst_node)
+    # within 1 dB, the step the ear just notices: the residual is where neighbouring envelopes don't overlap, worst on long gentle slides
+    check('touchdowns: a squeal blended between nodes keeps the energy law', worst_mid < 1.0, 'worst %.2f dB, %s' % (worst_mid, mid_at))
+    check('touchdowns: a firmer touchdown always thumps harder', mono == 0, '%d steps down' % mono)
+    check('touchdowns: the two mains are two tyres, not one file twice', indep > 0.7, 'correlation %.2f' % (1 - indep))
+    check('touchdowns: all three wheels at once leave room in SimGear\'s 128 sources', peak + LIMIT + 6 <= 120,
+          '%d one-shots, with the loops\' %d at most and the tyres\' 6: %d' % (peak, LIMIT, peak + LIMIT + 6))
 
 if __name__ == '__main__':
     for mod in ('mod3', 'mod4'):

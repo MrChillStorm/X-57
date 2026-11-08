@@ -85,3 +85,9 @@ GEAR = dict(track_in=78.74, wheelbase_in=114.17, main_x_in=172.0, ground_z_in=87
 # Drag of the gear down: from NASA's P2006T flight identification, not published [SIM]. 4 ft2 of drag area is fitted to NASA's
 # predicted phugoid damping (figs. 18, 19): one value serves every speed, and it is a CD of 0.025 on the P2006T's wing
 GEAR_DRAG_AREA_FT2 = 4.0
+# The wheels' spin, for the touchdowns (genx57.controls): each wheel's inertia about its axle and its rolling radius, PyWopWop's for the same tyres
+# (tyre.py wheel_inertia: the P2006T's 6.00-6 mains and 5.00-5 nose, Goodyear's sizes, the tyres' catalogue weights; mktouchdown.py checks they
+# agree), and the torque that spins a free wheel down in the air: an estimate, no measurement found. A main wheel's brake pads ride its disc and
+# its bearings drag, 3 N m, stopping it from 85 kt in some 14 s; one pilot's account has a light aircraft's wheels still within seconds of lift-off.
+# The nose wheel has no brake: bearings and seals, 0.5 N m, some 45 s
+WHEELS = {'6.00-6': dict(inertia_kgm2=0.1952, radius_m=0.207, drag_nm=3.0), '5.00-5': dict(inertia_kgm2=0.0859, radius_m=0.168, drag_nm=0.5)}

@@ -160,9 +160,8 @@ var meter_v = func(k) {           # the energy meter's reading: downstream of th
 };
 
 var update = func {
-    var g = get("/gear/gear[0]/position-norm");        # for the sounds: a lock clicks only on a gear that has moved, and a touchdown is as firm as the sink rate just before it
+    var g = get("/gear/gear[0]/position-norm");        # for the sounds: a lock clicks only on a gear that has moved
     if (g > 0.01 and g < 0.99) setprop(X ~ "gear-moved", 1);
-    if (!getprop("/gear/gear[1]/wow")) setprop(X ~ "touch-sink-fps", get("/velocities/speed-down-fps"));
     var e = get(J ~ "elec/ess-v");
     var ess = e > ALIVE;
     level = ess ? 0.6 * get("/instrumentation/x57/day-nits", 2500) : 0;

@@ -26,7 +26,7 @@ propellers scatter, 1.5 dB at 8,000 ft. The motors' tones aren't aerodynamic, an
 
 Level. The cockpit's and the outside's loops have different gains (manifest gain_db), so the outside's are brought to the
 cockpit's scale by their volume. A full-scale sample at volume 1 is then 112.5 dB re 20 uPa, and every other sound plays at
-the level it makes on that scale: PyWopWop's wind (mkwind.py) and gear in the airflow (mkgear.py), and the airframe's own
+the level it makes on that scale: PyWopWop's wind (mkwind.py), gear in the airflow (mkgear.py), tyres rolling (mktyres.py) and touchdowns (mktouchdown.py), and the airframe's own
 sounds, which LEVELS sets with what each level rests on.
 
 Place. The bank's positions are from the moment reference; SimGear's are from the model's origin, the VRP at station 0.
@@ -147,8 +147,8 @@ def convert(tag, body, group, view, scale):
 # any of them exists on this aircraft, or in PyWopWop's documents, so every level below is an estimate, and LEVELS says from what.
 # A file whose A-weighted rms (a click's: its loudest 125 ms) is L dB re its full scale plays at volume 10^((SPL - FULL - L)/20): the ASK 21's method.
 # Each stays silent, so holds no source, unless it's happening. The gear in the airflow is computed (mkgear.py).
-AIRFRAME = {'gear-p2006t.wav': 'gear.wav', 'flaps-p2006t.wav': 'Rotax912-Flaps.wav', 'rumble-p2006t.wav': 'Rotax912-Rumble.wav',
-            'touch-p2006t.wav': 'Rotax912-Ground_contact.wav', 'switch-rocker.wav': 'Rotax912-Click.wav',
+AIRFRAME = {'gear-p2006t.wav': 'gear.wav', 'flaps-p2006t.wav': 'Rotax912-Flaps.wav',
+            'switch-rocker.wav': 'Rotax912-Click.wav',
             'door-open-p2006t.wav': 'Rotax912-Door_open.wav', 'door-shut-p2006t.wav': 'Rotax912-Door_close.wav'}
 FG_ROOT = os.environ.get('FG_ROOT', os.path.expanduser('~/git/fgdata'))
 LOCK = ('gear-lock.wav', 'Sounds/gear-lck.wav')
@@ -157,28 +157,21 @@ WOW = '<or><property>gear/gear[0]/wow</property><property>gear/gear[1]/wow</prop
 STARTED = '<greater-than><property>sim/time/elapsed-sec</property><value>5</value></greater-than>'
 INTERNAL = '<property>sim/current-view/internal</property>'
 GEAR_POS = 'gear/gear[0]/position-norm'
-GS, SINK = 'velocities/groundspeed-kt', 'sim/model/x57/touch-sink-fps'      # the last sink rate in the air: cockpit.nas holds it through the touchdown
 KMH = 1 / 1.852                                             # kt per km/h
-# The tyres, as on the ASK 21: tyre/road noise at the tyre (CPX, ISO 11819-2: 0.2 m from it) on dense asphalt at 80 km/h is about 98 dB(A), growing as
-# 30 log10 of the speed (Sandberg and Ejsmont, Tyre/Road Noise Reference Book); a 6.00-6, narrower than a car's, about 97 and a 5.00-5 96: three
-# wheels 101.5, at 30 m 58 dB(A). In the cockpit no data: through the walls by the mass law it would be about 60, but the legs are bolted to a bare
-# metal cabin and the rumble comes through the structure. Estimate: a car's tyre noise inside at 80 km/h, about 66, plus 6 for a cabin with no
-# insulation (the ASK 21's shell, with no suspension at all, has plus 10)
-TYRE_REF_KT = 80 * KMH
-# The tyres spinning up, from the ASK 21's estimate for one main wheel at 70 km/h, 75 dB(A) inside and 68 at 30 m: the scrubbing's power goes as the
-# load, 1361 kg to 600, plus 3.6 dB, and two wheels touch, plus 3
-TOUCH_REF_KT, TOUCH_REF_FPS = 70 * KMH, 3.0
+# The tyres rolling are PyWopWop's (its tyre.py; mktyres.py here): each tyre's rolling noise scaled from a measured truck tyre (Hoever 2014) by width,
+# diameter, speed and asphalt texture, outside checked against one towed light aircraft on 5.00-5s, 60.5 dB(A) at 30 m against 60; in the cockpit through
+# the structure, from a recorded landing in the P2006T's cabin, set against the wind bank. They replace the stock rumble, whose 72 dB(A) at 43 kt in the
+# cockpit, from car-tyre data and a guessed cabin, sat well under the wind there: the recording has the roll near the wind's level
+# The touchdowns are PyWopWop's too (mktouchdown.py): each wheel's squeal from the energy its spin-up loses, its share and spectrum from recorded landings,
+# and a thump from its strut's force at its estimate, a firm one through a soft knee where it would pass full scale. Each plays once as the wheel's
+# weight comes on, cross-faded over the slip (the ground speed less the rim's: a wheel still turning after a hop is quiet) and sink rate the flight
+# model latches then (gear/unit[n]/touchdown-slip-kt, -sink-fps). They replace the stock contact sample, set from the ASK 21's estimate
 # The aural alert: ISO 7731's 15 dB over the noise round it, the cockpit's 90 at 100 kt (wind and cruise propellers). The real one reaches a headset
 # through the audio panel [ICD slide 40], whose setting isn't published; this cockpit's sound is what an open ear hears, so that is what it must clear
 ALERT_DBA = 105.0
 ROCKER_DBA, PUSH_DBA = 78.0, 72.0       # the loudest 125 ms of each: short sounds, so they peak well above this
 
 
-def speed_law(prop, ref, n):
-    return '<pow><div><property>%s</property><value>%.6g</value></div><value>%g</value></pow>' % (prop, ref, n)
-
-
-SINK_LAW = '<clip><div><property>%s</property><value>%g</value></div><clipMin>0.5</clipMin><clipMax>2</clipMax></clip>' % (SINK, TOUCH_REF_FPS)
 MAIN = (172.0 * IN, 0.0, 0.7)
 WING = (3.9, 0.0, 2.2)
 # the doors' middles, from the Tecnam's door objects (interior frame x aft, y right, z up, less 4.93 m and 1.96 m to the VRP): the main door on the left
@@ -209,11 +202,6 @@ LEVELS = [
     ('gear', 'gear-locked-up', LOCK[0], MOVED % ('<less-than><property>%s</property><value>0.01</value></less-than>' % GEAR_POS), 82.5, 52.5, None, True, MAIN, 'a leg reaching its up stop: as the down lock, less the stock sound file\'s 2.5 dB'),
     ('flap', 'flaps', 'flaps-p2006t.wav', '<mode>in-transit</mode><property>surface-positions/flap-pos-norm</property>', 65.0, 30.0, None, False, WING,
      'the flap motor: the middle of electric linear actuators\' published 55 to 70 dB(A), about 1 m off in the cabin\'s roof'),
-    ('rumble', 'rumble', 'rumble-p2006t.wav', '<mode>looped</mode><condition><and>%s<greater-than><property>%s</property><value>2</value></greater-than>'
-     '</and></condition>' % (WOW, GS), 72.0, 58.0, speed_law(GS, TYRE_REF_KT, 1.5), False, MAIN, 'three tyres rolling at 80 km/h (see the tyres)'),
-    ('squeal', 'touch', 'touch-p2006t.wav', '<condition>%s</condition>' % WOW, 82.0, 75.0,
-     '<product>%s%s</product>' % (speed_law(GS, TOUCH_REF_KT, 1.5), SINK_LAW), True, MAIN,
-     'two tyres spinning up at 70 km/h, 3 ft/s down (see the tyres); the sink rate as the amplitude, from half to twice'),
     ('click', 'rocker-a', 'switch-rocker.wav', TOGGLED % ('rocker', 1), ROCKER_DBA, None, None, True, None,
      'a toggle or rocker switch flipped, about 0.6 m from the ear: estimate'),
     ('click', 'rocker-b', 'switch-rocker.wav', TOGGLED % ('rocker', 0), ROCKER_DBA, None, None, True, None,
@@ -333,6 +321,53 @@ def gear_air(bank, scale):
     return ''.join(out), [(os.path.join(d, e['file']), e['file']) for e in man['files']]
 
 
+def tyres(bank, scale):
+    """PyWopWop's tyres rolling: each wheel's loops by equal power over its own roll speed, gated on its weight and to the speeds each is heard at, fading
+    as it lifts (the bank's own conditions and volumes). Here the outside's go to the cockpit's scale and each place from the model's origin"""
+    d = bank + '_tyres'
+    if not os.path.exists(os.path.join(d, 'pywopwop-tyres.xml')):
+        print('no tyres at %s: python3 mktyres.py' % d)
+        return '', []
+    man = json.load(open(os.path.join(d, 'manifest.json')))
+    mrs = GEO['reference']['mrs_in']
+    out = []
+    for e in re.findall(r'\t\t<tyre>.*?</tyre>\n', open(os.path.join(d, 'pywopwop-tyres.xml')).read(), re.S):
+        if re.search(r'<name>[^<]*-side</name>', e):
+            e, n = re.subn(r'<volume><expression>(.*?)</expression></volume>',
+                           lambda m: '<volume><expression><product><value>%.6g</value>%s</product></expression></volume>' % (scale['side'], m.group(1)), e, flags=re.S)
+            assert n == 1, e
+        e, n = re.subn(r'<position>\s*<x>([^<]+)</x>\s*<y>([^<]+)</y>\s*<z>([^<]+)</z>\s*</position>',
+                       lambda m: '<position>\n\t\t\t\t<x>%.3f</x>\n\t\t\t\t<y>%.3f</y>\n\t\t\t\t<z>%.3f</z>\n\t\t\t</position>'
+                       % (float(m.group(1)) + mrs[0] * IN, float(m.group(2)), float(m.group(3)) + mrs[2] * IN), e)
+        assert n == 1, e
+        out.append(e)
+    return ''.join(out), [(os.path.join(d, x['file']), x['file']) for x in man['files']]
+
+
+def touchdown(bank, scale):
+    """PyWopWop's touchdowns: each wheel's squeal and thump, once as its weight comes on, cross-faded over the slip and sink rate the flight model
+    latched then (the bank's own conditions and volumes: up to four squeals and two thumps, one waveform under different envelopes). Here the
+    outside's go to the cockpit's scale and each place from the model's origin"""
+    d = bank + '_touchdown'
+    if not os.path.exists(os.path.join(d, 'pywopwop-touchdown.xml')):
+        print('no touchdowns at %s: python3 mktouchdown.py' % d)
+        return '', []
+    man = json.load(open(os.path.join(d, 'touchdown.json')))
+    mrs = GEO['reference']['mrs_in']
+    out = []
+    for e in re.findall(r'\t\t<touchdown>.*?</touchdown>\n', open(os.path.join(d, 'pywopwop-touchdown.xml')).read(), re.S):
+        if re.search(r'<name>[^<]*_side</name>', e):
+            e, n = re.subn(r'<volume><expression>(.*?)</expression></volume>',
+                           lambda m: '<volume><expression><product><value>%.6g</value>%s</product></expression></volume>' % (scale['side'], m.group(1)), e, flags=re.S)
+            assert n == 1, e
+        e, n = re.subn(r'<position>\s*<x>([^<]+)</x>\s*<y>([^<]+)</y>\s*<z>([^<]+)</z>\s*</position>',
+                       lambda m: '<position>\n\t\t\t\t<x>%.3f</x>\n\t\t\t\t<y>%.3f</y>\n\t\t\t\t<z>%.3f</z>\n\t\t\t</position>'
+                       % (float(m.group(1)) + mrs[0] * IN, float(m.group(2)), float(m.group(3)) + mrs[2] * IN), e)
+        assert n == 1, e
+        out.append(e)
+    return ''.join(out), [(os.path.join(d, x['file']), x['file']) for x in man['files']]
+
+
 def main():
     bank = os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else '~/git/PyWopWop/out/x57')
     if not os.path.exists(os.path.join(bank, 'manifest.json')):
@@ -346,8 +381,13 @@ def main():
     used = set()
     wind_xml, wind_files = wind(bank)
     gear_xml, gear_files = gear_air(bank, scale)
+    tyre_xml, tyre_files = tyres(bank, scale)
+    touch_xml, touch_files = touchdown(bank, scale)
     full = full_scale_db(g['cockpit'])
     stock = os.path.join(HERE, '..', 'refs', 'fgaddon-p2006t', 'Tecnam-P2006T', 'Sounds')
+    for old in ('rumble-p2006t.wav', 'touch-p2006t.wav'):                  # the stock rumble and contact, which PyWopWop's tyres replaced
+        if os.path.exists(os.path.join(OUT, old)):
+            os.remove(os.path.join(OUT, old))
     for dst, src in AIRFRAME.items():
         shutil.copy(os.path.join(stock, src), os.path.join(OUT, dst))
     shutil.copy(os.path.join(FG_ROOT, LOCK[1]), os.path.join(OUT, LOCK[0]))
@@ -361,9 +401,13 @@ def main():
                 used.add(re.search(r'<path>Sounds/pywopwop/([^<]+)</path>', body).group(1))
         with open(os.path.join(OUT, 'x57-%s-sound.xml' % mod), 'w') as f:
             f.write('<?xml version="1.0"?>\n<!-- generated by fdm/x57sound.py from PyWopWop\'s bank -->\n<PropertyList>\n\t<fx>\n'
-                    + ''.join(out) + extra + wind_xml + gear_xml + '\t</fx>\n</PropertyList>\n')
+                    + ''.join(out) + extra + wind_xml + gear_xml + tyre_xml + touch_xml + '\t</fx>\n</PropertyList>\n')
         print('%s: %d loops' % (mod, len(out)))
-    for src, name in wind_files + gear_files:
+    fresh = {name for _, name in wind_files + gear_files + tyre_files + touch_files}
+    for name in os.listdir(os.path.join(OUT, 'pywopwop')):          # a bank's files it no longer makes (renamed or dropped) leave the package
+        if name.startswith(('touchdown_', 'tyre_')) and name not in fresh:
+            os.remove(os.path.join(OUT, 'pywopwop', name))
+    for src, name in wind_files + gear_files + tyre_files + touch_files:
         shutil.copy(src, os.path.join(OUT, 'pywopwop', name))
     for name in sorted(used):
         src, dst = os.path.join(bank, name), os.path.join(OUT, 'pywopwop', name)

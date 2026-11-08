@@ -46,6 +46,29 @@ def hl_stations():
     return [(q[0], -q[1], q[2]) for q in reversed(hubs)] + [tuple(q) for q in hubs]
 
 
+def disc_air(x, y, z):
+    """the air at a disc (structural inches: x aft, y right, z up) in body axes, ft/s, with the airplane's roll, pitch and yaw about its centre of
+    gravity: a yaw rate speeds one wingtip's disc and slows the other's, a roll rate tilts the flow through each. With the rates nil, the CG's air"""
+    dx = D(p('prop/cg-x-ft'), v(x / 12.0))              # ahead of the CG
+    dy = D(v(y / 12.0), p('prop/cg-y-ft'))              # right of it
+    dz = D(p('prop/cg-z-ft'), v(z / 12.0))              # below it
+    P_, Q_, R_ = p('velocities/p-aero-rad_sec'), p('velocities/q-aero-rad_sec'), p('velocities/r-aero-rad_sec')
+    u = S(p('velocities/u-aero-fps'), M(Q_, dz), M(v(-1), R_, dy))
+    vv = S(p('velocities/v-aero-fps'), M(R_, dx), M(v(-1), P_, dz))
+    w = S(p('velocities/w-aero-fps'), M(P_, dy), M(v(-1), Q_, dx))
+    return u, vv, w, (dx, dy, dz)
+
+
+def turning(x, y, z):
+    """what the airplane's turning adds to a disc's incidence and sideslip, rad: (p dy - q dx)/V, (r dx - p dz)/V"""
+    dx = D(p('prop/cg-x-ft'), v(x / 12.0))
+    dy = D(v(y / 12.0), p('prop/cg-y-ft'))
+    dz = D(p('prop/cg-z-ft'), v(z / 12.0))
+    P_, Q_, R_ = p('velocities/p-aero-rad_sec'), p('velocities/q-aero-rad_sec'), p('velocities/r-aero-rad_sec')
+    V = p('prop/V-fps')
+    return Q(D(M(P_, dy), M(Q_, dx)), V), Q(D(M(R_, dx), M(P_, dz)), V)
+
+
 def spin_hl(i):
     """each wing's six the same way as its cruise propeller, inboard blades rising, the wings mirrored: so NASA's geometry (X-57.vsp3 and .glb), and the
     Mod IV CFD's skin friction [TM-20230010662 fig. 63], the same in every bay of a wing and mirrored on the other, and the corotating case of Deere et al.
@@ -66,7 +89,8 @@ def cruise(f, s, e):
     M_ = X.CRUISE_MOTOR
     rho = p('atmosphere/rho-slugs_ft3')
     hold = p('ctl/hold-now')
-    u = f.fn('prop/%s/u-fps' % s, MAX(v(0), p('velocities/u-aero-fps')))
+    hub = GEO['cruise']['hub_in']
+    u = f.fn('prop/%s/u-fps' % s, MAX(v(0), disc_air(hub[0], (-1 if s == 'l' else 1) * hub[1], hub[2])[0]), desc='through the disc, with the airplane\'s turning')
     lever = f.fn('prop/%s/lever' % s, S(p('/controls/engines/engine[%d]/throttle' % e), p('ctl/lever-extra-%s' % s)), desc='FlightGear\'s lever stops at 1 and 0: overdrive and regeneration come by a switch and the last tenth of its travel')
     armed = GT(S(p('elec/cmc-%sa' % s), p('elec/cmc-%sb' % s)), v(0.5))
     live = f.fn('prop/%s/hub-live' % s, MAX(GT(ABS(lever), v(0.003)), GT(p('velocities/vc-kts'), v(25)), M(p('ctl/cockpit'), armed)), desc='parked with the lever closed; turning at idle in flight. In the cockpit an armed controller turns the motor at idle')
@@ -148,10 +172,11 @@ def high_lift(f):
                                                                  IFTHEN(LT(mode, v(2.5)), sched, p('ctl/hl-rpm-test')))),
          desc='mode 0 disarmed, 1 fixed, 2 airspeed, 3 the harness\'s rpm')
     cmd = p('prop/hl/rpm-cmd')
-    u = f.fn('prop/hl/u-fps', MAX(v(0), p('velocities/u-aero-fps')))
+    u0 = f.fn('prop/hl/u-fps', MAX(v(0), p('velocities/u-aero-fps')))
     lim = R['hl_torque_limit_nm']
-    for i in range(1, 13):
+    for i, q in enumerate(hl_stations(), 1):
         k = 'prop/hl/d%d/' % i
+        u = f.fn(k + 'u-fps', MAX(v(0), disc_air(*q)[0]), desc='through this disc, with the airplane\'s turning')
         on = f.fn(k + 'power', M(p('elec/contactor-%s%s' % (PALLET[i], SIDE_OF[i])), p('ctl/hl-motor-%d' % i), p('bat/%s/avail' % PALLET[i])))
         st = k + 'rpm-state'
         rpm = f.fn(k + 'rpm', IFTHEN(GT(hold, v(0.5)), M(cmd, on), p(st)))
@@ -274,6 +299,9 @@ def build(hl):
     PW.channel(f, hl)
     f.channel('state')
     f.fn('ctl/hold-now', MAX(p('ctl/hold-props'), M(LT(p('simulation/sim-time-sec'), v(2)), GT(p('position/h-agl-ft'), v(50)))))
+    for a in 'xyz':           # the discs' air turns with the airplane about its centre of gravity
+        f.fn('prop/cg-%s-ft' % a, M(p('inertia/cg-%s-in' % a), v(1 / 12.0)))
+    f.fn('prop/V-fps', MAX(p('velocities/vt-fps'), v(30.0)), desc='for the turning\'s angles at the discs, floored as the wing\'s')
     if hl:      # stopped and disarmed, everything the high-lift channels make is nil: they rest, holding it. Each property read takes a lock in FlightGear
         f.fn('prop/hl/live', MAX(GT(p('ctl/hl-mode'), v(0.5)), GT(p('prop/hl/rpm'), v(0)), GT(p('bu/test/hl-thrust'), v(-900))),
              desc='armed, still turning, or the harness\'s thrust going through the discs')
@@ -313,7 +341,8 @@ def forces(hl, mrs, flex=False):
         dx, dy, dz = (mrs[0] - hub[0]) / 12.0, spin * hub[1] / 12.0, -(hub[2] - mrs[2]) / 12.0
         T = p('prop/%s/thrust-lbs' % s)
         N = p('prop/%s/inplane-lbs' % s)
-        fy, fz = M(v(-1), N, be), M(v(-1), N, al)
+        ta, tb = turning(hub[0], spin * hub[1], hub[2])
+        fy, fz = M(v(-1), N, S(be, tb)), M(v(-1), N, S(al, ta))
         X_.append(T)
         Y_.append(fy)
         Z_.append(fz)
@@ -334,11 +363,16 @@ def forces(hl, mrs, flex=False):
             L_.append(M(v(-spin_hl(i)), p('prop/hl/d%d/q-air-ftlb' % i)))
         dx = (mrs[0] - float(np.mean([q[0] for q in st]))) / 12.0
         N = p('prop/hl/inplane-lbs')
-        fy, fz = M(v(-1), N, be), M(v(-1), N, al)
+        mid = [float(np.mean([q[k] for q in st])) for k in range(3)]
+        ta, tb = turning(mid[0], 0.0, mid[2])         # the twelve together; their spread in span gives the roll's damping below
+        fy, fz = M(v(-1), N, S(be, tb)), M(v(-1), N, S(al, ta))
         Y_.append(fy)
         Z_.append(fz)
         M_.append(M(v(-dx), fz))
         N_.append(M(v(dx), fy))
+        # a roll rate tilts each disc's flow by p y / V, so each one's in-plane force: about the mean, sum y^2 over the twelve
+        y2 = sum((q[1] / 12.0) ** 2 for q in st) / 12.0
+        L_.append(M(v(-y2), N, Q(p('velocities/p-aero-rad_sec'), p('prop/V-fps'))))
     return X_, Y_, Z_, L_, M_, N_
 
 

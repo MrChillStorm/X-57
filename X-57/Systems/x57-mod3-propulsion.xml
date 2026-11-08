@@ -122,9 +122,13 @@
 </channel>
 <channel name="state">
 <fcs_function name="ctl/hold-now"><function><max><property>ctl/hold-props</property><product><lt><property>simulation/sim-time-sec</property><value>2</value></lt><gt><property>position/h-agl-ft</property><value>50</value></gt></product></max></function></fcs_function>
+<fcs_function name="prop/cg-x-ft"><function><product><property>inertia/cg-x-in</property><value>0.083333333</value></product></function></fcs_function>
+<fcs_function name="prop/cg-y-ft"><function><product><property>inertia/cg-y-in</property><value>0.083333333</value></product></function></fcs_function>
+<fcs_function name="prop/cg-z-ft"><function><product><property>inertia/cg-z-in</property><value>0.083333333</value></product></function></fcs_function>
+<fcs_function name="prop/V-fps"><description>for the turning's angles at the discs, floored as the wing's</description><function><max><property>velocities/vt-fps</property><value>30</value></max></function></fcs_function>
 </channel>
 <channel name="cruise l">
-<fcs_function name="prop/l/u-fps"><function><max><value>0</value><property>velocities/u-aero-fps</property></max></function></fcs_function>
+<fcs_function name="prop/l/u-fps"><description>through the disc, with the airplane's turning</description><function><max><value>0</value><sum><property>velocities/u-aero-fps</property><product><property>velocities/q-aero-rad_sec</property><difference><property>prop/cg-z-ft</property><value>7.3040833</value></difference></product><product><value>-1</value><property>velocities/r-aero-rad_sec</property><difference><value>-15.81175</value><property>prop/cg-y-ft</property></difference></product></sum></max></function></fcs_function>
 <fcs_function name="prop/l/lever"><description>FlightGear's lever stops at 1 and 0: overdrive and regeneration come by a switch and the last tenth of its travel</description><function><sum><property>/controls/engines/engine[0]/throttle</property><property>ctl/lever-extra-l</property></sum></function></fcs_function>
 <fcs_function name="prop/l/hub-live"><description>parked with the lever closed; turning at idle in flight. In the cockpit an armed controller turns the motor at idle</description><function><max><gt><abs><property>prop/l/lever</property></abs><value>0.003</value></gt><gt><property>velocities/vc-kts</property><value>25</value></gt><product><property>ctl/cockpit</property><gt><sum><property>elec/cmc-la</property><property>elec/cmc-lb</property></sum><value>0.5</value></gt></product></max></function></fcs_function>
 <fcs_function name="prop/l/run"><function><product><property>prop/l/hub-live</property><property>ctl/motor-on-l</property></product></function></fcs_function>
@@ -433,7 +437,7 @@
 <fcs_function name="prop/l/power-kw"><function><product><property>prop/l/torque-nm</property><value>0.0010000027</value><property>prop/l/rpm</property><value>0.10471976</value></product></function></fcs_function>
 </channel>
 <channel name="cruise r">
-<fcs_function name="prop/r/u-fps"><function><max><value>0</value><property>velocities/u-aero-fps</property></max></function></fcs_function>
+<fcs_function name="prop/r/u-fps"><description>through the disc, with the airplane's turning</description><function><max><value>0</value><sum><property>velocities/u-aero-fps</property><product><property>velocities/q-aero-rad_sec</property><difference><property>prop/cg-z-ft</property><value>7.3040833</value></difference></product><product><value>-1</value><property>velocities/r-aero-rad_sec</property><difference><value>15.81175</value><property>prop/cg-y-ft</property></difference></product></sum></max></function></fcs_function>
 <fcs_function name="prop/r/lever"><description>FlightGear's lever stops at 1 and 0: overdrive and regeneration come by a switch and the last tenth of its travel</description><function><sum><property>/controls/engines/engine[1]/throttle</property><property>ctl/lever-extra-r</property></sum></function></fcs_function>
 <fcs_function name="prop/r/hub-live"><description>parked with the lever closed; turning at idle in flight. In the cockpit an armed controller turns the motor at idle</description><function><max><gt><abs><property>prop/r/lever</property></abs><value>0.003</value></gt><gt><property>velocities/vc-kts</property><value>25</value></gt><product><property>ctl/cockpit</property><gt><sum><property>elec/cmc-ra</property><property>elec/cmc-rb</property></sum><value>0.5</value></gt></product></max></function></fcs_function>
 <fcs_function name="prop/r/run"><function><product><property>prop/r/hub-live</property><property>ctl/motor-on-r</property></product></function></fcs_function>

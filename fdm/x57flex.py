@@ -3,6 +3,10 @@
 The beam:
   - mass: the clean wing 313.5 lb with its H-frame, 134 lb at each tip [20240011864 table 1: plates 19.5 and mass simulators 114.5 lb make the 134 lb nacelle].
     The H-frame's own 30 lb is a guess. The rest goes with the square of the chord. Mod IV adds 12 motors of about 16 lb [20240007439];
+  - the tip's rotary inertia, about the axis bending turns it on (fore and aft): the 134 lb as a solid cylinder filling the nacelle's widest section, 13.8 in
+    [X-57.vsp3, CruiseNacelle-Motor], m d^2 / 8, 0.93 kg m2. An estimate, the low end: the test's mass simulators are boxes of about the nacelle's size [20240011864
+    fig. 4a], which a box's m (w^2 + h^2) / 12 puts at 1.24. Second bending turns the tip most, so it is what this moves: without it 18.5 and 17.1 Hz against 15.76
+    and 14.82, the first modes barely;
   - stiffness: EI falls with the square of the distance from the tip, down to a small floor there, E0 ((1 - s) + r)^2 / (1 + r)^2 with s the panel's span fraction. E0 and r are
     fitted to the vibration test's symmetric first bending with and without the tip masses, 2.26 and 6.55 Hz. The ASK 21's spar and shell sum can't reach both: 2.33 and 6.39 at best;
   - the root: in symmetric bending the wing's own carry-through takes the moment. In antisymmetric bending it goes through the H-frame, so the root gives in roll:
@@ -31,6 +35,7 @@ SLUG = 14.5939
 Y0 = 24.0 * IN                      # the H-frame's outer points, read off the paper's fig. 5: about the fuselage's half width
 TIP = GEO['cruise']['hub_in'][1] * IN
 WING_LB, HFRAME_LB, TIP_LB, HL_LB = 313.5, 30.0, 134.0, 16.0
+NACELLE_D = 13.8 * IN               # the cruise nacelle's widest section [X-57.vsp3]
 ZETA = 0.0057
 TEST = dict(tip=dict(s1=2.26, a1=2.14, s2=15.76, a2=14.82), clean=dict(s1=6.55, a1=5.76, s2=26.36, a2=23.90), free=dict(mod3=2.31, mod4=2.29))
 IC_FRAMES = 12                      # frames of static deflection after an initial condition
@@ -64,6 +69,7 @@ def beam(A, B, tip_kg=0.0, discs=(), N=NODES):
         K[2 * e:2 * e + 4, 2 * e:2 * e + 4] += k
         Mm[2 * e:2 * e + 4, 2 * e:2 * e + 4] += m
     Mm[-2, -2] += tip_kg
+    Mm[-1, -1] += tip_kg * NACELLE_D ** 2 / 8      # its rotary inertia, a solid cylinder about its own axis
     for y, kg in discs:                      # on the nearest node: they're small and many nodes are near
         Mm[2 * int(np.argmin(np.abs(ye - y))), 2 * int(np.argmin(np.abs(ye - y)))] += kg
     return K, Mm, ye

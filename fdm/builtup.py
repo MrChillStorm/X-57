@@ -4,7 +4,8 @@
 
 Every part's forces come from the air at that part: translation, rotation about the centre of gravity, and what the other parts do to it.
   Wing:      strips in a lifting line solved ahead of time, on their own section tables, each with its own speed. So a strip in a slipstream, or behind a stopped disc, has its own lift.
-  Discs:     thrust, torque and in-plane force, a slipstream by momentum theory with a contraction, and its swirl.
+  Discs:     thrust, torque and in-plane force, a slipstream by momentum theory with a contraction, and its swirl. A jet drifts sideways with the crossflow,
+             the less the stronger it is, so in a sideslip it leaves some strips and covers others; the tail's drift with the wing's wake as well.
   Bodies:    Munk's force and crossflow drag by stations, with the wing's upwash and downwash on them. The fuselage's crossflow also reaches the wing: a high wing gets its dihedral effect that way.
   Tail:      strips in the wing's downwash, by the wing's trailing vortices with the wake's height, and its wake's loss of dynamic pressure.
   Fin:       strips in the fuselage's sidewash, with the wing's effect by Datcom.
@@ -183,7 +184,7 @@ class Aero:
                 a = s.fn('bu/disc/%s/a-fps' % d['name'], M(v(0.5), D(SQ(S(SQR(uh), Q(M(v(2 / A), MAX(T, v(0))), s.RHO))), uh)), 'axial speed added at the disc')
                 nm = 'bu/disc/' + d['name']
                 s.fn(nm + '/vt-fps', Q(MAX(q, v(0)), M(s.RHO, S(uh, a), v(A * 0.7 * Dm / 2))), 'swirl at 0.7 R')
-                s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, a=a, ad=s.jet(nm, a, uh), R=Dm / 2))
+                s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, a=a, ad=s.jet(nm, a, uh), R=Dm / 2, **s.drift(nm, vv, uh, a)))
                 if s.c.get('jet_turn') and d.get('test'):
                     # the flap turns the jet: the thrust's axial part lost, which the airframe feels as drag
                     th = M(v(math.radians(s.c['jet_turn'])), p('ctl/flap-deg'))
@@ -207,9 +208,20 @@ class Aero:
             s.fn(nm + '/vt-fps', Q(q, M(s.RHO, S(uh, a), v(A * 0.7 * Dm / 2))), 'swirl at 0.7 R')
             Cn = T2(nm + '/J', nm + '/Cp', t['J'], t['Cp'], t['Cn'])
             N = s.fn(nm + '/normal-lbs-rad', M(Cn, k4, p(nm + '/run')))
-            s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, T=T, N=N, q=q, a=a, ad=s.jet(nm, a, uh), R=Dm / 2))
+            s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, T=T, N=N, q=q, a=a, ad=s.jet(nm, a, uh), R=Dm / 2, **s.drift(nm, vv, uh, a)))
         if gated:
             s.g.fcs.channel('built-up aerodynamics')
+
+    DRIFT = [round(-0.6 + 0.05 * i, 2) for i in range(25)]      # the jet's sideways run per ft behind its disc, the tables' points
+
+    def drift(s, nm, vv, uh, a):
+        """How far a jet runs sideways for each foot it goes back. The air crosses the airplane at -v, the body's side speed: the jet keeps that crossflow
+        and goes back at its own speed, u plus the speed the disc adds, from a at the disc to 2a far behind. So a strong jet, at low speed, drifts less
+        than the free stream; a weak one, at speed, nearly with it. Halfway to the far value for the wing behind the disc, the far value at the tail"""
+        side = M(v(-1), vv)
+        s.fn(nm + '/drift', Q(side, S(uh, M(v(1.5), a))), 'the jet\'s sideways run per ft behind the disc, over the wing')
+        s.fn(nm + '/drift-far', Q(side, S(uh, M(v(2.0), a))), 'and far behind, at the tail')
+        return dict(drift=nm + '/drift', drift_far=nm + '/drift-far')          # property names, as the tables take them
 
     def jet(s, nm, a, u):
         """the axial speed a wing feels: a jet no taller than the chord does less than strip theory says, and less the stronger it is"""
@@ -225,30 +237,49 @@ class Aero:
             s.add(d['name'], d['x'], d['y'], d['z'], Fx=d['T'], Fy=M(v(-1), d['N'], ay), Fz=M(v(-1), d['N'], az), Mx=M(v(-d['spin']), d['q']))
 
     def wash_of(s, r):
+        """what the discs do to a strip: for each disc that reaches it, its share of the slipstream's speed and of its swirl, each as a value at no drift
+        and a table over the jet's drift (nil at none, so a straight flight is as before). None if no jet can reach it"""
         def sw_of(dy, Rs, d):
             core = 0.35 * Rs
             return float(np.mean(np.where((np.abs(dy) < Rs) & (np.abs(dy) > core), -np.sign(dy), 0.0))) * d['spin']
-        """what the discs do to a strip: for each, the part of it in the slipstream, the speed there and the swirl. None if none reaches it"""
         out = []
+        if r['kind'] != 'wing':
+            return out
+        y = np.linspace(r['ya'], r['yb'], 41) * F
         for d in s.D:
             Rs = d['R'] * s.c['contraction']
-            y = np.linspace(r['ya'], r['yb'], 41) * F
             dy = y - d['y']
-            inside = float(np.mean(np.abs(dy) < Rs))
-            if inside <= 0 or r['kind'] != 'wing':
-                continue
             x = r['x4'] * F - d['x']
-            ku = 1 + x / math.hypot(x, d['R'])
-            if s.c.get('ring_wake'):        # a tube of ring vortices, as the V-22's wake, over the strip's span
-                import ringwake
-                zz = r['zm'] * F - d['z']
-                out.append((d, ringwake.mean_axial(x, dy, zz, d['R'], s.c['contraction']), sw_of(dy, Rs, d)))
+            reach = Rs + max(abs(s.DRIFT[0]), abs(s.DRIFT[-1])) * max(x, 0.0)
+            if not np.any(np.abs(dy) < reach):
                 continue
-            core = 0.35 * Rs
-            sw = float(np.mean(np.where((np.abs(dy) < Rs) & (np.abs(dy) > core), -np.sign(dy), 0.0)))
-            # a jet over an unflapped outer strip lifts less than the strip's own speed says [fitted to the contactor failure's rolling moment]
-            out.append((d, inside * ku * (1.0 if r['flap'] or d.get('tip') else s.c.get('jet_out', 1.0)), sw * d['spin']))
+            ku = 1 + x / math.hypot(x, d['R'])
+            zz = r['zm'] * F - d['z']
+            out_k = 1.0 if r['flap'] or d.get('tip') else s.c.get('jet_out', 1.0)
+
+            def share(shift):
+                if not np.any(np.abs(dy - shift) < Rs):     # a strip feels a jet while the jet covers some of it
+                    return 0.0
+                if s.c.get('ring_wake'):        # a tube of ring vortices, as the V-22's wake, over the strip's span
+                    import ringwake
+                    return ringwake.mean_axial(x, dy - shift, zz, d['R'], s.c['contraction'])
+                # a jet over an unflapped outer strip lifts less than the strip's own speed says [fitted to the contactor failure's rolling moment]
+                return float(np.mean(np.abs(dy - shift) < Rs)) * ku * out_k
+            shifts = [g * x for g in s.DRIFT] if x > 0 else [0.0] * len(s.DRIFT)
+            a = [share(h) for h in shifts]
+            sw = [sw_of(dy - h, Rs, d) for h in shifts]
+            a0, sw0 = a[s.DRIFT.index(0.0)], sw[s.DRIFT.index(0.0)]
+            if max(abs(q) for q in a) <= 0:
+                continue
+            out.append(dict(d=d, a0=a0, a=[q - a0 for q in a], sw0=sw0, sw=[q - sw0 for q in sw]))
         return out
+
+    def wash_term(s, nm, w, key):
+        """a strip's share of one jet, k = 'a' for its speed or 'sw' for its swirl: the share at no drift and what the drift adds"""
+        moves = any(abs(q) > 1e-9 for q in w[key])
+        if not moves:
+            return v(w[key + '0']) if w[key + '0'] else None
+        return s.fn('%s/%s-%s' % (nm, key, w['d']['name']), S(v(w[key + '0']), T1(w['d']['drift'], s.DRIFT, w[key])))
 
     # the wing
     def wing(s):
@@ -272,7 +303,11 @@ class Aero:
             th = math.atan2(zz, yy)
             c2, s2 = math.cos(2 * th), math.sin(2 * th)
             kv = ny + nz * kk * s2 - ny * kk * c2
-            kw = nz + nz * kk * c2 + ny * kk * s2
+            # Inside the body the doublet doesn't hold. A strip there stands for the body's carry-through: the wing's pressure field acts on the roof and the
+            # belly, and the lift goes on across about as the wing's own would (wing-body theory). Cut short, the line would shed vortices at the roots,
+            # which a wing-body doesn't. So it takes the free stream's incidence, as a wing; the sidewash, the high wing's dihedral, stays
+            inside = r['kind'] == 'wing' and yy * yy + zz * zz < fz['a'] ** 2
+            kw = nz if inside else nz + nz * kk * c2 + ny * kk * s2
             u, vv, w = s.vel(x34, y, z)
             # the wing's bending: the strip rises with the mode, which takes flow from under it, and leans with the mode's slope
             fp = fsl = 0.0
@@ -284,12 +319,15 @@ class Aero:
                 w = D(w, M(v(fp), p('flex/qd%s-fps' % sd)))
             wash = s.wash_of(r)
             u, vv = s.fn(nm + '/uf', u), s.fn(nm + '/vf', vv)       # each is used more than once, and each read takes a lock in FlightGear
-            U = s.fn(nm + '/u', S(u, *[M(v(a), d['ad']) for d, a, _ in wash]))
+            jets = [(w['d'], s.wash_term(nm, w, 'a')) for w in wash]
+            jets = [(d, k) for d, k in jets if k]
+            U = s.fn(nm + '/u', S(u, *[M(k, d['ad']) for d, k in jets]))
             # the jet straightens the flow through it less than adding its speed along the shaft would: part of the angle stays
             keep = c.get('jet_keep', 0.0)
-            kj = s.fn(nm + '/kj', S(v(1), M(v(keep), Q(S(*[M(v(a), d['ad']) for d, a, _ in wash]), MAX(u, v(10)))))) if wash and keep else None
+            kj = s.fn(nm + '/kj', S(v(1), M(v(keep), Q(S(*[M(k, d['ad']) for d, k in jets]), MAX(u, v(10)))))) if jets and keep else None
             wj = M(w, kj) if kj else w
-            Wn = s.fn(nm + '/wn', S(M(v(kv), vv), M(v(kw), wj), *([M(lean, vv)] if lean else []), *[M(v(sw), p(d['nm'] + '/vt-fps')) for d, _, sw in wash if sw]), 'flow up through the strip')
+            swirl = [(w['d'], s.wash_term(nm, w, 'sw')) for w in wash]
+            Wn = s.fn(nm + '/wn', S(M(v(kv), vv), M(v(kw), wj), *([M(lean, vv)] if lean else []), *[M(k, p(d['nm'] + '/vt-fps')) for d, k in swirl if k]), 'flow up through the strip')
             V2 = s.fn(nm + '/V2', S(SQR(U), SQR(Wn), v(1e-4)))
             Vl = s.fn(nm + '/V', SQ(V2))
             phi = ATAN2(Wn, U)
@@ -418,7 +456,9 @@ class Aero:
                     b = d['R'] + 0.1 * (x4 - d['x'])
                     if abs(yy) > 2 * b:
                         continue
-                    jet.append(M(v(s.c['k_tail_jet'] * 2 * d['R'] / b * math.exp(-yy * yy / b ** 2)), d['a'], tag('exp', M(v(-1 / b ** 2), SQR(S(v(zz), M(v(d['x'] - x4), tanw)))))))
+                    # down with the wing's wake, and sideways as the crossflow carries the far jet
+                    lat = SQR(D(v(yy), M(v(x4 - d['x']), p(d['drift_far']))))
+                    jet.append(M(v(s.c['k_tail_jet'] * 2 * d['R'] / b), d['a'], tag('exp', M(v(-1 / b ** 2), S(SQR(S(v(zz), M(v(d['x'] - x4), tanw))), lat)))))
                 eta = s.fn(nm + '/eta', MAX(D(v(1.0), loss), v(0.15)), 'the wake\'s dynamic pressure')
                 u, vv, w = s.vel(x34, y, z)
                 U = s.fn(nm + '/u', S(u, *jet))
@@ -572,9 +612,15 @@ class Aero:
         b = s.c.get('beta_fit')
         if b:
             cf = s.c['coef']
-            # fitted power off: blown, the sections don't stall where this comes from
-            kb = M(p('aero/qbar-psf'), v(cf['S'] * cf['b']), *([D(v(1), p('prop/hl/on'))] if s.c.get('hl_fit') else []))
+            kb = M(p('aero/qbar-psf'), v(cf['S'] * cf['b']))
             tb = lambda n: T3('aero/beta-deg', 'aero/alpha-deg', 'ctl/flap-deg', b['beta'], b['alpha'], b['flaps'], b[n])
+            if s.c.get('hl_fit'):
+                # Fitted power off. Blown, the sections don't stall, so the part of it that comes near stall goes. What it holds at the lowest
+                # incidence, 2 deg, far from any stall, stays: there it is the high sideslip's own yaw, which the CFD with the propellers on shows as well
+                on = p('prop/hl/on')
+                low = lambda n: T2('aero/beta-deg', 'ctl/flap-deg', b['beta'], b['flaps'], [[b[n][k][i][0] for k in range(len(b['flaps']))] for i in range(len(b['beta']))])
+                tb_ = tb
+                tb = lambda n: S(M(D(v(1), on), tb_(n)), M(on, low(n)))
             s.add('fit-beta', 0.0, 0.0, 0.0, Mx=s.fn('bu/fit/beta-L', M(kb, tb('Cl'))), Mz=s.fn('bu/fit/beta-N', M(kb, tb('Cn'))))
         u = s.c.get('rud_fit')
         if u:
@@ -592,6 +638,14 @@ class Aero:
         r = s.c.get('rate_fit')
         if r:
             tb = lambda n: T2('aero/alpha-deg', 'ctl/flap-deg', r['alpha'], r['flaps'], r[n])
+            hold = s.c.get('rate_hold')
+            if hold and s.c.get('hl_fit'):
+                # Fitted power off, from the strips to the tunnel. Near and past stall most of it stands in for unblown sections stalling on the
+                # down-going wing; blown, they don't. So with the high lift on it holds its value from 2 deg under the power-off stall
+                s.fn('bu/fit/rate-alpha', MIN(p('aero/alpha-deg'), T1('ctl/flap-deg', hold['flaps'], hold['alpha'])), 'the incidence the rates\' correction takes, blown')
+                on = p('prop/hl/on')
+                tb_ = tb
+                tb = lambda n: S(M(D(v(1), on), tb_(n)), M(on, T2('bu/fit/rate-alpha', 'ctl/flap-deg', r['alpha'], r['flaps'], r[n])))
             cf = s.c['coef']
             # JSBSim's b/2V has no floor, and at rest a frame's stale value meets a live rate: no rate term below 30 ft/s to speak of
             bv, cv = MIN(p('aero/bi2vel'), v(cf['b'] / 60)), MIN(p('aero/ci2vel'), v(cf['c'] / 60))

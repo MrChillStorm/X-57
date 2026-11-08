@@ -37,6 +37,11 @@ ENGINE = dict(takeoff_kw=73.5, continuous_kw=69.0, idle_kw=1.5)                 
 # Full-throttle power against altitude from the manual's cruise tables: % of take-off power, ISA, 2388 rpm or nearest
 POWER_LAPSE = dict(alt_ft=[0.0, 3000.0, 6000.0, 9000.0, 12000.0, 15000.0], frac=[1.0, 0.885, 0.80, 0.72, 0.64, 0.565])
 FLIGHT_GEAR_DRAG_FT2 = 4.0                                       # NASA's gear, the X-57's fit
+# The brakes: a hydraulic disc on each main wheel, a master cylinder on each toe pedal [AFM 7-10]; Mods II-IV kept the gear [SIM]. A disc gives a torque for its pressure,
+# so a force at the tyre whatever the wheel carries, up to the tyre's grip. Its force at full pedal is fitted to the manual's landing roll (phase5_checks.py brakefit):
+# the table is for grass and paved is only 2 % shorter [AFM 5-19], so the brakes, not the grip, set the stop. Estimates in it: touchdown 58 KIAS, brakes 2 s after.
+# 237 lbf is about 185 N m at the 6.00-6 tyre's [AFM] 6.9 in static loaded radius [Goodyear Aviation Databook 2022], some 0.2 g with both
+BRAKE_LBF = 237.0
 
 
 def wing_edges():
