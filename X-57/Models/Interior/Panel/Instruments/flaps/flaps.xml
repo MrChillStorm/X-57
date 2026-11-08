@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>flaps.ac</path>
+
+  <animation>
+    <object-name>fond</object-name>
+    <object-name>face</object-name>
+    <object-name>needle</object-name>
+    <object-name>flapslever</object-name>
+
+    <object-name>vitre</object-name>
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>fond</object-name>
+    <object-name>face</object-name>
+    <object-name>needle</object-name>
+    <object-name>flapslever</object-name>
+    <object-name>vitre</object-name>
+  </animation>
+
+  <!-- working for Compositor -->
+  <effect>
+    <inherits-from>Aircraft/X-57/Models/Effects/Glass/instrument-glass</inherits-from>
+    <object-name>vitre</object-name>
+  </effect>
+
+  <animation>
+    <type>material</type>
+    <object-name>face</object-name>
+    <object-name>needle</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/instruments-norm</factor-prop>
+      <red>   0.50 </red>
+      <green> 0.40 </green>
+      <blue>  0.30 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>needle</object-name>
+    <property>fdm/jsbsim/ctl/flap-deg</property><factor>6</factor><center><x-m>0.00175</x-m><y-m>0</y-m><z-m>0</z-m></center>
+    <axis>
+      <x> -1 </x>
+      <y>  0 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>flapslever</object-name>
+    <property>sim/model/x57/flap-switch</property><factor>20</factor>
+    <center>
+      <x-m>  0.00000 </x-m>
+      <y-m> -0.05542 </y-m>
+      <z-m>  0.00000 </z-m>
+    </center>
+    <axis>
+      <x> 0 </x>
+      <y> 1 </y>
+      <z> 0 </z>
+    </axis>
+  </animation>
+
+<animation><type>pick</type><object-name>flapslever</object-name><action><button>3</button><repeatable type="bool">false</repeatable><binding><command>nasal</command><script>x57cockpit.flap_nudge(-1);</script></binding></action><action><button>4</button><repeatable type="bool">false</repeatable><binding><command>nasal</command><script>x57cockpit.flap_nudge(1);</script></binding></action><hovered><binding><command>set-tooltip</command><tooltip-id>x57-flaps</tooltip-id><label>Flaps %s: hold above to raise, below to lower</label><property>fdm/jsbsim/ctl/flap-deg</property><mapping>nasal</mapping><script>return sprintf("%d deg", math.round(arg[0]));</script></binding></hovered></animation>
+<model><path>switch.xml</path></model>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>face</object-name><object-name>flapslever</object-name><object-name>fond</object-name><object-name>needle</object-name></effect>
+</PropertyList>

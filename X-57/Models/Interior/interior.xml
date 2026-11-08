@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>interior.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>interieur</object-name>
+    <object-name>int-roof</object-name>
+    <object-name>int-bulk</object-name>
+    <object-name>inttour</object-name>
+    <object-name>planchet</object-name>
+    <object-name>intporteG</object-name>
+    <object-name>intporteD</object-name>
+    <object-name>inttourporteG</object-name>
+    <object-name>inttourporteD</object-name>
+    <object-name>intportecargoB</object-name>
+
+    <!-- Objets transparents -->
+    <object-name>intvitres</object-name>
+    <object-name>intvitreG</object-name>
+    <object-name>intvitreD</object-name>
+    <!-- HDR mode -->
+    <object-name>HDRintvitres</object-name>
+    <object-name>HDRintvitreG</object-name>
+    <object-name>HDRintvitreD</object-name>
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>interieur</object-name>
+    <object-name>int-roof</object-name>
+    <object-name>int-bulk</object-name>
+    <object-name>inttour</object-name>
+    <object-name>planchet</object-name>
+    <object-name>intporteG</object-name>
+    <object-name>intporteD</object-name>
+    <object-name>inttourporteG</object-name>
+    <object-name>inttourporteD</object-name>
+    <object-name>intportecargoB</object-name>
+    <object-name>intvitres</object-name>
+    <object-name>intvitreG</object-name>
+    <object-name>intvitreD</object-name>
+  </animation>
+
+  <!-- working for Compositor -->
+  <effect>
+    <inherits-from>Aircraft/X-57/Models/Effects/Glass/glassrain</inherits-from>
+    <object-name>intvitres</object-name>
+    <object-name>intvitreG</object-name>
+    <object-name>intvitreD</object-name>
+  </effect>
+
+  <effect>
+    <inherits-from>Aircraft/X-57/Models/Effects/Glass/glass</inherits-from>
+    <object-name>HDRintvitres</object-name>
+    <object-name>HDRintvitreG</object-name>
+    <object-name>HDRintvitreD</object-name>
+  </effect>
+
+  <!-- Sélection des vitres en fonction de HDR ou pas -->
+  <animation>
+    <type>select</type>
+    <condition>
+      <!-- <property>sim/rendering/hdr/hdr-enabled</property> -->
+      <property>sim/rendering/hdr/hdr-enabled</property>
+    </condition>
+    <object-name>HDRintvitres</object-name>
+    <object-name>HDRintvitreG</object-name>
+    <object-name>HDRintvitreD</object-name>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <condition>
+      <!-- <not><property>sim/rendering/hdr/hdr-enabled</property></not> -->
+      <not><property>sim/rendering/hdr/hdr-enabled</property></not>
+    </condition>
+    <object-name>intvitres</object-name>
+    <object-name>intvitreG</object-name>
+    <object-name>intvitreD</object-name>
+  </animation>
+
+  <model>
+    <path>Panel/all-panels.xml</path>
+  </model>
+
+  <model>
+    <path>../Pilot/all-pilots.xml</path>
+  </model>
+
+  <model>
+    <path>Seats/all-seats.xml</path>
+  </model>
+
+  <!-- Doors animation -->
+  <animation>
+    <name>IntPorteGauche</name><object-name>intporteG</object-name><object-name>inttourporteG</object-name><object-name>intvitreG</object-name><object-name>HDRintvitreG</object-name>
+  </animation>
+
+  <animation>
+    <type>pick</type>
+    <object-name>intporteG</object-name><object-name>inttourporteG</object-name><object-name>intvitreG</object-name><object-name>HDRintvitreG</object-name>
+    <visible>true</visible>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <binding>
+        <condition>
+          <and>
+            <property>gear/gear[0]/wow</property>
+            <property>gear/gear[1]/wow</property>
+            <property>gear/gear[2]/wow</property>
+            <less-than>
+              <property>gear/gear[0]/rollspeed-ms</property>
+              <value>10</value>
+            </less-than>
+          </and>
+        </condition>
+        <command>nasal</command>
+        <script>doors.crew.toggle();</script>
+      </binding>
+    </action><hovered><binding><command>set-tooltip</command><tooltip-id>x57-door-main</tooltip-id><label>Main door: %s</label><property>sim/model/door-positions/crew/position-norm</property><mapping>nasal</mapping><script>var v = arg[0]; var w = getprop('/gear/gear[0]/wow') and getprop('/gear/gear[1]/wow') and getprop('/gear/gear[2]/wow') and 10 > getprop('/gear/gear[0]/rollspeed-ms'); if (!w) return v > 0.01 ? 'open (shuts on the ground)' : 'shut (opens on the ground)'; return v > 0.99 ? 'open, click to shut' : 0.01 > v ? 'shut, click to open' : 'moving';</script></binding></hovered>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>IntPorteGauche</object-name>
+    <!-- <property>sim/model/door-positions/crew/position-norm</property> -->
+    <property>sim/model/door-left</property>
+    <factor>-110</factor>
+    <center>
+      <x-m> -2.57720 </x-m>
+      <y-m> -0.58568 </y-m>
+      <z-m> -0.48420 </z-m>
+    </center>
+    <axis>
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 1 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <name>IntPorteDroite</name><object-name>intporteD</object-name><object-name>inttourporteD</object-name><object-name>intvitreD</object-name><object-name>HDRintvitreD</object-name>
+  </animation>
+
+  <animation>
+    <type>pick</type>
+    <object-name>intporteD</object-name><object-name>inttourporteD</object-name><object-name>intvitreD</object-name><object-name>HDRintvitreD</object-name>
+    <visible>true</visible>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <binding>
+        <condition>
+          <and>
+            <property>gear/gear[0]/wow</property>
+            <property>gear/gear[1]/wow</property>
+            <property>gear/gear[2]/wow</property>
+            <less-than>
+              <property>gear/gear[0]/rollspeed-ms</property>
+              <value>10</value>
+            </less-than>
+          </and>
+        </condition>
+        <command>nasal</command>
+        <script>doors.passenger.toggle();</script>
+      </binding>
+    </action><hovered><binding><command>set-tooltip</command><tooltip-id>x57-door-rear</tooltip-id><label>Rear door: %s</label><property>sim/model/door-positions/passenger/position-norm</property><mapping>nasal</mapping><script>var v = arg[0]; var w = getprop('/gear/gear[0]/wow') and getprop('/gear/gear[1]/wow') and getprop('/gear/gear[2]/wow') and 10 > getprop('/gear/gear[0]/rollspeed-ms'); if (!w) return v > 0.01 ? 'open (shuts on the ground)' : 'shut (opens on the ground)'; return v > 0.99 ? 'open, click to shut' : 0.01 > v ? 'shut, click to open' : 'moving';</script></binding></hovered>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>IntPorteDroite</object-name>
+    <!-- <property>sim/model/door-positions/passenger/position-norm</property> -->
+    <property>sim/model/door-right</property>
+    <factor> 80 </factor>
+    <center>
+      <x-m> -1.66389 </x-m>
+      <y-m>  0.60889 </y-m>
+      <z-m> -0.42408 </z-m>
+    </center>
+    <axis>
+      <x> 0 </x>
+      <y> 0 </y>
+      <z> 1 </z>
+    </axis>
+  </animation>
+
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>interieur</object-name><object-name>int-roof</object-name><object-name>int-bulk</object-name><object-name>planchet</object-name><object-name>intporteD</object-name><object-name>intporteG</object-name><object-name>inttour</object-name><object-name>inttourporteD</object-name><object-name>inttourporteG</object-name></effect>
+<model><path>cabin.xml</path></model>
+<model><path>pedals.xml</path></model>
+</PropertyList>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- written by fdm/x57pilot.py: the pilot, in the interior's frame; hidden from his own eyes -->
+<PropertyList>
+  <model><name>ThePilot</name><path>pilot.xml</path></model>
+  <animation><type>select</type><object-name>ThePilot</object-name>
+    <condition><not-equals><property>sim/current-view/name</property><value>Cockpit View</value></not-equals></condition></animation>
+</PropertyList>

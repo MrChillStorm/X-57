@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<PropertyList><name>x57-lens</name><inherits-from>Effects/model-pbr</inherits-from><parameters><base-color-factor type="vec4d">0.8 0.82 0.85 1.0</base-color-factor><metallic-factor type="float">0.2</metallic-factor><roughness-factor type="float">0.15</roughness-factor></parameters></PropertyList>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <!-- Pilot yoke -->
+  <model>
+    <path>Aircraft/X-57/Models/Interior/Panel/Instruments/yokes/yoke.xml</path>
+    <offsets>
+      <x-m> -0.00024 </x-m>
+      <y-m> -0.28442 </y-m>
+      <z-m> -0.21115 </z-m>
+    </offsets>
+  </model>
+  
+  <!-- Copilot yoke -->
+  </PropertyList>

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<PropertyList>
+  <name>instrument-glass</name>
+  <inherits-from>Aircraft/X-57/Models/Effects/Glass/glass</inherits-from>
+  <technique n="128"><pass><blend><source-rgb>one</source-rgb></blend><define n="300"><name>BLEND_PREMULTIPLIED</name></define>
+    <program><fragment-shader n="0">Aircraft/X-57/Shaders/HDR/instrument_glass.frag</fragment-shader></program></pass></technique>
+</PropertyList>

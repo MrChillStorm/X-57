@@ -1,0 +1,12 @@
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{42mm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Control} & \textbf{What it does} \\
+\midrule
+\ann{ARM}, \ann{DISARM/RESET} & Arms or disarms all twelve motors. Moving to \ann{DISARM/RESET} also clears faults and a yoke disarm \\
+\ann{AIRSPEED}, \ann{FIXED} & Motor speed from the airspeed schedule, or fixed. You can change it without disarming \\
+\ann{RESET REQ'D} (yellow) & The yoke switch was used. Move ARM to DISARM/RESET \\
+\ann{RDY} (blue) & Steady: ready. Flashing: starting up or waiting for high voltage \\
+\ann{RUN} (green) & Steady: running. Flashing: spinning up or down \\
+\ann{FAULT} (red) & Steady: armed with no high voltage. Flashing: fault while armed \\
+\bottomrule
+\end{tabularx}

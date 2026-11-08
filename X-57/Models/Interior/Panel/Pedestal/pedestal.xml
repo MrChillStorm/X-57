@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>pedestal.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>pedestal</object-name>
+    <object-name>pedestal2</object-name>
+    <object-name>throttle-knob.L</object-name>
+    <object-name>throttle-knob.R</object-name>
+    <object-name>rpm-knob.L</object-name>
+    <object-name>rpm-knob.R</object-name>
+    
+    <!-- Objets transparents -->
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>pedestal2</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/panel-dim</factor-prop>
+      <red>   0.8 </red>
+      <green> 0.8 </green>
+      <blue>  0.8 </blue>
+    </emission>
+  </animation>
+
+  <!-- Throttle -->  
+  <animation>
+    <type>knob</type>
+    <drag-direction>vertical</drag-direction>
+    <object-name>throttle-knob.L</object-name>
+    <value>0.0</value>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>controls/engines/engine[0]/throttle</property>
+        <min> 0 </min>
+        <max> 1 </max>
+        <factor> 0.1 </factor>
+      </binding>
+    </action>
+  </animation>
+  
+  <animation>
+    <type>rotate</type>
+    <object-name>throttle-knob.L</object-name>
+    <property>fdm/jsbsim/prop/l/lever</property><interpolation><entry><ind>-0.174</ind><dep>0</dep></entry><entry><ind>0</ind><dep>6</dep></entry><entry><ind>1</ind><dep>40</dep></entry><entry><ind>1.66</ind><dep>50</dep></entry></interpolation>
+    <center>
+      <x-m>  0.01796 </x-m>
+      <y-m>  0.00000 </y-m>
+      <z-m> -0.10735 </z-m>
+    </center>
+    <axis>
+      <x>  0 </x>
+      <y> -1 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+  
+  <animation>
+    <type>knob</type>
+    <drag-direction>vertical</drag-direction>
+    <object-name>throttle-knob.R</object-name>
+    <value>0.0</value>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>controls/engines/engine[1]/throttle</property>
+        <min> 0 </min>
+        <max> 1 </max>
+        <factor> 0.1 </factor>
+      </binding>
+    </action>
+  </animation>
+  
+  <animation>
+    <type>rotate</type>
+    <object-name>throttle-knob.R</object-name>
+    <property>fdm/jsbsim/prop/r/lever</property><interpolation><entry><ind>-0.174</ind><dep>0</dep></entry><entry><ind>0</ind><dep>6</dep></entry><entry><ind>1</ind><dep>40</dep></entry><entry><ind>1.66</ind><dep>50</dep></entry></interpolation>
+    <center>
+      <x-m>  0.01796 </x-m>
+      <y-m>  0.00000 </y-m>
+      <z-m> -0.10735 </z-m>
+    </center>
+    <axis>
+      <x>  0 </x>
+      <y> -1 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+  
+  <!-- Propeller -->  
+  <animation>
+    <type>knob</type>
+    <drag-direction>vertical</drag-direction>
+    <object-name>rpm-knob.L</object-name>
+    <value>0.0</value>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>controls/engines/engine[0]/propeller-pitch</property>
+        <min> 0 </min>
+        <max> 1 </max>
+        <factor> 0.1 </factor>
+      </binding>
+    </action>
+  </animation>
+  
+  <animation>
+    <type>rotate</type>
+    <object-name>rpm-knob.L</object-name>
+    <property>controls/engines/engine[0]/propeller-pitch</property>
+    <factor> 50 </factor>
+    <center>
+      <x-m>  0.01796 </x-m>
+      <y-m>  0.00000 </y-m>
+      <z-m> -0.10735 </z-m>
+    </center>
+    <axis>
+      <x>  0 </x>
+      <y> -1 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+  
+  <animation>
+    <type>knob</type>
+    <drag-direction>vertical</drag-direction>
+    <object-name>rpm-knob.R</object-name>
+    <value>0.0</value>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>controls/engines/engine[1]/propeller-pitch</property>
+        <min> 0 </min>
+        <max> 1 </max>
+        <factor> 0.1 </factor>
+      </binding>
+    </action>
+  </animation>
+  
+  <animation>
+    <type>rotate</type>
+    <object-name>rpm-knob.R</object-name>
+    <property>controls/engines/engine[1]/propeller-pitch</property>
+    <factor> 50 </factor>
+    <center>
+      <x-m>  0.01796 </x-m>
+      <y-m>  0.00000 </y-m>
+      <z-m> -0.10735 </z-m>
+    </center>
+    <axis>
+      <x>  0 </x>
+      <y> -1 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+  
+  <!-- Mixture -->  
+  </PropertyList>

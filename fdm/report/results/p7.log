@@ -1,0 +1,46 @@
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+
+Everything on
+  buses at 13.8 V                                                                           ok
+  wing avionics at 23 V                                                                     ok
+  converters under 70 A, and 47 to 70 % of the 140 A together        29 + 40 A              ok
+  the essential battery charges                                      -2 A                   ok
+
+Failures and sheds
+  ESS BATT off in flight: the converters hold the bus                                       ok
+  and both cross buses open: Essential Bus dead                                             ok
+  contactors drop without it                                                                ok
+  no torque left                                                     0.0 Nm                 ok
+  a converter can't start again without the bus                                             ok
+  all switches back: traction back                                   127.5 Nm               ok
+  converter A failed: B carries it all, within 70 A                  69 A                   ok
+  Bus A kept through the cross bus                                                          ok
+  both failed: the battery carries the Essential Bus                 13.4 V, 69 A           ok
+  traction stays on the battery's bus                                                       ok
+  shedding the avionics buses cuts the load                          69 to 47 A             ok
+
+High voltage
+  one controller disarmed: half the torque                           64 of 127 Nm           ok
+  both disarmed: none                                                                       ok
+  LA and RA are on Wing Avionics A                                                          ok
+  Wing Avionics A off: LA and RA gone, LB and RB stay                                       ok
+
+Propeller modes
+  MAN: blades stay without a switch                                  21.59 deg              ok
+  FEATHER held: coarser                                              21.6 to 22.6 deg       ok
+  START held: finer                                                  21.6 deg               ok
+  the lever's aft stop overrides MAN                                 21.6 to 22.6 deg       ok
+  PROP CONT. breaker pulled: the hub stays                                                  ok
+  each propeller lever sets its own speed                            1800, 2700 rpm         ok
+
+Motor response
+  both controllers disarmed: no torque, even with the rotor slow     0.0 Nm                 ok
+  in the cockpit a lever cut ramps, 127.5 Nm/s a controller          127, 64, 16 Nm         ok
+
+ALL WITHIN LIMITS

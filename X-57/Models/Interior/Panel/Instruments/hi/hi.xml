@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>hi.ac</path>
+
+  <animation>
+    <object-name>fond</object-name>
+    <object-name>face</object-name>
+    <object-name>front</object-name>
+    <object-name>HdgBug</object-name>
+    <object-name>OBS-Knob</object-name>
+    <object-name>Hdg-Knob</object-name>
+
+    <object-name>vitre</object-name>
+    <object-name>clic-offset-L</object-name>
+    <object-name>clic-offset-R</object-name>
+    <object-name>clic-bug-L</object-name>
+    <object-name>clic-bug-R</object-name>
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>fond</object-name>
+    <object-name>face</object-name>
+    <object-name>front</object-name>
+    <object-name>HdgBug</object-name>
+    <object-name>OBS-Knob</object-name>
+    <object-name>Hdg-Knob</object-name>
+    <object-name>vitre</object-name>
+    <object-name>clic-offset-L</object-name>
+    <object-name>clic-offset-R</object-name>
+    <object-name>clic-bug-L</object-name>
+    <object-name>clic-bug-R</object-name>
+  </animation>
+
+  <!-- working for Compositor -->
+  <effect>
+    <inherits-from>Aircraft/X-57/Models/Effects/Glass/instrument-glass</inherits-from>
+    <object-name>vitre</object-name>
+  </effect>
+
+  <animation>
+    <type>material</type>
+    <object-name>face</object-name>
+    <object-name>front</object-name>
+    <object-name>HdgBug</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/instruments-norm</factor-prop>
+      <red>   0.50 </red>
+      <green> 0.40 </green>
+      <blue>  0.30 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>OBS-Knob</object-name>
+    <object-name>Hdg-Knob</object-name>
+    <condition>
+      <property>controls/lighting/instrument-lights</property>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/luminosite-lights</factor-prop>
+      <red>   0.45000 </red>
+      <green> 0.09000 </green>
+      <blue>  0.00001 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>face</object-name>
+    <property>instrumentation/heading-indicator/indicated-heading-deg</property>
+    <factor>-1</factor>
+    <axis>
+      <x> -1 </x>
+      <y>  0 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>HdgBug</object-name>
+    <property>instrumentation/heading-indicator/indicated-heading-deg</property>
+    <factor>-1</factor>
+    <axis>
+      <x> -1 </x>
+      <y>  0 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>HdgBug</object-name>
+     <property>autopilot/settings/heading-bug-deg</property>
+    <axis>
+      <x> -1 </x>
+      <y>  0 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+
+  <!--     Heading Bug control    -->
+  <animation>
+    <type>knob</type>
+    <object-name>Hdg-Knob</object-name>
+    <drag-direction>vertical</drag-direction>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>autopilot/settings/heading-bug-deg</property>
+        <factor>1</factor>
+        <min>0</min>
+        <max>360</max>
+      </binding>
+    </action>
+  </animation>
+
+  <!--             Heading Offset             -->
+  <animation>
+    <type>knob</type>
+    <object-name>OBS-Knob</object-name>
+    <drag-direction>vertical</drag-direction>
+    <action>
+      <binding>
+        <command>property-adjust</command>
+        <property>instrumentation/heading-indicator/offset-deg</property>
+        <factor>1</factor>
+        <min>0</min>
+        <max>360</max>
+      </binding>
+    </action>
+  </animation>
+
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>Hdg-Knob</object-name><object-name>HdgBug</object-name><object-name>OBS-Knob</object-name><object-name>face</object-name><object-name>fond</object-name><object-name>front</object-name></effect>
+</PropertyList>

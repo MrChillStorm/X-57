@@ -1,0 +1,55 @@
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+
+Power off, neutral, against the solvers' mean. Linear range
+ok   flaps  0: CL within 0.044, Cm within 0.058 (fitted)  worst 0.002, 0.002, CD 0.0004
+ok   flaps 10: CL within 0.093, Cm within 0.087 (fitted)  worst 0.001, 0.002, CD 0.0005
+  flaps 20, not fitted, between 10 and 30: worst CL 0.055, Cm 0.026, CD 0.0084 over 4 points
+ok   flaps 20: within the widest limits, 0.09 and 0.09
+ok   flaps 30: CL within 0.060, Cm within 0.054 (fitted)  worst 0.003, 0.020, CD 0.0004
+
+Past stall: shape only. The solvers differ by 0.2-0.4 in CL here
+  flaps  0: peak CL 2.18 at 16 deg (the table: 2.18 at 16); past it, worst difference 0.01
+ok   flaps 0: the peak within 1 deg of the table's
+  flaps 10: peak CL 2.29 at 16 deg (the table: 2.29 at 16); past it, worst difference 0.02
+ok   flaps 10: the peak within 1 deg of the table's
+  flaps 30: peak CL 2.80 at 12 deg (the table: 2.81 at 12); past it, worst difference 0.02
+ok   flaps 30: the peak within 1 deg of the table's
+
+Each input's increment, below stall, against the same solver's neutral case: RMS error (RMS of the increment itself). None of these is fitted but the aileron's gain
+ok   beta  CY   error 0.0240 of 0.3150: 8 %
+ok   beta  Cn   error 0.0000 of 0.0364: 0 %
+ok   beta  Cl   error 0.0000 of 0.0276: 0 %
+ok   stab  CL   error 0.0415 of 0.2655: 16 %
+ok   stab  Cm   error 0.1177 of 1.7192: 7 %
+ok   ail   Cl   error 0.0048 of 0.0296: 16 %
+ok   ail   CL   error 0.0159 of 0.0832: 19 %
+MISS ail   Cm   error 0.0180 of 0.0325: 56 %
+ok   rud   CY   error 0.0000 of 0.1351: 0 %
+ok   rud   Cn   error 0.0000 of 0.0640: 0 %
+ok   rud   Cl   error 0.0013 of 0.0087: 14 %
+
+Mod IV with the CFD's own thrust through the slipstreams
+MISS 58 KCAS, flaps 30: CLmax 4.40-4.58  CL 4.99 at 15 deg
+  dCL, model (STAR-CCM+): 2: 1.49 (1.14) 4: 1.59 (1.27) 8: 1.73 (1.45) 10: 1.82 (1.50) 12: 1.89 (1.52) 14: 2.05 (1.62) 15: 2.14 (1.67)
+  dCm, model (STAR-CCM+): 2: +0.71 (+0.60) 4: +0.74 (+0.58) 8: +0.73 (+0.45) 10: +0.54 (+0.33) 12: +0.22 (+0.13) 14: +0.19 (+0.12) 15: +0.24 (+0.09)
+MISS dCL +1.1 to +1.7 between 2 and 15 deg  from 1.49 to 2.14
+ok   dCm +0.6 falling to +0.1  from +0.71 to +0.24
+MISS the props' CL, 35-75 KCAS, below stall: inside the solvers' spread  error 0.327, spread 0.078
+ok   the props' Cm, 35-75 KCAS, below stall: inside the solvers' spread  error 0.161, spread 0.136
+ok   the props' CD, 35-75 KCAS, below stall: inside the solvers' spread  error 0.029, spread 0.030
+ok   power on: ail   Cl   error 0.0054 of 0.0382: 14 %
+ok   power on: stab  CL   error 0.0586 of 0.3336: 18 %
+ok   power on: stab  Cm   error 0.2404 of 2.1051: 11 %
+ok   power on: rud   CY   error 0.0099 of 0.1410: 7 %
+ok   power on: rud   Cn   error 0.0045 of 0.0664: 7 %
+ok   power on: beta  CY   error 0.0299 of 0.3484: 9 %
+ok   power on: beta  Cn   error 0.0069 of 0.0409: 17 %
+ok   power on: beta  Cl   error 0.0087 of 0.0349: 25 %
+
+4 misses: ail   Cm ; 58 KCAS, flaps 30: CLmax 4.40-4.58; dCL +1.1 to +1.7 between 2 and 15 deg; the props' CL, 35-75 KCAS, below stall: inside the solvers' spread

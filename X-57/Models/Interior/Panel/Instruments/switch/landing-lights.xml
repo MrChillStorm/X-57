@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>on-off.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>base</object-name>
+    <object-name>on-off</object-name><object-name>on-off-lit</object-name>
+
+    <!-- Objets transparents -->
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>base</object-name>
+    <object-name>on-off</object-name><object-name>on-off-lit</object-name>
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>on-off</object-name><object-name>on-off-lit</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/instruments-norm</factor-prop>
+      <red>   0.50 </red>
+      <green> 0.40 </green>
+      <blue>  0.30 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>pick</type>
+    <visible>true</visible>
+    <object-name>on-off</object-name><object-name>on-off-lit</object-name>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <binding><command>property-toggle</command><property>/sim/model/x57/click/rocker</property></binding><binding>
+        <command>property-toggle</command>
+        <property>controls/lighting/landing-lights</property>
+      </binding>
+    </action>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>on-off</object-name><object-name>on-off-lit</object-name>
+    <property>controls/lighting/landing-lights</property>
+    <factor> 35 </factor>
+    <axis>
+      <x>  0 </x>
+      <y> -1 </y>
+      <z>  0 </z>
+    </axis>
+  </animation>
+
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>base</object-name><object-name>on-off</object-name></effect>
+<animation><type>select</type><object-name>on-off</object-name><condition><not><greater-than><property>/instrumentation/x57/tecnam/switches-nits</property><value>0</value></greater-than></not></condition></animation><animation><type>select</type><object-name>on-off-lit</object-name><condition><greater-than><property>/instrumentation/x57/tecnam/switches-nits</property><value>0</value></greater-than></condition></animation><effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.95 0.85</lit-color><lit-level><use>/instrumentation/x57/tecnam/switches-nits</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">1</lit-reflectance></parameters><object-name>on-off-lit</object-name></effect>
+</PropertyList>

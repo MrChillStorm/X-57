@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>overhead.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>overhead</object-name>
+    <object-name>overhead2</object-name>
+    <object-name>overhead3</object-name>
+
+    <!-- Objets transparents -->
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>overhead</object-name>
+    <object-name>overhead2</object-name>
+    <object-name>overhead3</object-name>
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>overhead</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/panel-dim</factor-prop>
+      <red>   0.8 </red>
+      <green> 0.8 </green>
+      <blue>  0.8 </blue>
+    </emission>
+  </animation>
+
+  <model>
+    <path>Instruments/switch/switch.xml</path>
+    <offsets>
+      <x-m>  0.020 </x-m>
+      <y-m> -0.043 </y-m>
+      <z-m> -0.062 </z-m>
+    </offsets>
+  </model>
+
+  <model>
+    <path>Instruments/switch/switch.xml</path>
+    <offsets>
+      <x-m>  0.020 </x-m>
+      <y-m> -0.037 </y-m>
+      <z-m> -0.088 </z-m>
+    </offsets>
+  </model>
+
+  <model>
+    <path>Instruments/switch/switch.xml</path>
+    <offsets>
+      <x-m>  0.020 </x-m>
+      <y-m> -0.022 </y-m>
+      <z-m> -0.088 </z-m>
+    </offsets>
+  </model>
+
+  <model>
+    <path>Instruments/switch/switch.xml</path>
+    <offsets>
+      <x-m>  0.020 </x-m>
+      <y-m>  0.022 </y-m>
+      <z-m> -0.088 </z-m>
+    </offsets>
+  </model>
+
+  <model>
+    <path>Instruments/switch/switch.xml</path>
+    <offsets>
+      <x-m>  0.020 </x-m>
+      <y-m>  0.037 </y-m>
+      <z-m> -0.088 </z-m>
+    </offsets>
+  </model>
+
+  <model>
+    <path>Instruments/switch/switch.xml</path>
+    <offsets>
+      <x-m>  0.020 </x-m>
+      <y-m>  0.043 </y-m>
+      <z-m> -0.062 </z-m>
+    </offsets>
+  </model>
+
+</PropertyList>

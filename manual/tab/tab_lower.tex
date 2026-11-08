@@ -1,0 +1,17 @@
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{42mm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Control} & \textbf{What it does} \\
+\midrule
+Gear lever & Up or down. Gear runs on the Essential Bus. On the ground the gear stays down whatever the lever says, and comes up as soon as the wheels leave the ground if the lever is up. That guard is a simulator choice: sources disagree on whether the real aircraft has a squat switch \\
+\ann{NOSE}, \ann{LH}, \ann{RH} (green) & Gear down and locked \\
+\ann{TRANS} (red) & Gear moving \\
+\ann{LT TEST} & Tests the gear lights while held \\
+Flap switch and indicator & As on NASA's Mod III and IV, the flaps run while the switch is held and stop where it's let go: press and hold just above the lever to raise them, just below it to lower them, and the lever springs back to the middle. They move 3 degrees a second. The scroll wheel over the lever nudges them 2.5 degrees; \ann{[} and \ann{]} step 0, 10, 20 and 30 from wherever they stand. The dial reads in degrees: NASA takes off with 10 and lands with 30. NASA's data has flaps 0, 10 and 30, so in between the model interpolates \\
+\ann{LANDING}, \ann{TAXI}, \ann{NAV}, \ann{STROBE} & The exterior lights, all on DC Converter Bus B in NASA's power drawings: 3 A breakers, 7.5 A for the strobe. Those drawings collar out landing, taxi and nav, the one with the Mod IV additions included, so only the strobe was to be live. Here all four work. They don't say where the lights sit: the tip nacelles, the tail and the fin are this model's choices. Landing and taxi are in the left wing's leading edge, where NASA's photographs show them on Mod II's stock wing. No source shows them on this wing, so they keep the same distance from the centreline \\
+\ann{INSTR} (fitted only) & Not on the X-57: X-57 menu > Tecnam cockpit lights fits the P2006T's. The fifth rocker in the LIGHTS row, as on the P2006T: the instrument lights, on DC Converter Bus B through the \ann{INSTR LIGHT} breaker, which NASA's drawings collar out. Three dimmers appear under the \ann{EXPERIMENTAL} placard: switch lights, avionics key lights, and the two ceiling cockpit lights over the left and right panels. The cabin light and the emergency light are in the ceiling, each with its switch on the lamp. Unfitted, none of it is drawn \\
+\ann{CABIN FAN} & No effect \\
+\ann{DAU ENABLE} & Data system. Green Time Lock light \\
+\ann{RF ENABLE} & Telemetry. No effect here \\
+\ann{RECORD} & Light: green ready, red archiving, amber fault \\
+\bottomrule
+\end{tabularx}

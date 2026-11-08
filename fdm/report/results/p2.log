@@ -1,0 +1,75 @@
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+airspeed mode, 154 of NASA's points, up to 8,000 ft
+ok     rpm schedule reproduced  worst 0.2 rpm
+    J 0.5-0.80,  77 points: torque +0 % (worst +3), thrust -4 % (worst -6)
+    J 0.8-1.10,  21 points: torque +4 % (worst +7), thrust -11 % (worst -18)
+    J 1.1-1.35,  33 points: torque +52 % (worst +77), thrust -70 % (worst -83)
+ok     airspeed: torque within 10 % of NASA's to J 1.1  worst 6.5 %
+fixed mode, 154 of NASA's points, up to 8,000 ft
+    J 0.5-0.80,  43 points: torque +0 % (worst +2), thrust -5 % (worst -6)
+    J 0.8-1.10,  36 points: torque +3 % (worst +6), thrust -10 % (worst -20)
+    J 1.1-1.35,  30 points: torque +24 % (worst +73), thrust -47 % (worst -82)
+ok     fixed: torque within 10 % of NASA's to J 1.1  worst 5.8 %
+Tunnel, 2022 retest
+     Ct LH: model less measured, mean -0.0044, rms 0.0062, 30 points
+     Ct RH: model less measured, mean +0.0039, rms 0.0066, 33 points
+ok   Ct inside the tunnel's scatter  rms 0.0064
+     Cq LH: model less measured, mean -0.0006, rms 0.0008, 17 points
+     Cq RH: model less measured, mean +0.0003, rms 0.0006, 28 points
+ok   Cq inside the tunnel's scatter  rms 0.0007
+ok   cruise tables pass through NASA's points  worst Ct 0.0002, Cp 0.0003, 37 points
+Windmilling after a contactor failure
+     tunnel, 75 KEAS, sea level: failed disc 2640 rpm, J 1.52, thrust -2.3 lbf (measured 2483 and 2654 rpm)
+ok   windmilling speed inside the tunnel's measured range, or within 3 %  2640 rpm
+     50 KCAS, 2,500 ft: failed disc 1813 rpm, +10 % on Table 7's 1651, J 1.53; a good disc 4935 rpm
+     58 KCAS, 2,500 ft: failed disc 2111 rpm, +9 % on Table 7's 1937, J 1.53; a good disc 5011 rpm
+     65 KCAS, 2,500 ft: failed disc 2370 rpm, +9 % on Table 7's 2184, J 1.53; a good disc 4694 rpm
+     75 KCAS, 2,500 ft: failed disc 2740 rpm, +16 % on Table 7's 2357, J 1.52; a good disc 4273 rpm
+     90 KCAS, 2,500 ft: failed disc 3293 rpm, +7 % on Table 7's 3065, J 1.52; a good disc 3763 rpm
+Cruise motor, 120 KCAS, 6,000 ft: lever 0.60, rpm 2250, pitch 26.3
+ok   steady before the step  2250.0 rpm
+     lever +0.25: rpm peak 2367, back to 2250 after 40 s; pitch 26.3 to 28.0 at up to 1.00 deg/s; thrust 148 lbf each
+ok   the hub keeps to 1 deg/s
+ok   overspeed held near 2750 rpm  peak 2367
+ok   the governor brings rpm back  2250 rpm
+     hub fixed, lever back: right 2112 rpm, left 2250 rpm
+ok   a fixed hub lets the rpm go, the other governs
+Idle, 75 KCAS, high lift Fixed: trim 1966 rpm, 2.8 lbf a side; flown 1966 rpm, 2.8 lbf, pitch 14.0
+ok   on the fine stop the trim's rpm is where the rotor settles  1966, 1966
+High-lift motors, standing: armed Fixed: 95 % in 0.33 s, 4776 rpm, 19.8 Nm, 9.9 kW, 64.7 lbf a disc (NASA run-up 10 kW, 120 kW all twelve)
+ok   Fixed run-up power near NASA's 10 kW a disc  9.9 kW
+ok   disarmed, the discs stop  in 0.5 s
+Bus A lost: pack A 0.0 kW, pack B 51.3 (52.7 before); discs on A 2691 rpm, on B 4274; cruise 1 controller, 32 Nm
+ok   a lost bus takes half the discs, evenly, and one controller a motor
+ok   a lost bus draws nothing  0.0 kW
+Right motor off: windmilling at 1736 rpm; feathered: 0 rpm, pitch 85; left 2250 rpm
+ok   a stopped motor windmills, and feathers to a stop in 71 s at 1 deg/s
+Cell
+     0.5 C: at 1 Ah 3.80 V (fig. 3.80), at 2 Ah 3.49 V (3.47); cell 26.5 C
+     1.0 C: at 1 Ah 3.71 V (fig. 3.70), at 2 Ah 3.41 V (3.38); cell 36.1 C
+     2.0 C: at 1 Ah 3.56 V (fig. 3.50), at 2 Ah 3.26 V (3.18); cell 53.8 C
+     3.0 C: at 1 Ah 3.40 V (fig. 3.33), at 2 Ah 3.09 V (3.00); cell 71.6 C
+ok   cell within 0.1 V of Chin fig. 9  worst 0.09 V
+Mission: 41.9 kWh drawn (NASA 41.9, of 51.2 usable), 1695 s. NASA's plots for it, against the model: lowest 370 V, 378; depth of discharge 82.6 %, 80.0; hottest 57.9 C, 59.3
+ok   mission energy is NASA's  41.94 kWh
+ok   lowest voltage within 15 V of NASA's 370  378 V
+ok   depth of discharge within 5 points of NASA's 82.6 %  80.0 %
+ok   hottest pack within 5 C of NASA's 57.9  59.3 C
+Planning powers
+     Mod III setup, 120 KCAS, 6,000 ft, clean               cruise 70 kW (NASA 90), high lift 0 (0), system 81; alpha 2.3
+     Mod III setup, the same, gear down                     cruise 123 kW (NASA 90), high lift 0 (0), system 140; alpha 2.2
+     Mod III pattern, 105 KCAS, 3,800 ft, clean             cruise 62 kW (NASA 60), high lift 0 (0), system 72; alpha 4.9
+     Mod III pattern, the same, gear down                   cruise 107 kW (NASA 60), high lift 0 (0), system 122; alpha 4.8
+     Mod III climb, 100 KCAS, 2,800 ft, 500 ft/min, clean   cruise 104 kW (NASA 120), high lift 0 (0), system 119; alpha 6.1
+     Mod III climb, the same, gear down                     cruise 123 kW (NASA 120), high lift 0 (0), system 140; alpha 5.9
+     Mod IV hold, 63 KCAS, 6,000 ft, flaps 30, gear down    cruise -7 kW (NASA 10), high lift 114 (115), system 122; alpha 6.4
+ok   the efficiency chain is NASA's  system 122.6 kW from 30.3 + 78.3 shaft
+     (NASA's ground roll: 96 + 108 kW shaft gives 229.2 kW by this chain; its table says 229.2)
+
+ALL WITHIN LIMITS

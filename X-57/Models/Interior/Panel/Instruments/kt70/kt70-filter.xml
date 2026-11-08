@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <filter>
+    <name>Altitude FT/FL</name>
+    <debug>false</debug>
+    <type>gain</type>
+    <input>
+      <condition>
+        <equals>
+          <property>instrumentation/transponder/inputs/knob-mode</property>
+          <value>5</value>
+        </equals>
+        <less-than>
+          <property>instrumentation/transponder/altitude</property>
+          <value>999</value>
+        </less-than>
+      </condition>
+      <property>instrumentation/transponder/altitude</property>
+    </input>
+    <input>
+      <condition>
+        <equals>
+          <property>instrumentation/transponder/inputs/knob-mode</property>
+          <value>5</value>
+        </equals>
+        <greater-than>
+          <property>instrumentation/transponder/altitude</property>
+          <value>999</value>
+        </greater-than>
+      </condition>
+      <expression>
+        <div>
+          <property>instrumentation/transponder/altitude</property>
+          <value>100</value>
+        </div>
+      </expression>
+    </input>
+    <input>
+      <condition>
+        <equals>
+          <property>instrumentation/transponder/inputs/knob-mode</property>
+          <value>2</value>
+        </equals>
+      </condition>
+      <value>888</value>
+    </input>
+    <output>instrumentation/transponder/altitude-disp</output>
+  </filter>
+
+  <filter>
+    <name>Squawk normal</name>
+    <debug>false</debug>
+    <type>gain</type>
+    <input>
+      <condition>
+        <greater-than>
+          <property>instrumentation/transponder/inputs/knob-mode</property>
+          <value>2</value>
+        </greater-than>
+      </condition>
+      <property>instrumentation/transponder/id-code</property>
+    </input>
+    <input>
+      <condition>
+        <equals>
+          <property>instrumentation/transponder/inputs/knob-mode</property>
+          <value>2</value>
+        </equals>
+      </condition>
+      <value>8888</value>
+    </input>
+    <output>instrumentation/transponder/id-code-disp</output>
+  </filter>
+
+</PropertyList>

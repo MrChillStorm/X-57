@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<system name="x57-controls">
+<property value="0">ctl/instant</property>
+<property value="0">ctl/flap-cmd-deg</property>
+<property value="4">ctl/gear-drag-ft2</property>
+<property value="0">ctl/one-aileron</property>
+<property value="0">ctl/one-aileron-deg</property>
+<property value="0">bu/test/alphadot</property>
+<property value="-999">bu/test/hl-thrust</property>
+<property value="0">bu/test/hl-torque</property>
+<property value="0">/controls/flight/flaps</property>
+<channel name="surfaces">
+<fcs_function name="ctl/pitch-cmd"><function><sum><property>fcs/elevator-cmd-norm</property><property>fcs/pitch-trim-cmd-norm</property></sum></function><clipto><min>-1</min><max>1</max></clipto></fcs_function>
+<fcs_function name="ctl/stab-deg"><description>all-moving stabilator, -15 to +5 deg, trailing edge down positive</description><function><sum><value>-5</value><product><value>10</value><property>ctl/pitch-cmd</property></product></sum></function></fcs_function>
+<fcs_function name="x57/stab-norm"><description>for the 3-D model</description><function><product><value>0.066666667</value><property>ctl/stab-deg</property></product></function></fcs_function>
+<fcs_function name="ctl/roll-cmd"><function><sum><property>fcs/aileron-cmd-norm</property><property>fcs/roll-trim-cmd-norm</property></sum></function><clipto><min>-1</min><max>1</max></clipto></fcs_function>
+<fcs_function name="ctl/ail-right-deg"><description>right aileron, trailing edge down positive</description><function><ifthen><gt><property>ctl/one-aileron</property><value>0</value></gt><property>ctl/one-aileron-deg</property><ifthen><gt><property>ctl/roll-cmd</property><value>0</value></gt><product><value>-25</value><property>ctl/roll-cmd</property></product><product><value>-18</value><property>ctl/roll-cmd</property></product></ifthen></ifthen></function></fcs_function>
+<fcs_function name="ctl/ail-left-deg"><description>left aileron, trailing edge down positive</description><function><ifthen><gt><property>ctl/one-aileron</property><value>0</value></gt><value>0</value><ifthen><gt><property>ctl/roll-cmd</property><value>0</value></gt><product><value>18</value><property>ctl/roll-cmd</property></product><product><value>25</value><property>ctl/roll-cmd</property></product></ifthen></ifthen></function></fcs_function>
+<fcs_function name="ctl/yaw-cmd"><function><sum><property>fcs/rudder-cmd-norm</property><property>fcs/yaw-trim-cmd-norm</property></sum></function><clipto><min>-1</min><max>1</max></clipto></fcs_function>
+<fcs_function name="ctl/rud-deg"><description>trailing edge left positive: left pedal</description><function><product><value>28</value><property>ctl/yaw-cmd</property></product></function></fcs_function>
+<fcs_function name="x57/rudder-norm"><description>for the 3-D model</description><function><product><value>0.066666667</value><property>ctl/rud-deg</property></product></function></fcs_function>
+<fcs_function name="x57/pos-rudder"><function><property>fcs/rudder-cmd-norm</property></function><output>fcs/rudder-pos-norm</output></fcs_function>
+<fcs_function name="x57/pos-elevator"><function><property>ctl/pitch-cmd</property></function><output>fcs/elevator-pos-norm</output></fcs_function>
+<fcs_function name="x57/pos-left-aileron"><function><product><value>0.04</value><property>ctl/ail-left-deg</property></product></function><output>fcs/left-aileron-pos-norm</output></fcs_function>
+<fcs_function name="x57/pos-right-aileron"><function><product><value>0.04</value><property>ctl/ail-right-deg</property></product></function><output>fcs/right-aileron-pos-norm</output></fcs_function>
+<fcs_function name="ctl/flap-want"><description>the flap motor is on the Essential Bus</description><function><ifthen><gt><property>elec/flap-power</property><value>0.5</value></gt><sum><property>ctl/flap-cmd-deg</property><product><value>30</value><property>/controls/flight/flaps</property></product></sum><property>ctl/flap-moving</property></ifthen></function></fcs_function>
+<actuator name="ctl/flap-moving"><input>ctl/flap-want</input><rate_limit>3</rate_limit><clipto><min>0</min><max>30</max></clipto></actuator>
+<fcs_function name="ctl/flap-deg"><function><ifthen><gt><property>ctl/instant</property><value>0</value></gt><property>ctl/flap-want</property><property>ctl/flap-moving</property></ifthen></function></fcs_function>
+<fcs_function name="x57/pos-flap"><function><product><value>0.033333333</value><property>ctl/flap-deg</property></product></function><output>fcs/flap-pos-norm</output></fcs_function>
+<fcs_function name="gear/gear-want"><description>and so is the gear</description><function><ifthen><gt><property>elec/gear-power</property><value>0.5</value></gt><max><property>gear/gear-cmd-norm</property><product><property>gear/wow</property><property>gear/gear-moving</property></product></max><property>gear/gear-moving</property></ifthen></function></fcs_function>
+<kinematic name="gear/gear-moving"><input>gear/gear-want</input><traverse><setting><position>0</position><time>0</time></setting><setting><position>1</position><time>6</time></setting></traverse></kinematic>
+<fcs_function name="gear/gear-pos-norm"><function><ifthen><gt><property>ctl/instant</property><value>0</value></gt><property>gear/gear-cmd-norm</property><property>gear/gear-moving</property></ifthen></function><output>gear/unit[0]/pos-norm</output></fcs_function>
+</channel>
+</system>

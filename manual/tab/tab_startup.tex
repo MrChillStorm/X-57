@@ -1,0 +1,16 @@
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}p{58mm}>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Step} & \textbf{Control} & \textbf{What happens} \\
+\midrule
+1 & \ann{ESS BATT} & Essential battery powers the Essential Bus. Annunciator, D175, G-meter and radios come on \\
+2, 3 & \ann{DC CONV A}, \ann{B} & Each 13.8 V converter comes online. Needs the Essential Bus \\
+4, 5 & \ann{CROSS BUS A}, \ann{B} & Converters feed the Essential Bus, share the load and charge the battery \\
+6, 7 & \ann{WING AVIONICS A}, \ann{B} & 23 V to the motor controllers and high-lift controllers \\
+8, 9 & \ann{AVIONICS BUS A}, \ann{B} & Transponder and data system \\
+ & \ann{DAU ENABLE}, \ann{RF ENABLE}, \ann{RECORD} & Data system, if wanted \\
+10, 11 & \ann{MAIN BATT A}, \ann{B} (overhead) & Traction battery contactors close \\
+12 & \ann{LA}, \ann{LB}, \ann{RA}, \ann{RB} (overhead) & High voltage to each controller. Wait for each LED to turn green \\
+ & \ann{HIGH-LIFT BUS A}, \ann{B} (overhead, Mod IV) & High voltage to the high-lift controllers. H-LA to H-RB turn green \\
+13 & \ann{RIGHT CMC A}, \ann{B}, then \ann{LEFT CMC A}, \ann{B} & Arm the controllers: the motor turns at idle. The right side goes first, to keep the left door clear \\
+\bottomrule
+\end{tabularx}

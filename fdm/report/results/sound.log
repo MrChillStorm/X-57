@@ -1,0 +1,73 @@
+mod3: 196 loops
+ok   every loop is looped, its file there
+     sweep of 40000 states, every group free: most at once 18 in the cockpit, 18 outside
+ok   sources under 64, with room for what else is playing
+ok   no loop holds a source at nil volume  0 cases
+ok   nothing audible is cut off by its condition  0 cases
+ok   only the current view's loops run
+ok   no propeller turning: no loop runs  0
+ok   each group's loops add to one whole  worst 0.0000 of the power
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+mod3 on the wheels: pitch 0.03 deg, height of the centre of gravity 3.99 ft, weight on wheels 1
+  lift-off after 42.7 s at 90 KCAS, in 4278 ft
+  500 ft after 101.2 s at 93 KCAS, 526 ft/min
+  cruise, trimmed (aileron 0.025, rudder -0.001), hands off for 60 s: 133.8 KCAS, height changed -3 ft, bank -0.5 deg, pitch 0.8 deg
+  30 deg bank for 25 s: heading moved 103 deg, 1.14 g, 133.2 KCAS, sideslip 0.5 deg
+  wings level again: bank -0.5 deg, 131.7 KCAS
+  approach, flaps 30: 85.0 KCAS (aiming 94), alpha 2.7, stabilator 0.8, -950 ft/min
+     1166 samples along the flight
+     cockpit: at most 18 at once, 10 on average
+     cockpit: 0 of 11522 sources held under -60 dB, 22 under -40 dB
+ok   cockpit: under 1 % of the sources held are under -60 dB
+     outside: at most 18 at once, 10 on average
+     outside: 0 of 11522 sources held under -60 dB, 78 under -40 dB
+ok   outside: under 1 % of the sources held are under -60 dB
+ok   the propellers are heard once under way
+ok   parked, everything off: no loop runs  0
+ok   started: loops run  4 in the cockpit
+ok   shut down: every loop lets go of its source  after 3.5 s
+ok   the airframe's sounds play at their stated levels  worst 0.000 dB
+ok   each view has its gear loops, their files there
+ok   gear up: no gear loop runs  0 cases
+ok   gear loops: PyWopWop's levels at their speeds  worst 0.012 dB
+ok   gear loops: none held at nil, none cut off, two at most  nil 0, cut 0, most 2
+mod4: 452 loops
+ok   every loop is looped, its file there
+     sweep of 40000 states, every group free: most at once 42 in the cockpit, 42 outside
+ok   sources under 64, with room for what else is playing
+ok   no loop holds a source at nil volume  0 cases
+ok   nothing audible is cut off by its condition  0 cases
+ok   only the current view's loops run
+ok   no propeller turning: no loop runs  0
+ok   each group's loops add to one whole  worst 0.0000 of the power
+mod4 on the wheels: pitch -0.25 deg, height of the centre of gravity 4.02 ft, weight on wheels 1
+  lift-off after 12.8 s at 83 KCAS, in 1242 ft
+  500 ft after 44.8 s at 97 KCAS, 984 ft/min
+  cruise, trimmed (aileron 0.025, rudder -0.001), hands off for 60 s: 133.7 KCAS, height changed -3 ft, bank -0.5 deg, pitch 0.9 deg
+  30 deg bank for 25 s: heading moved 104 deg, 1.14 g, 133.1 KCAS, sideslip 0.5 deg
+  wings level again: bank -0.5 deg, 131.6 KCAS
+  approach, flaps 30: 75.1 KCAS (aiming 75), alpha 4.0, stabilator 0.2, -270 ft/min, high lift 4287 rpm, 5.1 kW a disc
+     961 samples along the flight
+     cockpit: at most 42 at once, 23 on average
+     cockpit: 6 of 22464 sources held under -60 dB, 130 under -40 dB
+ok   cockpit: under 1 % of the sources held are under -60 dB
+     outside: at most 42 at once, 23 on average
+     outside: 20 of 22464 sources held under -60 dB, 340 under -40 dB
+ok   outside: under 1 % of the sources held are under -60 dB
+ok   the propellers are heard once under way
+ok   parked, everything off: no loop runs  0
+ok   started: loops run  20 in the cockpit
+ok   shut down: every loop lets go of its source  after 3.5 s
+ok   the airframe's sounds play at their stated levels  worst 0.000 dB
+ok   each view has its gear loops, their files there
+ok   gear up: no gear loop runs  0 cases
+ok   gear loops: PyWopWop's levels at their speeds  worst 0.012 dB
+ok   gear loops: none held at nil, none cut off, two at most  nil 0, cut 0, most 2
+
+ALL CHECKS PASS

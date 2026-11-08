@@ -1,0 +1,16 @@
+\begin{tabularx}{\textwidth}{@{}ll>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Lever} & \textbf{Position} & \textbf{Effect} \\
+\midrule
+Torque & \ann{REGEN} & Below idle. Negative torque, recharging the battery \\
+ & \ann{IDLE} & 8 Nm per controller \\
+ & \ann{FULL} & 127.5 Nm per controller, 255 Nm per motor \\
+ & \ann{OVERDRIVE} & Up to 175 Nm, for one controller left. Past a detent \\
+Propeller & Forward & 2,700 rpm \\
+ & Cruise & 2,250 rpm \\
+ & Low & 1,700 rpm \\
+ & Aft stop & \ann{FEATHER}: drives the blades to feather, overriding MAN and AUTO \\
+Parking brake & Out & Set: holds the brakes on. A round knob at the foot of the pedestal, as on the P2006T: click it, or press \ann{B}. Set when the aircraft loads \\
+ & In & Released \\
+\bottomrule
+\end{tabularx}

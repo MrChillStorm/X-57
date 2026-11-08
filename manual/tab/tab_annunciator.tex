@@ -1,0 +1,15 @@
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{34mm}>{\raggedright\arraybackslash}p{34mm}l>{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Top row} & \textbf{Bottom row} & \textbf{Colour} & \textbf{Lights when} \\
+\midrule
+\ann{DC CONV A} & \ann{DC CONV B} & Yellow & Converter failed, or traction battery below 310 V \\
+\ann{MAIN BATT A} & \ann{MAIN BATT B} & Red & Cell above 65 \textdegree{}C \\
+\ann{TRAC BUS A} & \ann{TRAC BUS B} & Yellow & Traction bus at or below 350 V \\
+\ann{LEFT CMC A} & \ann{LEFT CMC B} & Yellow & Controller failed, or armed with no traction voltage \\
+\ann{RIGHT CMC A} & \ann{RIGHT CMC B} & Yellow & The same \\
+\ann{MAIN DOOR OPEN} & \ann{REAR DOOR OPEN} & Red & Door open \\
+\ann{PITOT HEAT} (green) & \ann{PITOT HEAT} (yellow) &  & Not modelled \\
+\ann{GEAR PUMP ON} &  & Yellow & Gear moving \\
+ & \ann{ESS BATT} & Red & Battery failed (steady), or below 12.8 V (slow flash) \\
+\bottomrule
+\end{tabularx}

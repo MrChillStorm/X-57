@@ -1,0 +1,133 @@
+
+Wind tunnel, Re 0.6 million, one part at a time [ICAS figs. 14, 16, 18; AIAA fig. 4]. Moments about 25 % of the chord
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+  wing-body lift slope, /deg                         0.0825   target 0.0800             ok
+  wing-body lift at alpha 0 (fitted incidence)        0.144   target 0.130              ok
+  wing-body aerodynamic centre, % chord                17.3   target 14.0               ok
+  nacelles move it forward, % chord                     1.2   target 3.0                ok
+  nacelles' lift (their measured loss)               -0.040   target -0.048             ok
+  wing-body Cm at CL 0                               -0.078   target -0.080             ok
+  fixed stabilator, whole aircraft: lift slope 0.0918/deg; neutral point, CL 0.3: 41.4 %
+  whole aircraft neutral point, % chord                41.4   target 41.0               ok
+  Cm delta, fig. 4, /rad                              -1.78   target -1.95              ok
+  Cm at delta 0 by alpha, fig. 4 reads -0.055 at 0, -0.115 at 4, -0.195 at 8: [-0.06  -0.119 -0.183]
+  Cn beta, tunnel, /rad                              0.0380   target 0.0500             ok
+  Cl beta, tunnel, /rad                             -0.0598   target -0.0573            ok
+  CY beta, tunnel, /rad                              -0.478   target -0.688             MISS (limit 20 %)
+  Cn delta r, tunnel, /rad                          -0.0721   target -0.0631            ok
+
+Modes in flight at 110 KIAS, 1140 kg, CG 19 % [AIAA tables 6-8]. These are the times seen on the aircraft
+  phugoid period, s                                    28.8   target 27.0               ok
+  phugoid damping                                     0.088   target 0.090              ok
+  short period, rad/s                                  5.92   target 3.41               MISS (limit 15 %)
+  short period damping                                0.589   target 0.400              MISS (limit 0.1)
+  Dutch roll period, s                                 2.96   target 3.25               ok
+  Dutch roll damping                                  0.305   target 0.260              ok
+  the roots left: [-14.173  -0.035]. The paper's own table 9 gives a short period of 4.95 rad/s, damping 0.54
+
+The stabilator history of fig. 24, flown. Measured by eye from the paper: V 55-64 m/s, az 3.5-17 m/s2, q -10 to +11 deg/s, vane alpha -1.2 to 4.7 deg
+  model: V 51.7-61.7 m/s, az 4.6-15.6 m/s2, q -7.6 to 8.1 deg/s, alpha 1.3 to 5.4 deg (trim 3.1)
+  lift for 2 deg of stabilator: az up 5.8 m/s2 (flight 7), alpha up 2.3 deg (the vane 3.7). Load per degree 2.49 against the vane's 1.89: the vane reads 1.32 of true alpha, if the model's lift slope is right
+  max-slope method, step in 0.05 s: 6.88 rad/s (overshoot 0.177, t2 - t1 0.38 s); the model's root is 5.92
+  max-slope method, step in 0.30 s: 5.86 rad/s (overshoot 0.161, t2 - t1 0.42 s); the model's root is 5.92
+  max-slope method, step in 0.60 s: 3.68 rad/s (overshoot 0.125, t2 - t1 0.58 s); the model's root is 5.92
+  max-slope method, step in 0.90 s: 2.31 rad/s (overshoot 0.092, t2 - t1 0.85 s); the model's root is 5.92
+
+Derivatives at the same condition [AIAA tables 9, 10]
+  CL alpha, /rad                                      5.977   target 4.152 to 4.500     MISS (limit 10 %)
+  Cm alpha, /rad                                     -1.297   target -0.800 to -0.871   MISS (limit 15 %)
+  Cm delta, /rad                                     -1.917   target -1.811             ok
+  Cm q, /rad                                         -14.48   target -14.80 to -19.05   ok
+  Cn r, /rad                                         -0.090   target -0.106             ok
+  with winglets and power, against the tunnel's without (checked like for like above): CY beta -0.645, Cn beta 0.0313, Cl beta -0.1118, Cn delta r -0.0778
+  printed, flight / handbook: Cl p -0.679 (-0.281 / -0.529), Cl r 0.094 (0.057), Cn p -0.048 (-0.130), Cl delta a 0.147 (0.045 / 0.057), Cl delta r 0.0084 (0.0009 / 0.014), CY delta r 0.188 (0.04 / 0.173)
+  neutral point from the two slopes: 40.7 %; downwash lag Cm alpha-dot -3.48
+
+Stabilator to trim level flight [AIAA fig. 11a], 1100 kg assumed, 2000 ft
+  CG 16.5 %: model at the paper's CLs [ -4.5  -5.   -5.4  -6.5  -7.1  -8.7 -10.2], paper [-4.0, -4.5, -4.9, -6.3, -7.0, -9.0, -10.9]
+  worst stabilator error, CG 16.5 %, deg               0.71   target 0.00               ok
+  CG 30.5 %: model at the paper's CLs [-3.9 -4.4 -5.3 -6.1], paper [-3.5, -4.0, -5.4, -6.9]
+  worst stabilator error, CG 30.5 %, deg               0.78   target 0.00               ok
+  neutral point at CL 0.25, 0.5, 0.75: 40.6, 41.6, 42.1 % (flight: 37, 43.5, 52.5)
+  neutral point at CL 0.5, % chord                     41.6   target 41.0 to 43.0       ok
+
+Sideslip at 100 kt, the wings near level as fig. 12 shows them, so these are flat skids and only the moments balance [AIAA fig. 13]
+  rudder, aileron by sideslip: -15: -7.6, +11.2, -10: -4.0, +7.4, -5: -1.8, +3.7, +5: +1.8, -3.7, +10: +4.3, -7.4, +15: +8.6, -11.2
+  rudder per degree, -15 to +15 deg                    0.54   target 0.65               ok
+  aileron per degree, -15 to +15 deg                   0.75   target 0.58               MISS (limit 25 %)
+  past +20 the fin's section stalls and the rudder stops helping, where the airplane held +25 on some 16 deg. The vane may read high here too; the offsets at zero sideslip aren't modelled
+
+Cruise, 1150 kg, ISA [AFM 5-17 to 5-19]: speed at the manual's power
+      0 ft  2250/97%: 146 (145), 2250/83%: 138 (136), 2250/65%: 125 (124), 2250/56%: 117 (116), 2250/43%: 102 (103), 2250/37%: 93 (95), 2100/63%: 123 (122), 2100/41%: 101 (100), 1900/58%: 120 (118), 1900/39%: 99 (97)
+   3000 ft  2388/87%: 144 (143), 2250/81%: 140 (138), 2250/54%: 118 (117), 2100/65%: 129 (127), 1900/60%: 125 (122)
+   6000 ft  2388/79%: 143 (141), 2250/65%: 132 (130), 2250/44%: 109 (108), 2100/51%: 118 (116), 1900/47%: 114 (112)
+   9000 ft  2388/71%: 140 (139), 2250/62%: 133 (131), 2100/48%: 118 (116), 1900/54%: 125 (123)
+  12000 ft  2388/63%: 137 (136), 2250/57%: 131 (129), 1900/50%: 124 (121)
+  mean +1.3 kt, rms 1.7 kt, worst +2.7 kt
+  worst cruise speed error, kt                          2.7   target 0.0                ok
+
+Enroute climb, maximum continuous power [AFM 5-13]
+  1180 kg, 0 ft, 84 KIAS, ft/min                       1129   target 1102               ok
+  1180 kg, 4000 ft, 81 KIAS, ft/min                     886   target 880                ok
+  1180 kg, 8000 ft, 77 KIAS, ft/min                     688   target 657                ok
+  1080 kg, 0 ft, 83 KIAS, ft/min                       1284   target 1251               ok
+  930 kg, 0 ft, 82 KIAS, ft/min                        1569   target 1527               ok
+One engine, feathered, maximum continuous on the other, balanced by rudder and sideslip with 3 deg of bank towards it [AFM 5-15]
+  1180 kg, 0 ft, 80 KIAS, ft/min                        217   target 206                ok
+  1180 kg, 4000 ft, 79 KIAS, ft/min                      83   target 85                 ok
+  1080 kg, 0 ft, 80 KIAS, ft/min                        286   target 271                ok
+  930 kg, 0 ft, 79 KIAS, ft/min                         414   target 390                ok
+
+Stall speeds, 1230 kg, forward CG 16.5 %, idle, gear down [AFM 5-6]
+  flaps up: CL max 1.231 at alpha 14.5, stabilator -14.5
+  stall speed, flaps up, KCAS                          64.0   target 64.0               ok
+  flaps T/O: CL max 1.546 at alpha 15.0, stabilator -14.7
+  stall speed, flaps T/O, KCAS                         57.1   target 56.0               ok
+  flaps full: CL max 1.691 at alpha 15.5, stabilator -14.7
+  stall speed, flaps full, KCAS                        54.6   target 54.0               ok
+
+Minimum control speed, left engine feathered, right at take-off power, flaps T/O, gear up, 5 deg of bank [AFM 62 KIAS]. Printed, no limit: Phase 5's check
+  70 KCAS: pedal 0.41 of full
+  65 KCAS: pedal 0.51 of full
+  60 KCAS: pedal 0.67 of full
+  55 KCAS: pedal 1.09 of full
+
+NASA's Mod II simulator, cruise, at its mass [20230004174]: 2835.5 lb, CG 24.4 %, inertias as printed
+   90 KCAS: short 3.85 (3.7), 0.525 (0.59); phugoid 0.263 (0.225), 0.054 (0.063); Dutch 1.55 (1.09), 0.261 (0.275); roll 0.11 s (0.88); alpha 5.6
+  90 KCAS short period, rad/s                          3.85   target 3.70               ok
+  90 KCAS short period damping                        0.525   target 0.590              ok
+  90 KCAS phugoid, rad/s                              0.263   target 0.225              MISS (limit 15 %)
+  90 KCAS phugoid damping                             0.054   target 0.063              ok
+  90 KCAS Dutch roll, rad/s                            1.55   target 1.09               MISS (limit 15 %)
+  90 KCAS Dutch roll damping                          0.261   target 0.275              ok
+  90 KCAS roll time constant, s                        0.11   target 0.88               MISS (limit 15 %)
+  100 KCAS: short 4.16 (4.1), 0.533 (0.59); phugoid 0.240 (0.205), 0.066 (0.076); Dutch 1.67 (1.18), 0.255 (0.290); roll 0.10 s (0.83); alpha 4.4
+  110 KCAS: short 4.47 (4.4), 0.542 (0.59); phugoid 0.220 (0.185), 0.074 (0.086); Dutch 1.80 (1.27), 0.251 (0.305); roll 0.10 s (0.78); alpha 3.5
+  110 KCAS short period, rad/s                         4.47   target 4.40               ok
+  110 KCAS short period damping                       0.542   target 0.590              ok
+  110 KCAS phugoid, rad/s                             0.220   target 0.185              MISS (limit 15 %)
+  110 KCAS phugoid damping                            0.074   target 0.086              ok
+  110 KCAS Dutch roll, rad/s                           1.80   target 1.27               MISS (limit 15 %)
+  110 KCAS Dutch roll damping                         0.251   target 0.305              ok
+  110 KCAS roll time constant, s                       0.10   target 0.78               MISS (limit 15 %)
+  120 KCAS: short 4.80 (4.8), 0.550 (0.59); phugoid 0.205 (0.170), 0.083 (0.104); Dutch 1.92 (1.37), 0.250 (0.310); roll 0.09 s (0.73); alpha 2.8
+  130 KCAS: short 5.13 (5.2), 0.557 (0.59); phugoid 0.192 (0.155), 0.094 (0.118); Dutch 2.05 (1.47), 0.250 (0.310); roll 0.08 s (0.68); alpha 2.3
+  130 KCAS short period, rad/s                         5.13   target 5.20               ok
+  130 KCAS short period damping                       0.557   target 0.590              ok
+  130 KCAS phugoid, rad/s                             0.192   target 0.155              MISS (limit 15 %)
+  130 KCAS phugoid damping                            0.094   target 0.118              ok
+  130 KCAS Dutch roll, rad/s                           2.05   target 1.47               MISS (limit 15 %)
+  130 KCAS Dutch roll damping                         0.250   target 0.310              MISS (limit 0.06)
+  130 KCAS roll time constant, s                       0.08   target 0.68               MISS (limit 15 %)
+  trimmed CL by alpha: 0.82 at 7.4 (NASA 8.0), 0.53 at 4.4 (NASA 4.7), 0.37 at 2.8 (NASA 2.9)
+  trimmed lift slope, /rad                             5.70   target 5.09               MISS (limit 10 %)
+  rudder, aileron by sideslip: -15: -7.3, +13.9, -10: -3.9, +8.6, -5: -1.7, +4.2, +5: +1.7, -4.2, +10: +4.2, -8.7, +15: +8.2, -13.9
+  aileron per degree of sideslip, -15 to +15           0.93   target 0.80               ok
+
+17 misses: CY beta, tunnel, /rad; short period, rad/s; short period damping; CL alpha, /rad; Cm alpha, /rad; aileron per degree, -15 to +15 deg; 90 KCAS phugoid, rad/s; 90 KCAS Dutch roll, rad/s; 90 KCAS roll time constant, s; 110 KCAS phugoid, rad/s; 110 KCAS Dutch roll, rad/s; 110 KCAS roll time constant, s; 130 KCAS phugoid, rad/s; 130 KCAS Dutch roll, rad/s; 130 KCAS Dutch roll damping; 130 KCAS roll time constant, s; trimmed lift slope, /rad

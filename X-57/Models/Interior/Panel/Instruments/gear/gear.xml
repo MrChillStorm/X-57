@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>gear.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>gearpanel</object-name>
+    <object-name>gearmanette</object-name>
+    <object-name>gearredon</object-name>
+    <object-name>gearnozeon</object-name>
+    <object-name>gearlefton</object-name>
+    <object-name>gearrighton</object-name>
+    <object-name>gearredoff</object-name>
+    <object-name>gearnozeoff</object-name>
+    <object-name>gearleftoff</object-name>
+    <object-name>gearrightoff</object-name>
+
+    <!-- Objets transparents -->
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>gearpanel</object-name>
+    <object-name>gearmanette</object-name>
+    <object-name>gearredon</object-name>
+    <object-name>gearnozeon</object-name>
+    <object-name>gearlefton</object-name>
+    <object-name>gearrighton</object-name>
+    <object-name>gearredoff</object-name>
+    <object-name>gearnozeoff</object-name>
+    <object-name>gearleftoff</object-name>
+    <object-name>gearrightoff</object-name>
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>gearredon</object-name>
+    <object-name>gearnozeon</object-name>
+    <object-name>gearlefton</object-name>
+    <object-name>gearrighton</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <red>   2 </red>
+      <green> 2 </green>
+      <blue>  2 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>gearredoff</object-name>
+    <object-name>gearnozeoff</object-name>
+    <object-name>gearleftoff</object-name>
+    <object-name>gearrightoff</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <red>   0.1 </red>
+      <green> 0.1 </green>
+      <blue>  0.1 </blue>
+    </emission>
+  </animation>
+
+  <animation>
+    <type>pick</type>
+    <object-name>gearmanette</object-name>
+    <visible>true</visible>
+    <action>
+      <button>0</button>
+      <repeatable>false</repeatable>
+      <binding>
+        <command>property-toggle</command>
+        <property>controls/gear/gear-down-cmd</property>
+      </binding>
+    </action>
+  </animation>
+
+  <animation>
+    <type>rotate</type>
+    <object-name>gearmanette</object-name>
+    <property>gear/gear[0]/position-norm</property>
+    <interpolation>
+      <entry><ind> 0 </ind><dep> -40 </dep></entry>
+      <entry><ind> 1 </ind><dep>   0 </dep></entry>
+    </interpolation>
+    <center>
+      <x-m> -0.00025 </x-m>
+      <y-m> -0.01588 </y-m>
+      <z-m> -0.03611 </z-m>
+    </center>
+    <axis>
+      <x> 0 </x>
+      <y> 1 </y>
+      <z> 0 </z>
+    </axis>
+  </animation>
+
+  <!-- Lampe rouge allumée si train rentré et rouge éteinte si train sortie -->
+  <animation>
+    <type>select</type>
+    <object-name>gearredoff</object-name>
+    <condition>
+      <and>
+        <equals>
+          <property>gear/gear[0]/position-norm</property>
+          <value> 1 </value>
+        </equals>
+        <equals>
+          <property>gear/gear[1]/position-norm</property>
+          <value> 1 </value>
+        </equals>
+        <equals>
+          <property>gear/gear[2]/position-norm</property>
+          <value> 1 </value>
+        </equals>
+      </and>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>gearredon</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[0]/position-norm</property>
+        <value> 0 </value>
+      </equals>
+      <equals>
+        <property>gear/gear[1]/position-norm</property>
+        <value> 0 </value>
+      </equals>
+      <equals>
+        <property>gear/gear[2]/position-norm</property>
+        <value> 0 </value>
+      </equals>
+    </condition>
+  </animation>
+
+  <!-- Lampe verte allumée si train sortie verte éteinte si train rentré -->
+  <animation>
+    <type>select</type>
+    <object-name>gearnozeon</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[0]/position-norm</property>
+        <value> 1 </value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>gearnozeoff</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[0]/position-norm</property>
+        <value> 0 </value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>gearlefton</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[1]/position-norm</property>
+        <value> 1 </value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>gearleftoff</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[1]/position-norm</property>
+        <value> 0 </value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>gearrighton</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[2]/position-norm</property>
+        <value> 1 </value>
+      </equals>
+    </condition>
+  </animation>
+
+  <animation>
+    <type>select</type>
+    <object-name>gearrightoff</object-name>
+    <condition>
+      <equals>
+        <property>gear/gear[2]/position-norm</property>
+        <value> 0 </value>
+      </equals>
+    </condition>
+  </animation>
+
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>gearleftoff</object-name><object-name>gearlefton</object-name><object-name>gearmanette</object-name><object-name>gearnozeoff</object-name><object-name>gearnozeon</object-name><object-name>gearpanel</object-name><object-name>gearredoff</object-name><object-name>gearredon</object-name><object-name>gearrightoff</object-name><object-name>gearrighton</object-name></effect>
+</PropertyList>

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<PropertyList><name>x57-gold</name><inherits-from>Effects/model-pbr</inherits-from><parameters><base-color-factor type="vec4d">1.0 0.78 0.36 1.0</base-color-factor><metallic-factor type="float">1.0</metallic-factor><roughness-factor type="float">0.22</roughness-factor></parameters></PropertyList>

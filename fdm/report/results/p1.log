@@ -1,0 +1,60 @@
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+Power off: model less the solvers, RMS (typical solver spread)
+  neutral curves            CD 0.0004 (0.0205) CL 0.0024 (0.0746) Cm 0.0046 (0.0713)
+  one input                 CD 0.0145 (0.0023) CL 0.0738 (0.0142) CY 0.0153 (0.0037) Cl 0.0031 (0.0015) Cm 0.0823 (0.0223) Cn 0.0013 (0.0014)  n 130
+  combined                  CD 0.0054 (0.0015) CL 0.0175 (0.0083) CY 0.0142 (0.0013) Cl 0.0045 (0.0004) Cm 0.0488 (0.0123) Cn 0.0027 (0.0006)  n 54
+  one input past stall      CD 0.0225 (0.0025) CL 0.0948 (0.0090) CY 0.0187 (0.0046) Cl 0.0082 (0.0012) Cm 0.1021 (0.0181) Cn 0.0020 (0.0017)  n 57
+  rows where a symmetric case shows an uneven stall: 12, left out
+MISS neutral, below stall: reproduces the solvers' mean
+MISS one input: its increment reproduced  CD 0.0145 CL 0.0738 CY 0.0153 Cl 0.0031 Cm 0.0823 Cn 0.0013
+MISS combined inputs: cross terms stay small  CD 0.005 CL 0.018 CY 0.014 Cl 0.004 Cm 0.049 Cn 0.003
+High lift on: model less the solvers, RMS (typical solver spread)
+  combined, 58-90 KCAS      CD 0.0055 (0.0008) CL 0.0272 (0.0096) CY 0.0214 (0.0010) Cl 0.0061 (0.0016) Cm 0.0489 (0.0070) Cn 0.0042 (0.0005)  n 96
+  effect of the props, 58-90 KCASCD 0.0593 (0.0292) CL 0.1437 (0.2461) Cm 0.0628 (0.1366)  n 104
+  effect of the props, other speedsCD 0.0909 (0.0362) CL 0.2102 (0.1616) Cm 0.0981 (0.1117)  n 72
+  one input, 58-90 KCAS     CD 0.0239 (0.0040) CL 0.1629 (0.0165) CY 0.0181 (0.0052) Cl 0.0105 (0.0029) Cm 0.3478 (0.0239) Cn 0.0053 (0.0018)  n 371
+  one input, other speeds   CD 0.0280 (0.0069) CL 0.1229 (0.0246) CY 0.0249 (0.0044) Cl 0.0092 (0.0020) Cm 0.2827 (0.0591) Cn 0.0078 (0.0021)  n 100
+MISS the props' effect, 58-90 KCAS: inside the solvers' spread  CD 0.059 CL 0.144 Cm 0.063
+MISS one input with the props on, 58-90 KCAS: within 0.05 in lift and pitch  CL 0.163 Cm 0.348
+MISS Mod IV, 58 KCAS, flaps 30: peak CL within 0.05 of NASA's 4.40-4.58  CL 4.30 at 14 deg
+Trimmed stall, Mod III, 3,000 lb: model, NASA
+  flaps  0: trimmed CLmax 1.95 at alpha 15.5, stabilator -11.1: 82.7 KCAS (NASA 88); untrimmed CFD peaks 2.13-2.34
+  flaps 10: trimmed CLmax 2.05 at alpha 12.5, stabilator -8.2: 80.6 KCAS (NASA 80); untrimmed CFD peaks 2.28-2.53
+  flaps 30: trimmed CLmax 2.65 at alpha 11.5, stabilator -6.2: 70.8 KCAS (NASA 73); untrimmed CFD peaks 2.76-3.03
+MISS stall speeds within 5 KCAS of NASA's  worst 5.3 KCAS
+Cruise, 8,000 ft, 3,000 lb: 149.8 KTAS, CL 0.748, CD 0.0549, L/D 13.6 (NASA 13.5), alpha 0.93, stabilator -0.09, 85.4 kW, thrust 219 lbf
+ok   L/D at 150 KTAS within 1 of NASA's 13.5
+  peak L/D 14.9 (NASA 15.9) at 110 KCAS, CL 1.08
+ok   peak L/D within 1.5 of NASA's 15.9
+mod3: model (NASA)
+   80  zeta phugoid 0.108 (0.111)  short 0.268 (0.363)  dutch 0.042 (0.111)  roll 1.05 s (1.24)  w 0.32 (0.30) 3.83 (3.91) 1.16 (1.18)  [NASA's stall speed]
+   88  zeta phugoid 0.099 (0.104)  short 0.361 (0.374)  dutch 0.106 (0.118)  roll 1.00 s (1.03)  w 0.30 (0.27) 3.90 (4.15) 1.22 (1.28)
+   96  zeta phugoid 0.104 (0.116)  short 0.414 (0.382)  dutch 0.124 (0.136)  roll 0.81 s (0.83)  w 0.27 (0.25) 4.01 (4.41) 1.27 (1.35)
+  104  zeta phugoid 0.108 (0.112)  short 0.450 (0.420)  dutch 0.144 (0.150)  roll 0.70 s (0.73)  w 0.25 (0.23) 4.16 (4.49) 1.34 (1.44)
+  112  zeta phugoid 0.120 (0.122)  short 0.467 (0.439)  dutch 0.157 (0.158)  roll 0.62 s (0.66)  w 0.24 (0.22) 4.38 (4.74) 1.44 (1.58)
+   worst: damping ratio phugoid 0.013, short period 0.032, Dutch roll 0.012; roll 5 %; frequency phugoid 10 %, short 9 %, Dutch 9 %
+mod4_fixed: model (NASA)
+   75  zeta phugoid 0.144 (0.123)  short 0.356 (0.366)  dutch 0.163 (0.150)  roll 1.18 s (1.34)  w 0.28 (0.24) 3.38 (3.77) 0.96 (1.13)
+   80  zeta phugoid 0.163 (0.164)  short 0.381 (0.378)  dutch 0.152 (0.145)  roll 1.03 s (1.18)  w 0.27 (0.26) 3.57 (3.86) 1.03 (1.14)
+   88  zeta phugoid 0.184 (0.190)  short 0.405 (0.372)  dutch 0.152 (0.127)  roll 0.89 s (1.00)  w 0.25 (0.23) 3.84 (4.22) 1.14 (1.25)
+   96  zeta phugoid 0.209 (0.207)  short 0.416 (0.386)  dutch 0.166 (0.147)  roll 0.78 s (0.81)  w 0.24 (0.22) 4.17 (4.41) 1.25 (1.34)
+  104  zeta phugoid 0.227 (0.228)  short 0.452 (0.418)  dutch 0.166 (0.154)  roll 0.71 s (0.72)  w 0.23 (0.20) 4.25 (4.51) 1.35 (1.44)
+  112  zeta phugoid 0.228 (0.228)  short 0.457 (0.439)  dutch 0.174 (0.152)  roll 0.63 s (0.68)  w 0.22 (-) 4.50 (4.68) 1.46 (1.57)
+   worst: damping ratio phugoid 0.020, short period 0.034, Dutch roll 0.025; roll 13 %; frequency phugoid 18 %, short 10 %, Dutch 15 %
+mod4_airspeed: model (NASA)
+   75  zeta phugoid 0.264 (0.271)  short 0.328 (0.360)  dutch 0.162 (0.170)  roll 1.12 s (1.40)  w 0.27 (0.26) 3.46 (3.82) 0.99 (1.12)
+   80  zeta phugoid 0.271 (0.269)  short 0.348 (0.376)  dutch 0.154 (0.132)  roll 1.13 s (1.19)  w 0.25 (0.24) 3.61 (3.87) 1.04 (1.17)
+   88  zeta phugoid 0.248 (0.288)  short 0.376 (0.374)  dutch 0.140 (0.127)  roll 1.00 s (1.03)  w 0.26 (0.19) 3.84 (4.16) 1.14 (1.29)
+   96  zeta phugoid 0.103 (0.116)  short 0.422 (0.380)  dutch 0.152 (0.141)  roll 0.81 s (0.83)  w 0.27 (0.25) 3.98 (4.43) 1.25 (1.36)
+   worst: damping ratio phugoid 0.039, short period 0.042, Dutch roll 0.022; roll 20 %; frequency phugoid 33 %, short 10 %, Dutch 12 %
+MISS Mod III modes match NASA's (damping within 0.02, frequency and roll within 8 %, stall speed aside)
+MISS Mod IV airspeed mode: damping within 0.05, frequency and roll within 20 %
+ok   Mod IV fixed mode: damping within 0.05, frequency and roll within 25 %
+
+MISSES: neutral, below stall: reproduces the solvers' mean; one input: its increment reproduced; combined inputs: cross terms stay small; the props' effect, 58-90 KCAS: inside the solvers' spread; one input with the props on, 58-90 KCAS: within 0.05 in lift and pitch; Mod IV, 58 KCAS, flaps 30: peak CL within 0.05 of NASA's 4.40-4.58; stall speeds within 5 KCAS of NASA's; Mod III modes match NASA's (damping within 0.02, frequency and roll within 8 %, stall speed aside); Mod IV airspeed mode: damping within 0.05, frequency and roll within 20 %

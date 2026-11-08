@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!-- written by fdm/x57panel.py -->
+<PropertyList>
+<path>overhead.ac</path>
+<model><path>tg-batt-a.xml</path><offsets><x-m>0.0015</x-m><y-m>-0.1071</y-m><z-m>0.0190</z-m></offsets></model>
+<model><path>tg-batt-b.xml</path><offsets><x-m>0.0015</x-m><y-m>0.1040</y-m><z-m>0.0132</z-m></offsets></model>
+<model><path>tg-la.xml</path><offsets><x-m>0.0015</x-m><y-m>-0.0612</y-m><z-m>0.0264</z-m></offsets></model>
+<model><path>tg-lb.xml</path><offsets><x-m>0.0015</x-m><y-m>-0.0612</y-m><z-m>-0.0064</z-m></offsets></model>
+<model><path>tg-ra.xml</path><offsets><x-m>0.0015</x-m><y-m>0.0597</y-m><z-m>0.0220</z-m></offsets></model>
+<model><path>tg-rb.xml</path><offsets><x-m>0.0015</x-m><y-m>0.0542</y-m><z-m>-0.0103</z-m></offsets></model>
+<model><path>tg-arm-la.xml</path><offsets><x-m>0.0015</x-m><y-m>-0.1086</y-m><z-m>-0.0337</z-m></offsets></model>
+<model><path>tg-arm-lb.xml</path><offsets><x-m>0.0015</x-m><y-m>-0.0780</y-m><z-m>-0.0337</z-m></offsets></model>
+<model><path>tg-arm-ra.xml</path><offsets><x-m>0.0015</x-m><y-m>0.0673</y-m><z-m>-0.0381</z-m></offsets></model>
+<model><path>tg-arm-rb.xml</path><offsets><x-m>0.0015</x-m><y-m>0.0949</y-m><z-m>-0.0387</z-m></offsets></model>
+<model><path>tg-hl-a.xml</path><offsets><x-m>0.0015</x-m><y-m>-0.0107</y-m><z-m>-0.0357</z-m></offsets></model>
+<model><path>tg-hl-b.xml</path><offsets><x-m>0.0015</x-m><y-m>0.0138</y-m><z-m>-0.0357</z-m></offsets></model>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-la</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-la-g</object-name></effect>
+<animation><type>select</type><object-name>led-la-g</object-name><condition><not><property>sim/model/x57/tc-red/la</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-la</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-la-r</object-name></effect>
+<animation><type>select</type><object-name>led-la-r</object-name><condition><property>sim/model/x57/tc-red/la</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-lb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-lb-g</object-name></effect>
+<animation><type>select</type><object-name>led-lb-g</object-name><condition><not><property>sim/model/x57/tc-red/lb</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-lb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-lb-r</object-name></effect>
+<animation><type>select</type><object-name>led-lb-r</object-name><condition><property>sim/model/x57/tc-red/lb</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-ra</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-ra-g</object-name></effect>
+<animation><type>select</type><object-name>led-ra-g</object-name><condition><not><property>sim/model/x57/tc-red/ra</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-ra</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-ra-r</object-name></effect>
+<animation><type>select</type><object-name>led-ra-r</object-name><condition><property>sim/model/x57/tc-red/ra</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-rb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-rb-g</object-name></effect>
+<animation><type>select</type><object-name>led-rb-g</object-name><condition><not><property>sim/model/x57/tc-red/rb</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-rb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-rb-r</object-name></effect>
+<animation><type>select</type><object-name>led-rb-r</object-name><condition><property>sim/model/x57/tc-red/rb</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-la</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-la-g</object-name></effect>
+<animation><type>select</type><object-name>led-hl-la-g</object-name><condition><not><property>sim/model/x57/tc-red/hl-la</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-la</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-la-r</object-name></effect>
+<animation><type>select</type><object-name>led-hl-la-r</object-name><condition><property>sim/model/x57/tc-red/hl-la</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-lb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-lb-g</object-name></effect>
+<animation><type>select</type><object-name>led-hl-lb-g</object-name><condition><not><property>sim/model/x57/tc-red/hl-lb</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-lb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-lb-r</object-name></effect>
+<animation><type>select</type><object-name>led-hl-lb-r</object-name><condition><property>sim/model/x57/tc-red/hl-lb</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-ra</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-ra-g</object-name></effect>
+<animation><type>select</type><object-name>led-hl-ra-g</object-name><condition><not><property>sim/model/x57/tc-red/hl-ra</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-ra</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-ra-r</object-name></effect>
+<animation><type>select</type><object-name>led-hl-ra-r</object-name><condition><property>sim/model/x57/tc-red/hl-ra</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">0.25 1 0.35</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-rb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-rb-g</object-name></effect>
+<animation><type>select</type><object-name>led-hl-rb-g</object-name><condition><not><property>sim/model/x57/tc-red/hl-rb</property></not></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/Lit/lit</inherits-from><parameters><lit-color type="vec3d">1 0.18 0.1</lit-color><lit-level><use>/instrumentation/x57/lamp/tc-hl-rb</use></lit-level><lit-gain type="float">1</lit-gain><lit-reflectance type="float">0.8</lit-reflectance></parameters><object-name>led-hl-rb-r</object-name></effect>
+<animation><type>select</type><object-name>led-hl-rb-r</object-name><condition><property>sim/model/x57/tc-red/hl-rb</property></condition></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>over-box</object-name><object-name>over-face</object-name><object-name>over-screws</object-name></effect>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-case</inherits-from><object-name>la-ring</object-name><object-name>lb-ring</object-name><object-name>ra-ring</object-name><object-name>rb-ring</object-name><object-name>hl-la-ring</object-name><object-name>hl-lb-ring</object-name><object-name>hl-ra-ring</object-name><object-name>hl-rb-ring</object-name></effect>
+</PropertyList>

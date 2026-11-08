@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>plaque.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>plaque</object-name>
+
+    <!-- Objets transparents -->
+  </animation>
+
+  <animation>
+    <type>noshadow</type>
+    <object-name>plaque</object-name>
+  </animation>
+
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-face</inherits-from><object-name>plaque</object-name><object-name>visses</object-name></effect>
+</PropertyList>

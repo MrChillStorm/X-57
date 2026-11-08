@@ -1,0 +1,58 @@
+
+The beam against the vibration test [20240011864 tables 5, 9] and NASA's whole aircraft [20240007439 table 4]
+  fitted: symmetric 2.25 (2.26), clean 6.55 (6.55), antisymmetric 2.14 (2.14)
+  clean, antisymmetric first bending, Hz                    6.05   target 5.76     ok
+  tip masses, symmetric second bending, Hz                 18.50   target 15.76    MISS (limit 10 %)
+  tip masses, antisymmetric second bending, Hz             17.06   target 14.82    MISS (limit 10 %)
+  clean, symmetric second bending, Hz                      27.75   target 26.36    ok
+  clean, antisymmetric second bending, Hz                  25.70   target 23.90    ok
+  free in the air, antisymmetric: 3.55, 3.89 Hz. NASA's table lists one first bending mode, without saying which; it sits nearest the symmetric
+  Mod III, free in the air, Hz                              2.39   target 2.31     ok
+  Mod IV, free in the air, Hz                               2.37   target 2.29     ok
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+
+Ringing with the air nearly gone: 300,000 ft, propellers parked
+  Mod III symmetric: 2.397 Hz (beam 2.395), damping 0.0055, kept 8 % after 12 s
+  Mod III, symmetric, Hz                                   2.397   target 2.395    ok
+  Mod III, symmetric, damping                             0.0055   target 0.0057   ok
+  Mod III antisymmetric: 3.540 Hz (beam 3.553), damping 0.0056, kept 22 % after 12 s
+  Mod III, antisymmetric, Hz                               3.540   target 3.553    ok
+  Mod III, antisymmetric, damping                         0.0056   target 0.0057   ok
+  Mod IV symmetric: 2.377 Hz (beam 2.372), damping 0.0055, kept 36 % after 12 s
+  Mod IV, symmetric, Hz                                    2.377   target 2.372    ok
+  Mod IV, symmetric, damping                              0.0055   target 0.0057   ok
+  Mod IV antisymmetric: 3.860 Hz (beam 3.895), damping 0.0057, kept 9 % after 12 s
+  Mod IV, antisymmetric, Hz                                3.860   target 3.895    ok
+  Mod IV, antisymmetric, damping                          0.0057   target 0.0057   ok
+
+In flight, trimmed level, 6,000 ft, a kick to each mode
+  Mod III            100 KCAS: alpha 6.6, tip +0.20 ft up; symmetric 2.39 Hz, damping 0.023; antisymmetric 3.54 Hz, 0.007  ok
+  Mod III            135 KCAS: alpha 0.9, tip +0.18 ft up; symmetric 2.39 Hz, damping 0.035; antisymmetric 3.55 Hz, 0.011  ok
+  Mod III            175 KCAS: alpha -1.5, tip +0.15 ft up; symmetric 2.40 Hz, damping 0.039; antisymmetric 3.55 Hz, 0.012  ok
+  Mod IV             100 KCAS: alpha 6.6, tip +0.18 ft up; symmetric 2.38 Hz, damping 0.022; antisymmetric 3.87 Hz, 0.006  ok
+  Mod IV             135 KCAS: alpha 0.9, tip +0.16 ft up; symmetric 2.38 Hz, damping 0.033; antisymmetric 3.87 Hz, 0.011  ok
+  Mod IV             175 KCAS: alpha -1.5, tip +0.14 ft up; symmetric 2.38 Hz, damping 0.037; antisymmetric 3.88 Hz, 0.013  ok
+  Mod IV, high lift   70 KCAS: alpha 4.9, tip +0.10 ft up; symmetric 2.38 Hz, damping 0.017; antisymmetric 3.87 Hz, 0.009  ok
+
+Dihedral effect, Mod III, 100 KCAS, flaps 0, bent to its 1 g shape against rigid
+  Cl beta -0.1476 rigid, -0.1634 bent; Cn beta 0.1118, 0.1076; tip 0.20 ft
+
+On the gear, wings bending, nothing running
+  standing, the pilot's g, spread                         0.0000   target 0.0000   ok
+  standing, side load factor, spread                      0.0000   target 0.0000   ok
+  standing, wing tip, ft, spread                          0.0000   target 0.0000   ok
+  dropped 0.2 ft with 1 deg of bank, the pilot's g, spread    0.0000   target 0.0000   ok
+  dropped 0.2 ft with 1 deg of bank, side load factor, spread    0.0000   target 0.0000   ok
+  dropped 0.2 ft with 1 deg of bank, wing tip, ft, spread    0.0000   target 0.0000   ok
+  rolling at 10 kt, the pilot's g, spread                 0.0000   target 0.0000   ok
+  rolling at 10 kt, side load factor, spread              0.0001   target 0.0000   ok
+  rolling at 10 kt, wing tip, ft, spread                  0.0004   target 0.0000   ok
+  gear lever up on the ground: the gear stays down         1.000   target 1.000    ok
+
+2 misses: tip masses, symmetric second bending, Hz; tip masses, antisymmetric second bending, Hz

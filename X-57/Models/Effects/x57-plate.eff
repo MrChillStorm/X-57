@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<PropertyList><name>x57-plate</name><inherits-from>Effects/model-pbr</inherits-from><parameters><base-color-factor type="vec4d">0.42 0.45 0.49 1.0</base-color-factor><metallic-factor type="float">0.0</metallic-factor><roughness-factor type="float">0.7</roughness-factor></parameters></PropertyList>

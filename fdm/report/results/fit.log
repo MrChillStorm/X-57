@@ -1,0 +1,23 @@
+
+
+     JSBSim Flight Dynamics Model v1.3.3 [GitHub build 2002/commit 66f7fafc07fe13e7ede9db20873030fed2881713] Oct 16 2026 00:38:24
+            [JSBSim-ML v2.0]
+
+JSBSim startup beginning ...
+
+pass 0: worst CL, Cm, CD up to 12 deg: flaps 0 0.203 0.073 0.0059; flaps 10 0.077 0.037 0.0130; flaps 30 0.392 0.122 0.0439
+pass 1: worst CL, Cm, CD up to 12 deg: flaps 0 0.034 0.052 0.0065; flaps 10 0.030 0.049 0.0110; flaps 30 0.125 0.233 0.0504
+pass 2: worst CL, Cm, CD up to 12 deg: flaps 0 0.008 0.021 0.0029; flaps 10 0.011 0.033 0.0057; flaps 30 0.043 0.124 0.0307
+pass 3: worst CL, Cm, CD up to 12 deg: flaps 0 0.004 0.006 0.0025; flaps 10 0.005 0.021 0.0017; flaps 30 0.014 0.062 0.0108
+pass 4: worst CL, Cm, CD up to 12 deg: flaps 0 0.003 0.005 0.0015; flaps 10 0.004 0.009 0.0026; flaps 30 0.009 0.032 0.0042
+pass 5: worst CL, Cm, CD up to 12 deg: flaps 0 0.002 0.004 0.0009; flaps 10 0.003 0.004 0.0020; flaps 30 0.010 0.028 0.0024
+pass 6: worst CL, Cm, CD up to 12 deg: flaps 0 0.002 0.003 0.0005; flaps 10 0.002 0.003 0.0013; flaps 30 0.011 0.026 0.0012
+pass 7: worst CL, Cm, CD up to 12 deg: flaps 0 0.002 0.002 0.0005; flaps 10 0.002 0.003 0.0008; flaps 30 0.009 0.024 0.0010
+pass 8: worst CL, Cm, CD up to 12 deg: flaps 0 0.002 0.002 0.0005; flaps 10 0.002 0.003 0.0005; flaps 30 0.008 0.022 0.0008
+rate corrections at alpha 2, flaps 0: Cmq +28.462 Clp +0.138 Clr +0.029 Cnp -0.079 Cnr -0.093
+moment left to the table, 58 KCAS, flaps 30: -2: -0.35 2: -0.04 4: +0.01 6: +0.02 8: +0.04 10: -0.21 11: -0.30 12: -0.41 13: -0.39 14: -0.52 15: -0.12 16: -0.29 17: -0.33 18: -0.38
+ground left to the table: heights over span [0.181 0.248 0.492 0.986 1.5  ], worst CL 0.070, Cm 0.159
+ground left with the propellers on: worst CL 0.091, Cm 0.148
+sideslip left to the table, flaps 0, 10 deg of sideslip, by alpha: Cl -0.0031 -0.0062 -0.0060 -0.0058 -0.0149 -0.0241, Cn +0.0006 +0.0021 +0.0001 -0.0019 -0.0090 -0.0161
+the strips' own roll for one propeller, Cl per lbf per psf: 0.00166 0.00163
+rudder left to the table, flaps 0, alpha 8, full travel: Cn +0.0270 CY -0.0575, rows [-28.0, -18.0, -10.0, -5.0, 0.0, 5.0, 10.0, 18.0, 28.0]

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<PropertyList><name>x57-face</name><inherits-from>Effects/model-pbr</inherits-from><parameters><metallic-factor type="float">0.0</metallic-factor><roughness-factor type="float">0.7</roughness-factor></parameters></PropertyList>

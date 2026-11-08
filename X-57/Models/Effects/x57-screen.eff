@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<PropertyList><name>x57-screen</name><inherits-from>Effects/model-pbr</inherits-from><parameters><base-color-factor type="vec4d">0.01 0.012 0.018 1</base-color-factor><metallic-factor type="float">0.0</metallic-factor><roughness-factor type="float">0.25</roughness-factor></parameters></PropertyList>

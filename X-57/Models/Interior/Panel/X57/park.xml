@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- written by fdm/x57panel.py -->
+<PropertyList>
+<path>park.ac</path>
+<animation><type>translate</type><object-name>park-stem</object-name><object-name>park-knob</object-name><property>/controls/gear/brake-parking</property><interpolation><entry><ind>0</ind><dep>0</dep></entry><entry><ind>1</ind><dep>0.02</dep></entry></interpolation><axis><x>1</x><y>0</y><z>0</z></axis></animation>
+<animation><type>pick</type><object-name>park-stem</object-name><object-name>park-knob</object-name><action><button>0</button><repeatable type="bool">false</repeatable><binding><command>property-toggle</command><property>/sim/model/x57/click/push</property></binding><binding><command>property-toggle</command><property>/controls/gear/brake-parking</property></binding></action><hovered><binding><command>set-tooltip</command><tooltip-id>x57-park</tooltip-id><label>Parking brake: %s</label><property>/controls/gear/brake-parking</property><mapping>on-off</mapping></binding></hovered></animation>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-case</inherits-from><object-name>park-bezel</object-name><object-name>park-knob</object-name></effect>
+<effect><inherits-from>Aircraft/X-57/Models/Effects/x57-steel</inherits-from><object-name>park-stem</object-name></effect>
+</PropertyList>

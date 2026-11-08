@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<PropertyList>
+
+  <path>panel.ac</path>
+
+  <animation>
+    <!-- Objets opaques -->
+    <object-name>panel</object-name>
+    <object-name>panel2</object-name>
+    <object-name>panel3</object-name>
+    <object-name>panel4</object-name>
+
+    <!-- Objets transparents -->
+  </animation>
+
+  <animation>
+    <type>material</type>
+    <object-name>panel</object-name>
+    <object-name>panel4</object-name>
+    <condition>
+      <property>controls/electric/battery-switch</property>
+    </condition>
+    <emission>
+      <factor-prop>controls/lighting/panel-dim</factor-prop>
+      <red>   0.8 </red>
+      <green> 0.8 </green>
+      <blue>  0.8 </blue>
+    </emission>
+  </animation>
+
+  <!-- PEDESTAL -->
+  <model>
+    <path>Pedestal/pedestal.xml</path>
+    <offsets>
+      <x-m>  0.03825 </x-m>
+      <y-m>  0.00000 </y-m>
+      <z-m> -0.47427 </z-m>
+    </offsets>
+  </model>
+
+  <!-- OVERHEAD -->
+  <!-- AI -->
+  <model>
+    <path>Instruments/ai/ai.xml</path>
+    <offsets>
+      <x-m>  0.000 </x-m>
+      <y-m> -0.341 </y-m>
+      <z-m> -0.032 </z-m>
+    </offsets>
+  </model>
+
+  <!-- ALT -->
+  <model>
+    <path>Instruments/alt/alt.xml</path>
+    <offsets>
+      <x-m>  0.001 </x-m>
+      <y-m> -0.245 </y-m>
+      <z-m> -0.032 </z-m>
+    </offsets>
+  </model>
+
+  <!-- ASI -->
+  <model>
+    <path>Instruments/asi/asi.xml</path>
+    <offsets>
+      <x-m>  0.003 </x-m>
+      <y-m> -0.436 </y-m>
+      <z-m> -0.032 </z-m>
+    </offsets>
+  </model>
+
+  <!-- CARB TEMPERATURE -->
+  <!-- CHRONOMETER -->
+  <!-- Engines -->
+  <!-- FLOW -->
+  <!-- FUEL PRESSURE -->
+  <!-- MANIFOLD -->
+  <!-- OILP -->
+  <!-- TACHMETER -->
+  <!-- FLAPS -->
+  <model>
+    <path>Instruments/flaps/flaps.xml</path>
+    <offsets>
+      <x-m> 0.0165 </x-m>
+      <y-m> 0.162 </y-m>
+      <z-m> -0.283 </z-m>
+      <pitch-deg> -21 </pitch-deg>
+    </offsets>
+  </model>
+
+  <!-- FUEL QUANTITY -->
+  <!-- GEAR -->
+  <!-- HI -->
+  <model>
+    <path>Instruments/hi/hi.xml</path>
+    <offsets>
+      <x-m>  0.001 </x-m>
+      <y-m> -0.341 </y-m>
+      <z-m> -0.128 </z-m>
+    </offsets>
+  </model>
+
+  <!-- KAP140 -->
+  <!-- KI204 -->
+  <!-- KNS80 -->
+  <!-- KI227 -->
+  <!-- Kt70 -->
+  <!-- KX165 -->
+  <!-- LIGHT PANEL -->
+  <!-- MAG COMPASS -->
+  <model>
+    <path>Instruments/mag-compass/mag-compass.xml</path>
+    <offsets>
+      <x-m> -0.164 </x-m>
+      <y-m>  0.000 </y-m>
+      <z-m>  0.177 </z-m>
+    </offsets>
+  </model>
+
+  <!-- PLAQUE -->
+  <!-- SWITCH -->
+  <!-- ALTERNATOR -->
+  <!-- BATTERY -->
+  <!-- INSTR LIGHT -->
+  <!-- LANDING LIGHT -->
+  <model>
+    <path>Instruments/switch/landing-lights.xml</path>
+    <offsets>
+      <x-m>  0.019 </x-m>
+      <y-m> 0.214 </y-m>
+      <z-m> -0.290 </z-m>
+      <pitch-deg> -21 </pitch-deg>
+    </offsets>
+  </model>
+
+  <!-- NAV LIGHT -->
+  <model>
+    <path>Instruments/switch/nav-lights.xml</path>
+    <offsets>
+      <x-m>  0.019 </x-m>
+      <y-m> 0.276 </y-m>
+      <z-m> -0.290 </z-m>
+      <pitch-deg> -21 </pitch-deg>
+    </offsets>
+  </model>
+
+  <!-- OTHER -->
+  <!-- OTHER LIGHT -->
+  <!-- OTHER LIGHT -->
+  <!-- TAXI LIGHT -->
+  <model>
+    <path>Instruments/switch/taxi-lights.xml</path>
+    <offsets>
+      <x-m>  0.019 </x-m>
+      <y-m> 0.245 </y-m>
+      <z-m> -0.290 </z-m>
+      <pitch-deg> -21 </pitch-deg>
+    </offsets>
+  </model>
+
+  <!-- ******************************************** -->
+  <!-- TURN -->
+  <model>
+    <path>Instruments/turn/turn.xml</path>
+    <offsets>
+      <x-m> -0.002 </x-m>
+      <y-m> -0.436 </y-m>
+      <z-m> -0.128 </z-m>
+    </offsets>
+  </model>
+
+  <!-- VSI -->
+  <model>
+    <path>Instruments/vsi/vsi.xml</path>
+    <offsets>
+      <x-m> -0.003 </x-m>
+      <y-m> -0.245 </y-m>
+      <z-m> -0.128 </z-m>
+    </offsets>
+  </model>
+
+  <!-- WARNING -->
+  <!-- YOKES -->
+  <model>
+    <path>Instruments/yokes/all-yokes.xml</path>
+  </model>
+
+<model><path>Instruments/switch/strobe-lights.xml</path><offsets><x-m>0.019</x-m><y-m>0.307</y-m><z-m>-0.290</z-m><pitch-deg>-21</pitch-deg></offsets></model>
+<model><path>X57/x57-panel.xml</path></model>
+<model><path>X57/tecnam.xml</path></model>
+<model><path>Instruments/lights/lightpanel.xml</path><offsets><x-m>-0.00036</x-m><y-m>-0.38338</y-m><z-m>-0.21477</z-m></offsets></model>
+<model><path>Instruments/switch/instr-lights.xml</path><offsets><x-m>0.019</x-m><y-m>0.338</y-m><z-m>-0.290</z-m><pitch-deg>-21</pitch-deg></offsets></model>
+</PropertyList>
