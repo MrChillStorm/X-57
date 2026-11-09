@@ -330,8 +330,11 @@ var runway_start = func {
 setlistener("/sim/signals/fdm-initialized", func(n) { if (n.getBoolValue()) runway_start(); }, 0, 0);
 
 # A Warthog stick's red thumb button, Weapons Release, becomes the yoke's high-lift disarm button on Mod IV. FlightGear's own Warthog binding
-# leaves that button unbound, a popup naming it; a binding the user has given it is left alone. A button's binding reads its script each time
-# it is pressed, so changing the script here is enough.
+# leaves that button unbound, a popup naming it: a button's binding reads its script each time it is pressed, so changing the script is enough.
+# A configuration of the user's own, as FlightGear's joystick dialog writes it, may have no button there at all, and bindings are only read
+# at start. So then the button's state is listened to, which FlightGear publishes for that dialog under /devices/status/joysticks, with the same
+# index as the stick's. A binding the user has given the button is left alone.
+var warthog_heard = {};
 var warthog_disarm = func {
     if (getprop(J ~ "prop/hl/rpm") == nil) return;
     var root = props.globals.getNode("/input/joysticks");
@@ -341,10 +344,18 @@ var warthog_disarm = func {
         foreach (var k; ["name", "id"])
             foreach (var n; js.getChildren(k))
                 if (find("Joystick - HOTAS Warthog", n.getValue() or "") >= 0) stick = 1;
+        if (!stick) continue;
         var script = js.getNode("button[1]/binding[0]/script");
-        if (!stick or script == nil or find("popup(", script.getValue() or "") != 0) continue;
-        script.setValue('setprop("/sim/model/x57/hl-yoke", 1);');
-        logprint(LOG_INFO, "X-57: the Warthog's red thumb button is the yoke's high-lift disarm");
+        if (script != nil and find("popup(", script.getValue() or "") == 0) {
+            script.setValue('setprop("/sim/model/x57/hl-yoke", 1);');
+            logprint(LOG_INFO, "X-57: the Warthog's red thumb button is the yoke's high-lift disarm");
+            continue;
+        }
+        if (js.getNode("button[1]/binding[0]") != nil) continue;
+        var st = "/devices/status/joysticks/joystick[" ~ js.getIndex() ~ "]/button[1]";
+        if (warthog_heard[st] != nil) continue;          # once, though a reset runs this again
+        warthog_heard[st] = setlistener(st, func(n) { if (n.getBoolValue()) setprop(X ~ "hl-yoke", 1); }, 0, 1);
+        logprint(LOG_INFO, "X-57: the Warthog's red thumb button, unbound, is the yoke's high-lift disarm (" ~ st ~ ")");
     }
 };
 setlistener("/sim/signals/fdm-initialized", func(n) { if (n.getBoolValue()) settimer(warthog_disarm, 1); }, 1, 0);
