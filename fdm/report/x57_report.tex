@@ -40,7 +40,7 @@ A flight-dynamics model of the X-57 Maxwell in its Mod III and Mod IV forms has 
 Mods III and IV never flew, so nothing here can be compared with a flight of those aircraft: the references are the CFD
 database, wind tunnel and vibration tests of their parts, and piloted-simulation results, all published. The model is built up part by part, 17 wing strips a side, 3 stabilator strips a side, 4 fin strips and 11 fuselage stations, so that
 any one of the fourteen propellers can fail and leave its own part of the wing. Each wing strip sits in the slipstream of its own disc, carried by the
-ring-vortex wake used in the same author's helicopter models with one fitted constant, in place of the three a plain jet needed. The method was first proved on the
+ring-vortex wake that takes a rotor's downwash to the airframe in the same author's helicopter models, with one fitted constant, in place of the three a plain jet needed. The method was first proved on the
 Tecnam P2006T, whose fuselage and tail the X-57 keeps: it passes that aircraft's flight manual, cruise within 2.7\,kt at 27 points and climb on one and two engines
 within limits. Its flight-test misses are traced to the test paper's methods by a second source: at the Mod II simulator's mass the model gives
 that simulator's short period within 5\,\%, and the paper's own derivatives give 4.95\,rad/s where its flight figure is 3.41. On the X-57 the model
@@ -126,7 +126,7 @@ published blades. The high-lift blades run about 10$^\circ$ folded forward on th
 The cruise propellers turn against the tip vortices, inboard blade rising: the published statements \cite{borer,dv} and the published 3-D geometry, measured blade by blade, agree. Each wing's six high-lift propellers turn the same way as its cruise propeller, the wings mirrored. The published geometry builds them so. The Mod IV CFD's skin friction \cite{dv} has the same lopsided pattern in every bay of a wing and its mirror image on the other, where alternating propellers would flip it from bay to bay. And on the X-57's predecessor wing, CFD gave propellers all turning against the tip vortex 0.31 more lift coefficient than pairs turning towards each other \cite{deere}. The simulator paper's ``each pair of motors was counter-rotating'' \cite{sim3} is taken as left against right. It can also be read as neighbours, as this model first did, so that simulator may differ.
 
 \subsection{Slipstream}\label{sec:wake}
-The axial speed at each strip comes from a tube of ring vortices behind the disc, after Heyson and Katzoff \cite{hk}, the model used for the same author's V-22, UH-60 and Bo 105. Its contraction, 0.90 of the radius, is momentum theory's. The
+The axial speed at each strip comes from a tube of ring vortices behind the disc, after Heyson and Katzoff \cite{hk}, the model with which the same author's V-22, UH-60 and Bo 105 take each rotor's downwash to the airframe. Their rotors' own inflow is a Peters--He dynamic wake; here the disc tables give it, in steady flow. The tube's contraction, 0.90 of the radius, is momentum theory's. The
 slipstream's effect on a wing is then reduced by one fitted constant, on the jet's strength:
 \begin{equation}
 a_\text{eff} = a\left(1 - k\,\frac{a}{u+a}\right),\qquad k = 0.70
