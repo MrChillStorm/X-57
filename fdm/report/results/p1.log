@@ -33,26 +33,26 @@ ok   L/D at 150 KTAS within 1 of NASA's 13.5
   peak L/D 15.7 (NASA 15.9) at 110 KCAS, CL 1.08
 ok   peak L/D within 1.5 of NASA's 15.9
 mod3: model (NASA)
-   80  zeta phugoid 0.101 (0.111)  short 0.287 (0.363)  dutch 0.061 (0.111)  roll 0.96 s (1.24)  w 0.32 (0.30) 3.80 (3.91) 1.17 (1.18)  [NASA's stall speed]
-   88  zeta phugoid 0.098 (0.104)  short 0.367 (0.374)  dutch 0.128 (0.118)  roll 0.89 s (1.03)  w 0.30 (0.27) 3.86 (4.15) 1.22 (1.28)
+   80  zeta phugoid 0.101 (0.111)  short 0.285 (0.363)  dutch 0.059 (0.111)  roll 0.97 s (1.24)  w 0.32 (0.30) 3.80 (3.91) 1.17 (1.18)  [NASA's stall speed]
+   88  zeta phugoid 0.098 (0.104)  short 0.367 (0.374)  dutch 0.129 (0.118)  roll 0.89 s (1.03)  w 0.30 (0.27) 3.86 (4.15) 1.22 (1.28)
    96  zeta phugoid 0.104 (0.116)  short 0.418 (0.382)  dutch 0.144 (0.136)  roll 0.74 s (0.83)  w 0.27 (0.25) 3.98 (4.41) 1.27 (1.35)
-  104  zeta phugoid 0.108 (0.112)  short 0.452 (0.420)  dutch 0.167 (0.150)  roll 0.65 s (0.73)  w 0.25 (0.23) 4.15 (4.49) 1.33 (1.44)
-  112  zeta phugoid 0.121 (0.122)  short 0.467 (0.439)  dutch 0.184 (0.158)  roll 0.58 s (0.66)  w 0.24 (0.22) 4.37 (4.74) 1.43 (1.58)
-   worst: damping ratio phugoid 0.012, short period 0.036, Dutch roll 0.026; roll 14 %; frequency phugoid 10 %, short 10 %, Dutch 9 %
+  104  zeta phugoid 0.108 (0.112)  short 0.452 (0.420)  dutch 0.168 (0.150)  roll 0.64 s (0.73)  w 0.25 (0.23) 4.15 (4.49) 1.33 (1.44)
+  112  zeta phugoid 0.121 (0.122)  short 0.466 (0.439)  dutch 0.183 (0.158)  roll 0.58 s (0.66)  w 0.24 (0.22) 4.37 (4.74) 1.43 (1.58)
+   worst: damping ratio phugoid 0.012, short period 0.036, Dutch roll 0.025; roll 13 %; frequency phugoid 10 %, short 10 %, Dutch 9 %
 mod4_fixed: model (NASA)
-   75  zeta phugoid 0.141 (0.123)  short 0.374 (0.366)  dutch 0.220 (0.150)  roll 1.08 s (1.34)  w 0.28 (0.24) 3.24 (3.77) 0.92 (1.13)
-   80  zeta phugoid 0.163 (0.164)  short 0.381 (0.378)  dutch 0.208 (0.145)  roll 0.96 s (1.18)  w 0.27 (0.26) 3.56 (3.86) 0.98 (1.14)
-   88  zeta phugoid 0.181 (0.190)  short 0.409 (0.372)  dutch 0.200 (0.127)  roll 0.79 s (1.00)  w 0.25 (0.23) 3.82 (4.22) 1.09 (1.25)
-   96  zeta phugoid 0.210 (0.207)  short 0.421 (0.386)  dutch 0.215 (0.147)  roll 0.71 s (0.81)  w 0.24 (0.22) 4.15 (4.41) 1.18 (1.34)
+   75  zeta phugoid 0.141 (0.123)  short 0.377 (0.366)  dutch 0.214 (0.150)  roll 1.08 s (1.34)  w 0.28 (0.24) 3.24 (3.77) 0.92 (1.13)
+   80  zeta phugoid 0.163 (0.164)  short 0.382 (0.378)  dutch 0.209 (0.145)  roll 0.97 s (1.18)  w 0.27 (0.26) 3.56 (3.86) 0.98 (1.14)
+   88  zeta phugoid 0.181 (0.190)  short 0.407 (0.372)  dutch 0.204 (0.127)  roll 0.77 s (1.00)  w 0.25 (0.23) 3.81 (4.22) 1.09 (1.25)
+   96  zeta phugoid 0.209 (0.207)  short 0.420 (0.386)  dutch 0.221 (0.147)  roll 0.69 s (0.81)  w 0.24 (0.22) 4.15 (4.41) 1.18 (1.34)
   104  zeta phugoid 0.228 (0.228)  short 0.451 (0.418)  dutch 0.217 (0.154)  roll 0.64 s (0.72)  w 0.23 (0.20) 4.27 (4.51) 1.28 (1.44)
-  112  zeta phugoid 0.228 (0.228)  short 0.454 (0.439)  dutch 0.231 (0.152)  roll 0.58 s (0.68)  w 0.22 (-) 4.54 (4.68) 1.39 (1.57)
-   worst: damping ratio phugoid 0.018, short period 0.037, Dutch roll 0.079; roll 21 %; frequency phugoid 19 %, short 14 %, Dutch 19 %
+  112  zeta phugoid 0.228 (0.228)  short 0.454 (0.439)  dutch 0.230 (0.152)  roll 0.58 s (0.68)  w 0.22 (-) 4.54 (4.68) 1.39 (1.57)
+   worst: damping ratio phugoid 0.018, short period 0.035, Dutch roll 0.078; roll 23 %; frequency phugoid 19 %, short 14 %, Dutch 19 %
 mod4_airspeed: model (NASA)
    75  zeta phugoid 0.263 (0.271)  short 0.312 (0.360)  dutch 0.193 (0.170)  roll 1.08 s (1.40)  w 0.26 (0.26) 3.63 (3.82) 0.94 (1.12)
-   80  zeta phugoid 0.266 (0.269)  short 0.365 (0.376)  dutch 0.192 (0.132)  roll 0.98 s (1.19)  w 0.25 (0.24) 3.47 (3.87) 0.98 (1.17)
+   80  zeta phugoid 0.266 (0.269)  short 0.366 (0.376)  dutch 0.188 (0.132)  roll 0.99 s (1.19)  w 0.25 (0.24) 3.47 (3.87) 0.99 (1.17)
    88  zeta phugoid 0.250 (0.288)  short 0.376 (0.374)  dutch 0.179 (0.127)  roll 0.88 s (1.03)  w 0.25 (0.19) 3.86 (4.16) 1.10 (1.29)
    96  zeta phugoid 0.103 (0.116)  short 0.429 (0.380)  dutch 0.184 (0.141)  roll 0.73 s (0.83)  w 0.27 (0.25) 3.93 (4.43) 1.19 (1.36)
-   worst: damping ratio phugoid 0.037, short period 0.049, Dutch roll 0.061; roll 23 %; frequency phugoid 33 %, short 11 %, Dutch 16 %
+   worst: damping ratio phugoid 0.037, short period 0.049, Dutch roll 0.056; roll 23 %; frequency phugoid 33 %, short 11 %, Dutch 16 %
 MISS Mod III modes match NASA's (damping within 0.02, frequency and roll within 8 %, stall speed aside)
 MISS Mod IV airspeed mode: damping within 0.05, frequency and roll within 20 %
 MISS Mod IV fixed mode: damping within 0.05, frequency and roll within 25 %

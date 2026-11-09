@@ -58,13 +58,13 @@ Minimum control speed, Mod III, takeoff flaps, gear down, full power on the righ
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 0, gear up [20240006682 figs. 6-9]
   trim: alpha 8.1 (NASA 8.4), lever 0.49, 65 kW, 113 lbf a motor
-  left disc after 3 s: -38 lbf at 2030 rpm; alpha 8.0 to 9.8
-  bank at 3 s                                              -75   target -87      ok
-  pitch at 3 s                                           -10.1   target -11.5    ok
+  left disc after 3 s: -38 lbf at 2029 rpm; alpha 8.0 to 9.8
+  bank at 3 s                                              -74   target -87      ok
+  pitch at 3 s                                            -9.9   target -11.5    ok
   heading at 3 s                                         -23.2   target -23.0    ok
-  peak roll rate, deg/s                                    -47   target -47      ok
+  peak roll rate, deg/s                                    -46   target -47      ok
   peak sideslip                                           10.5   target 9.1      ok
-  sink at 3 s, ft/s                                       19.0   target 24.5     ok
+  sink at 3 s, ft/s                                       18.7   target 24.5     ok
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 10, gear down [20240006682 figs. 6-9]
   trim: alpha 5.2 (NASA 8.4), lever 0.73, 97 kW, 170 lbf a motor
@@ -84,12 +84,12 @@ Contactor failure on the right wing, 58 KCAS, flaps 30, the CFD's thrust [TM fig
   failure A, Cn at 8 deg, inside the solvers           -0.0055   target 0.0000   ok
 
 NASA's failure list [20240006496 table 1], Mod III at 97 KCAS, full power, 4 s after each
-  Controller fails, half power                 torque 255 to 128 Nm, thrust 255 to 112 lbf, 2653 rpm, pitch 20.3 to 16.3  ok
-  Motor fails, propeller forces remain         torque 255 to 0 Nm, thrust 255 to -40 lbf, 1890 rpm, pitch 20.3 to 16.3  ok
+  Controller fails, half power                 torque 255 to 128 Nm, thrust 255 to 112 lbf, 2652 rpm, pitch 20.3 to 16.3  ok
+  Motor fails, propeller forces remain         torque 255 to 0 Nm, thrust 255 to -40 lbf, 1888 rpm, pitch 20.3 to 16.3  ok
   Motor fails, no propeller forces             torque 255 to 0 Nm, thrust 255 to -0 lbf, 1732 rpm, pitch 20.3 to 16.4  ok
   Fixed pitch, lever to half                   torque 255 to 127 Nm, thrust 255 to 115 lbf, 2200 rpm, pitch 20.3 to 20.3  ok
-  Half power, hub frozen                       torque 255 to 128 Nm, thrust 255 to 109 lbf, 2250 rpm, pitch 20.3 to 20.3  ok
-  Zero power, hub frozen                       torque 255 to 0 Nm, thrust 255 to -26 lbf, 1625 rpm, pitch 20.3 to 20.3  ok
+  Half power, hub frozen                       torque 255 to 128 Nm, thrust 255 to 109 lbf, 2249 rpm, pitch 20.3 to 20.3  ok
+  Zero power, hub frozen                       torque 255 to 0 Nm, thrust 255 to -25 lbf, 1623 rpm, pitch 20.3 to 20.3  ok
   Instant feather                              torque 255 to 255 Nm, thrust 255 to 27 lbf, 1594 rpm, pitch 20.3 to 85.0  ok
   Command stuck, one motor, lever to half      left 255 to 255 Nm, right 255 to 127  ok
   Command stuck, both, lever to half           left 255 to 255 Nm, right 255 to 255  ok

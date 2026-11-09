@@ -36,9 +36,9 @@ In flight, trimmed level, 6,000 ft, a kick to each mode
   Mod III            135 KCAS: alpha 0.8, tip +0.19 ft up; symmetric 2.39 Hz, damping 0.034; antisymmetric 3.55 Hz, 0.019  ok
   Mod III            175 KCAS: alpha -1.5, tip +0.18 ft up; symmetric 2.39 Hz, damping 0.041; antisymmetric 3.56 Hz, 0.024  ok
   Mod IV             100 KCAS: alpha 6.5, tip +0.18 ft up; symmetric 2.37 Hz, damping 0.021; antisymmetric 3.87 Hz, 0.012  ok
-  Mod IV             135 KCAS: alpha 0.8, tip +0.17 ft up; symmetric 2.37 Hz, damping 0.032; antisymmetric 3.87 Hz, 0.022  ok
-  Mod IV             175 KCAS: alpha -1.5, tip +0.16 ft up; symmetric 2.38 Hz, damping 0.039; antisymmetric 3.90 Hz, 0.028  ok
-  Mod IV, high lift   70 KCAS: alpha 4.9, tip +0.09 ft up; symmetric 2.37 Hz, damping 0.017; antisymmetric 3.86 Hz, 0.013  ok
+  Mod IV             135 KCAS: alpha 0.8, tip +0.17 ft up; symmetric 2.37 Hz, damping 0.032; antisymmetric 3.87 Hz, 0.021  ok
+  Mod IV             175 KCAS: alpha -1.5, tip +0.16 ft up; symmetric 2.38 Hz, damping 0.039; antisymmetric 3.90 Hz, 0.029  ok
+  Mod IV, high lift   70 KCAS: alpha 4.9, tip +0.09 ft up; symmetric 2.37 Hz, damping 0.017; antisymmetric 3.87 Hz, 0.012  ok
 
 Dihedral effect, Mod III, 100 KCAS, flaps 0, bent to its 1 g shape against rigid
   Cl beta -0.1515 rigid, -0.1659 bent; Cn beta 0.1104, 0.1061; tip 0.20 ft

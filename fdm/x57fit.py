@@ -18,6 +18,9 @@ T = json.load(open(os.path.join(HERE, 'data', 'aero_tables.json')))
 GRID = np.arange(-12.0, 34.0, 1.0)
 ALPHAS = np.arange(-6.0, 25.0, 1.0)
 PROBE = 'bu/wR6/a'           # a strip mid-way along the flap: the section's angle to file the error under
+# where the rates' correction is taken: the tunnel's points (from -4; -5 holds -4's value, as the table), and from 10 deg a quarter degree apart, where the strips stall one by one.
+# A half degree left 0.04-0.08 rms against the tunnel at flaps 10 and 30 over 12-18 deg; a quarter, 0.02-0.04, the same as the strips' own change between 100 and 170 ft/s
+RATE_ALPHAS = np.concatenate([np.arange(-5.0, 10.0, 1.0), np.arange(10.0, 18.01, 0.25)])
 
 
 def errors(f, flap):
@@ -217,7 +220,16 @@ def rates():
     holds; the strips land on the CFD's. So what's added here carries them to the tunnel, as the table model is"""
     f = H.load('mod3')
     R = T['rates']
-    A = [a for a in R['alpha'] if -5 <= a <= 18]
+    # on the tunnel's own curve, digitised a degree apart [TM figs. 58-62], and not on the table's grid, which has nothing between 14 and 18:
+    # the strips stall within a degree, so a correction taken only at the table's points left the sum jumping between them
+    W = json.load(open(os.path.join(HERE, 'data', 'digitised', 'tunnel_rates.json')))
+    A = [float(a) for a in RATE_ALPHAS]
+
+    def want(k, j, a):
+        if R['source'] != 'tunnel':
+            return float(np.interp(a, R['alpha'], R[k][j]))
+        # the CFD's change with flap, a straight line in alpha (aerotables.flap_change), on the tunnel's flaps-up curve
+        return float(np.interp(a, W['alpha'], W[k]) + np.interp(a, R['alpha'], np.array(R[k][j]) - np.array(R[k][0])))
     V, e, c, b = 170.0, 0.05, 2.13, 31.623
     import math
     out = dict(alpha=A, flaps=[0.0, 10.0, 30.0], **{k: np.zeros((len(A), 3)) for k in ('Cmq', 'Clp', 'Clr', 'Cnp', 'Cnr')})
@@ -230,14 +242,13 @@ def rates():
         return {k: f['aero/coef/' + k] for k in ('Cm', 'Cl', 'Cn')}
     for j, flap in enumerate(out['flaps']):
         for i, a in enumerate(A):
-            ra = list(R['alpha']).index(a)
             d = lambda x, y, k, h: (y[k] - x[k]) / h
             hq, hb = 2 * e * c / (2 * V), 2 * e * b / (2 * V)
             q0, q1, a0, a1 = at(a, flap, q=-e), at(a, flap, q=e), at(a, flap, ad=-0.1), at(a, flap, ad=0.1)
             p0, p1, r0, r1 = at(a, flap, p=-e), at(a, flap, p=e), at(a, flap, r=-e), at(a, flap, r=e)
             own = dict(Cmq=d(q0, q1, 'Cm', hq) + d(a0, a1, 'Cm', 0.2 * c / (2 * V)), Clp=d(p0, p1, 'Cl', hb), Cnp=d(p0, p1, 'Cn', hb), Clr=d(r0, r1, 'Cl', hb), Cnr=d(r0, r1, 'Cn', hb))
             for k in own:
-                out[k][i, j] = R[k][j][ra] - own[k]
+                out[k][i, j] = want(k, j, a) - own[k]
     print('rate corrections at alpha 2, flaps 0: ' + ' '.join('%s %+.3f' % (k, out[k][A.index(2.0), 0]) for k in ('Cmq', 'Clp', 'Clr', 'Cnp', 'Cnr')))
     return {k: (v.tolist() if hasattr(v, 'tolist') else v) for k, v in out.items()}
 
