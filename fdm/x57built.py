@@ -104,6 +104,44 @@ def corrected(t, cols):
     return out
 
 
+# NACA Report 661 (Abbott and Greenberg 1939), table I: the NACA 23012 with a sealed 0.20c plain flap in the variable-density tunnel, effective
+# R 8.2 to 8.6 million, upright model. Deflection (deg, down positive): section clmax, zero-lift angle (deg), lift slope (per deg).
+NACA661 = {-30: (0.88, 9.4, .095), -20: (1.02, 8.0, .092), -15: (1.18, 6.1, .095), -10: (1.38, 3.8, .099), -5: (1.52, 1.4, .100),
+           -2: (1.62, -0.2, .099), -1: (1.68, -0.7, .098), 0: (1.74, -1.2, .100), 5: (1.83, -3.6, .097), 10: (1.92, -6.0, .094),
+           15: (2.02, -9.1, .087), 20: (2.11, -10.5, .086), 30: (2.19, -12.3, .086)}
+
+
+def naca661_share(delta):
+    """The share of a plain flap's lift increment that the section keeps at maximum lift, from NACA661: each deflection's clmax increment over
+    the increment its own lift line gives at the plain section's zero lift (as held_cl is taken). Down about 0.4, up about 0.8. Deflections
+    under 5 deg are left out: their increments are a few hundredths, at the table's rounding"""
+    c0, z0, _ = NACA661[0]
+    d = [x for x in sorted(NACA661) if abs(x) >= 5]
+    return np.interp(delta, d, [(NACA661[x][0] - c0) / (NACA661[x][2] * (z0 - NACA661[x][1])) for x in d])
+
+
+def shifted_lift(aa, plain, dcl0, j0, k_max):
+    """The aileron's lift as the plain section's, corrected as the wing's, shifted by each deflection's equivalent angle, as sections.slotted
+    does the flap: cl(alpha, delta) = cl0(alpha + dcl0 (1 - k) / slope) + k dcl0. dcl0 is NeuralFoil's increment at zero lift (held
+    above); k (k_max, one for each column) the share of it kept at maximum lift. Below its zero lift the plain curve runs on straight, so a
+    large up deflection doesn't meet the plain section's negative stall. Returned before the fit's corrections, which corrected() then adds to
+    every column"""
+    corr = np.zeros_like(aa)
+    if os.path.exists(FIT_FILE):
+        C = json.load(open(FIT_FILE))['0.0']
+        corr = np.interp(aa, C['a'], C['dcl']) * np.clip((36 - np.abs(aa)) / 8, 0, 1)
+    p = plain + corr
+    near = (aa > -15) & (aa < 5)
+    az = float(np.interp(0.0, p[near], aa[near]))
+    slope = (np.interp(az + 2, aa, p) - np.interp(az - 2, aa, p)) / 4.0
+    ext = lambda x: np.where(x >= az, np.interp(x, aa, p), slope * (x - az))
+    fade = 1 - np.clip((np.abs(aa) - 25) / 30, 0, 1)
+    out = np.zeros((len(aa), len(dcl0)))
+    for j, d0 in enumerate(dcl0):
+        out[:, j] = p if j == j0 else ext(aa + d0 * (1 - k_max[j]) / slope) + fade * k_max[j] * d0
+    return out - corr[:, None]
+
+
 def tables():
     kw = dict(n_crit=9.0, xtr=0.03)
     re = lambda c: 1.9e6 * c / 0.65
@@ -116,7 +154,11 @@ def tables():
     # where the lifting line takes an up aileron's strips, 7 to 8 deg up: NeuralFoil's plain section loses lift slope from about 4 deg and the
     # up-deflected one doesn't. NASA's CFD has the aileron linear from -25 to +5 deg and nearly the same at 2 and 8 deg [TM sec. 4.1.3]. At zero lift
     # NeuralFoil's up and down increments are nearly alike, as in thin-airfoil theory; at the strips' cruise angle the down one is two-thirds of the up.
-    # Nothing scales them: gains of 1.5 on lift and 2.0 on moment were there before, and steepened a deflected section's lift slope to 0.18 per degree
+    # Nothing scales them: gains of 1.5 on lift and 2.0 on moment were there before, and steepened a deflected section's lift slope to 0.18 per degree.
+    # Its lift past that is the plain section's shifted by each deflection's equivalent angle (shifted_lift), keeping NACA Report 661's share of the
+    # increment at maximum lift (naca661_share). Handed back to NeuralFoil's increment instead, the aileron near stall kept 0.8 of the CFD's roll
+    # up and 1.5 times it down: NeuralFoil's flap at -25 deg climbs 0.13 per degree from 8 to 14 deg, twice its plain section's 0.064, where
+    # Report 661's up-deflected flaps keep within 0.008 of the plain section's slope
     ail = SEC.table(xy, re(0.6), hinge=AIL_HINGE, deltas=(-25.0, -15.0, -10.0, -5.0, 0.0, 5.0, 10.0, 18.0), clmax_k=k, **kw)
     j0 = ail['delta'].index(0.0)
     aa = np.array(ail['alpha'])
@@ -124,11 +166,14 @@ def tables():
     near = (aa > -15) & (aa < 5)
     a_zero = float(np.interp(0.0, c0[near], aa[near]))
     w = np.clip((14.0 - np.abs(aa)) / 6.0, 0, 1)[:, None]
+    held_cl = None
     for n in ('cl', 'cd', 'cm'):
         v = np.array(ail[n])
         d = v - v[:, [j0]]
         held = np.array([[np.interp(a_zero, aa, d[:, j]) for j in range(d.shape[1])]])
+        held_cl = held[0] if n == 'cl' else held_cl
         ail[n] = (v[:, [j0]] + w * held + (1 - w) * d).tolist()
+    ail['cl'] = shifted_lift(aa, np.array(ail['cl'])[:, j0], held_cl, j0, naca661_share(np.array(ail['delta']))).tolist()
     T = dict(w0=corrected(base, [0.0]), wf=corrected(SEC.slotted(base, FLAPS), [0.0, 10.0, 30.0]), wa=corrected(ail, [0.0] * 8))
     T['w0'] = dict(T['w0'], delta=[0.0], cl=np.array(T['w0']['cl'])[:, :1].tolist(), cd=np.array(T['w0']['cd'])[:, :1].tolist(), cm=np.array(T['w0']['cm'])[:, :1].tolist())
     T.update(P.tail_tables(re, kw))

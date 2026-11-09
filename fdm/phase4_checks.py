@@ -93,6 +93,26 @@ def controls(f):
         e, d = zip(*v)
         rel = rms(e) / max(rms(d), 1e-6)
         check('%-5s %-3s' % (k, c), rel <= 0.25 or rms(e) <= 0.005, 'error %.4f of %.4f: %.0f %%' % (rms(e), rms(d), 100 * rel))
+    # Near stall the CFD has one aileron deflected at flaps 0 alpha 16, 10 at 15 and 30 at 14. Separation there can settle differently in two
+    # solutions: a case counts only where the CFD's lift moved the way an aileron moves it (down adds lift, up takes it away) against the same
+    # solver's neutral case
+    near = [r for r in C.L('poweroff')['rows'] if r['flap'] in (0, 10, 30) and not r['tab'] and r['alpha'] > STALL[r['flap']] - 2
+            and not any(r[k] for k in ('beta', 'stab', 'rud'))]
+    base = {(r['flap'], r['alpha']): r for r in near if not r['ail']}
+    e, d, out = [], [], []
+    for r in (r for r in near if r['ail']):
+        b = base.get((r['flap'], r['alpha']), {})
+        ss = [s for s in SOL if s in r and 'Cl' in r[s] and s in b and 'CL' in b[s]]
+        keep = [s for s in ss if (r[s]['CL'] - b[s]['CL']) * r['ail'] > 0]
+        if not keep:
+            out.append('flaps %g alpha %g aileron %+g' % (r['flap'], r['alpha'], r['ail']))
+            continue
+        m, m0 = air(f, r), air(f, dict(r, ail=0.0))
+        d.append(float(np.mean([r[s]['Cl'] for s in keep])))
+        e.append(m['Cl'] - m0['Cl'] - d[-1])
+    rel = rms(e) / max(rms(d), 1e-6)
+    print('Near stall, the aileron\'s roll; left out, the CFD\'s lift moving against the aileron: %s' % ('; '.join(out) or 'none'))
+    check('ail   Cl near stall', rel <= 0.25 or rms(e) <= 0.005, 'error %.4f of %.4f: %.0f %%, %d cases' % (rms(e), rms(d), 100 * rel, len(e)))
 
 
 def highlift(f):

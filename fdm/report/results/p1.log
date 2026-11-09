@@ -7,21 +7,21 @@ JSBSim startup beginning ...
 
 Power off: model less the solvers, RMS (typical solver spread)
   neutral curves            CD 0.0004 (0.0205) CL 0.0019 (0.0746) Cm 0.0043 (0.0713)
-  one input                 CD 0.0143 (0.0023) CL 0.0697 (0.0142) CY 0.0153 (0.0037) Cl 0.0040 (0.0015) Cm 0.0725 (0.0223) Cn 0.0009 (0.0014)  n 130
-  combined                  CD 0.0056 (0.0015) CL 0.0165 (0.0083) CY 0.0142 (0.0013) Cl 0.0042 (0.0004) Cm 0.0464 (0.0123) Cn 0.0023 (0.0006)  n 54
-  one input past stall      CD 0.0227 (0.0025) CL 0.0967 (0.0090) CY 0.0187 (0.0046) Cl 0.0061 (0.0012) Cm 0.0990 (0.0181) Cn 0.0011 (0.0017)  n 57
+  one input                 CD 0.0144 (0.0023) CL 0.0694 (0.0142) CY 0.0153 (0.0037) Cl 0.0026 (0.0015) Cm 0.0724 (0.0223) Cn 0.0009 (0.0014)  n 130
+  combined                  CD 0.0056 (0.0015) CL 0.0179 (0.0083) CY 0.0142 (0.0013) Cl 0.0046 (0.0004) Cm 0.0462 (0.0123) Cn 0.0023 (0.0006)  n 54
+  one input past stall      CD 0.0227 (0.0025) CL 0.0980 (0.0090) CY 0.0187 (0.0046) Cl 0.0082 (0.0012) Cm 0.0992 (0.0181) Cn 0.0026 (0.0017)  n 57
   rows where a symmetric case shows an uneven stall: 12, left out
 MISS neutral, below stall: reproduces the solvers' mean
-MISS one input: its increment reproduced  CD 0.0143 CL 0.0697 CY 0.0153 Cl 0.0040 Cm 0.0725 Cn 0.0009
-MISS combined inputs: cross terms stay small  CD 0.006 CL 0.016 CY 0.014 Cl 0.004 Cm 0.046 Cn 0.002
+MISS one input: its increment reproduced  CD 0.0144 CL 0.0694 CY 0.0153 Cl 0.0026 Cm 0.0724 Cn 0.0009
+MISS combined inputs: cross terms stay small  CD 0.006 CL 0.018 CY 0.014 Cl 0.005 Cm 0.046 Cn 0.002
 High lift on: model less the solvers, RMS (typical solver spread)
-  combined, 58-90 KCAS      CD 0.0061 (0.0008) CL 0.0246 (0.0096) CY 0.0215 (0.0010) Cl 0.0052 (0.0016) Cm 0.0438 (0.0070) Cn 0.0035 (0.0005)  n 96
+  combined, 58-90 KCAS      CD 0.0061 (0.0008) CL 0.0249 (0.0096) CY 0.0215 (0.0010) Cl 0.0053 (0.0016) Cm 0.0440 (0.0070) Cn 0.0035 (0.0005)  n 96
   effect of the props, 58-90 KCASCD 0.0573 (0.0292) CL 0.1533 (0.2461) Cm 0.0539 (0.1366)  n 104
   effect of the props, other speedsCD 0.0872 (0.0362) CL 0.2196 (0.1616) Cm 0.0805 (0.1117)  n 72
-  one input, 58-90 KCAS     CD 0.0234 (0.0040) CL 0.1603 (0.0165) CY 0.0181 (0.0052) Cl 0.0100 (0.0029) Cm 0.3448 (0.0239) Cn 0.0055 (0.0018)  n 371
-  one input, other speeds   CD 0.0252 (0.0069) CL 0.1058 (0.0246) CY 0.0251 (0.0044) Cl 0.0096 (0.0020) Cm 0.2889 (0.0591) Cn 0.0051 (0.0021)  n 100
+  one input, 58-90 KCAS     CD 0.0235 (0.0040) CL 0.1582 (0.0165) CY 0.0181 (0.0052) Cl 0.0094 (0.0029) Cm 0.3447 (0.0239) Cn 0.0056 (0.0018)  n 371
+  one input, other speeds   CD 0.0252 (0.0069) CL 0.1063 (0.0246) CY 0.0251 (0.0044) Cl 0.0088 (0.0020) Cm 0.2886 (0.0591) Cn 0.0051 (0.0021)  n 100
 MISS the props' effect, 58-90 KCAS: inside the solvers' spread  CD 0.057 CL 0.153 Cm 0.054
-MISS one input with the props on, 58-90 KCAS: within 0.05 in lift and pitch  CL 0.160 Cm 0.345
+MISS one input with the props on, 58-90 KCAS: within 0.05 in lift and pitch  CL 0.158 Cm 0.345
 MISS Mod IV, 58 KCAS, flaps 30: peak CL within 0.05 of NASA's 4.40-4.58  CL 4.29 at 14 deg
 Trimmed stall, Mod III, 3,000 lb: model, NASA
   flaps  0: trimmed CLmax 1.94 at alpha 15.0, stabilator -10.5: 82.8 KCAS (NASA 88); untrimmed CFD peaks 2.13-2.34

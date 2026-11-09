@@ -27,12 +27,14 @@ ok   beta  Cn   error 0.0000 of 0.0364: 0 %
 ok   beta  Cl   error 0.0000 of 0.0276: 0 %
 ok   stab  CL   error 0.0416 of 0.2655: 16 %
 ok   stab  Cm   error 0.1175 of 1.7192: 7 %
-ok   ail   Cl   error 0.0062 of 0.0296: 21 %
-ok   ail   CL   error 0.0190 of 0.0832: 23 %
-MISS ail   Cm   error 0.0098 of 0.0325: 30 %
+ok   ail   Cl   error 0.0040 of 0.0296: 14 %
+ok   ail   CL   error 0.0150 of 0.0832: 18 %
+ok   ail   Cm   error 0.0066 of 0.0325: 20 %
 ok   rud   CY   error 0.0000 of 0.1351: 0 %
 ok   rud   Cn   error 0.0000 of 0.0640: 0 %
 ok   rud   Cl   error 0.0013 of 0.0087: 14 %
+Near stall, the aileron's roll; left out, the CFD's lift moving against the aileron: flaps 10 alpha 15 aileron -5; flaps 10 alpha 15 aileron -25
+MISS ail   Cl near stall  error 0.0055 of 0.0203: 27 %, 19 cases
 
 Mod IV with the CFD's own thrust through the slipstreams
 ok   58 KCAS, flaps 30: CLmax 4.40-4.58  CL 4.54 at 14 deg
@@ -43,7 +45,7 @@ ok   dCm +0.6 falling to +0.1  from +0.57 to +0.10
 ok   the props' CL, 35-75 KCAS, below stall: inside the solvers' spread  error 0.085, spread 0.078
 ok   the props' Cm, 35-75 KCAS, below stall: inside the solvers' spread  error 0.023, spread 0.136
 ok   the props' CD, 35-75 KCAS, below stall: inside the solvers' spread  error 0.024, spread 0.030
-ok   power on: ail   Cl   error 0.0069 of 0.0382: 18 %
+ok   power on: ail   Cl   error 0.0040 of 0.0382: 11 %
 ok   power on: stab  CL   error 0.0702 of 0.3336: 21 %
 ok   power on: stab  Cm   error 0.3855 of 2.1051: 18 %
 ok   power on: rud   CY   error 0.0099 of 0.1410: 7 %
@@ -61,4 +63,4 @@ ok   one cruise propeller: Cl, the strips' own  error 0.0029 of 0.0176: 17 %, th
 ok   one cruise propeller: Cm   error 0.0034 of 0.0168: 20 %, the model's 1.00 of the CFD's
 ok   one cruise propeller: Cn   error 0.0014 of 0.0013: 113 %, the model's 1.15 of the CFD's
 
-2 misses: ail   Cm ; power on: beta  Cl 
+2 misses: ail   Cl near stall; power on: beta  Cl 

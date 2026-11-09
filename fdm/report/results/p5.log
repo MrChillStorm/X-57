@@ -26,39 +26,39 @@ Ground effect against the CFD, up to 10 deg
 Rates of climb, gear down, takeoff flaps, 2,500 ft. High lift on NASA's propeller table, as its simulator
   full power: 144.2 kW, stabilator -2.8, alpha 4.3
   Mod III, 97 KCAS, full power                             597   target 430      MISS (limit 60)
-  one motor out, zero sideslip: left disc -27 lbf, right 255, rudder -0.69, aileron 0.47, bank 5.6, residual 2e-12
+  one motor out, zero sideslip: left disc -27 lbf, right 255, rudder -0.69, aileron 0.51, bank 5.6, residual 1e-11
   windmilling, at zero sideslip: -531 ft/min
-  feathered: left disc 3 lbf, rudder -0.62, aileron 0.48, bank 5.1
-  Mod III, one motor out, feathered                       -419   target -450     ok
+  feathered: left disc 3 lbf, rudder -0.61, aileron 0.52, bank 5.0
+  Mod III, one motor out, feathered                       -420   target -450     ok
   Mod III, a traction bus out                             -315   target -300     ok
   Mod III, 2,400 rpm                                       426   target 270      MISS (limit 60)
   DiTTo, 97 KIAS: 48.1 kW a motor, each disc 18.6 lbf
   DiTTo 97 KIAS                                            788   target 720      ok
   one motor out, feathered: left disc 3 lbf, right 173, rudder -0.42, bank 3.5
-  DiTTo 97 KIAS, one motor out                              84   target 360      MISS (limit 80)
+  DiTTo 97 KIAS, one motor out                              85   target 360      MISS (limit 80)
   DiTTo 97 KIAS, contactor out                             601   target 480      MISS (limit 80)
   DiTTo 97 KIAS, a traction bus out                       -173   target -100     ok
   DiTTo, 84 KIAS: 48.1 kW a motor, each disc 28.2 lbf
   DiTTo 84 KIAS                                           1153   target 1000     MISS (limit 80)
-  one motor out, feathered: left disc 2 lbf, right 193, rudder -0.64, bank 4.0
-  DiTTo 84 KIAS, one motor out                             457   target 530      ok
+  one motor out, feathered: left disc 2 lbf, right 193, rudder -0.63, bank 3.9
+  DiTTo 84 KIAS, one motor out                             453   target 530      ok
   DiTTo 84 KIAS, contactor out                             893   target 740      MISS (limit 80)
   DiTTo 84 KIAS, a traction bus out                         88   target 100      ok
 
 Minimum control speed, Mod III, takeoff flaps, gear down, full power on the right, left disc windmilling, zero sideslip
-  120 KCAS: pedal 0.41 of full, bank 5.2, residual 3e-13
-  105 KCAS: pedal 0.56 of full, bank 5.4, residual 6e-13
-  97 KCAS: pedal 0.69 of full, bank 5.6, residual 7e-13
-  92 KCAS: pedal 0.80 of full, bank 5.8, residual 3e-10
-  88 KCAS: pedal 0.91 of full, bank 6.0, residual 6e-13
-  85 KCAS: pedal 1.00 of full, bank 6.1, residual 1e-01
-  82 KCAS: pedal 1.00 of full, bank 5.7, residual 6e-01
-  78 KCAS: pedal 1.00 of full, bank 5.3, residual 1e+00
-  minimum control speed, KCAS                             84.1   target 85.0     ok
+  120 KCAS: pedal 0.41 of full, bank 5.2, residual 6e-13
+  105 KCAS: pedal 0.56 of full, bank 5.4, residual 6e-14
+  97 KCAS: pedal 0.69 of full, bank 5.6, residual 1e-11
+  92 KCAS: pedal 0.79 of full, bank 5.8, residual 2e-12
+  88 KCAS: pedal 0.89 of full, bank 5.9, residual 3e-13
+  85 KCAS: pedal 0.98 of full, bank 6.0, residual 6e-13
+  82 KCAS: pedal 1.00 of full, bank 5.7, residual 4e-01
+  78 KCAS: pedal 1.00 of full, bank 5.4, residual 2e+00
+  minimum control speed, KCAS                             84.2   target 85.0     ok
 
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 0, gear up [20240006682 figs. 6-9]
   trim: alpha 8.1 (NASA 8.4), lever 0.49, 65 kW, 113 lbf a motor
-  left disc after 3 s: -38 lbf at 2029 rpm; alpha 8.0 to 9.8
+  left disc after 3 s: -38 lbf at 2030 rpm; alpha 8.0 to 9.8
   bank at 3 s                                              -75   target -87      ok
   pitch at 3 s                                           -10.1   target -11.5    ok
   heading at 3 s                                         -23.2   target -23.0    ok
@@ -69,7 +69,7 @@ Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 0, gear up [20240006682 figs
 Left motor lost, no pilot, 6,000 ft, 95 KCAS, flaps 10, gear down [20240006682 figs. 6-9]
   trim: alpha 5.2 (NASA 8.4), lever 0.73, 97 kW, 170 lbf a motor
   left disc after 3 s: -33 lbf at 1796 rpm; alpha 5.2 to 8.4
-  at 3 s: bank -83 (-87), pitch -18.0 from 5.2 (-11.5 from 8), heading -23.0 (-23), roll rate -52 (-47), sideslip 16.4 (9.1), sink 24.0 (24.5)
+  at 3 s: bank -83 (-87), pitch -18.0 from 5.2 (-11.5 from 8), heading -23.0 (-23), roll rate -52 (-47), sideslip 16.5 (9.1), sink 24.1 (24.5)
 
 Contactor failure on the right wing, 58 KCAS, flaps 30, the CFD's thrust [TM figs. 47-51, read by eye]
   failure A, alpha 2: dCL -0.301, Cl +0.041, Cn -0.0082, CY +0.000, dCm -0.068; 0.75 of the discs working
