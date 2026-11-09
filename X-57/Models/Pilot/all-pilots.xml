@@ -1,7 +1,16 @@
 <?xml version="1.0"?>
-<!-- written by fdm/x57pilot.py: the pilot, in the interior's frame; hidden from his own eyes -->
+<!-- written by fdm/x57pilot.py: the pilot, in the interior's frame; hidden from his own eyes: the Cockpit View, or an FGCamera
+     cockpit camera (FGCamera1) in his head (x -0.42 to -0.15 m, z 2.65 to 2.90 m in the views' frame, with a margin) -->
 <PropertyList>
   <model><name>ThePilot</name><path>pilot.xml</path></model>
   <animation><type>select</type><object-name>ThePilot</object-name>
-    <condition><not-equals><property>sim/current-view/name</property><value>Cockpit View</value></not-equals></condition></animation>
+    <condition><not><or>
+      <equals><property>sim/current-view/name</property><value>Cockpit View</value></equals>
+      <and>
+        <equals><property>sim/current-view/name</property><value>FGCamera1</value></equals>
+        <less-than><property>sim/current-view/x-offset-m</property><value>-0.12</value></less-than>
+        <greater-than><property>sim/current-view/z-offset-m</property><value>2.55</value></greater-than>
+        <less-than><property>sim/current-view/z-offset-m</property><value>3.0</value></less-than>
+      </and>
+    </or></not></condition></animation>
 </PropertyList>
