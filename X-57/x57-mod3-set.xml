@@ -38,9 +38,9 @@
  <engines><engine n="0"><rpm type="double">2400</rpm></engine><engine n="1"><rpm type="double">2400</rpm></engine></engines>
  <nasal><doors><file>Aircraft/X-57/Nasal/doors.nas</file></doors><x57lights><file>Aircraft/X-57/Nasal/lights.nas</file></x57lights><x57hdr><file>Aircraft/X-57/Nasal/hdr.nas</file></x57hdr><x57displays><file>Aircraft/X-57/Nasal/displays.nas</file></x57displays><x57cockpit><file>Aircraft/X-57/Nasal/cockpit.nas</file></x57cockpit><x57tecnam><file>Aircraft/X-57/Nasal/tecnam.nas</file></x57tecnam><x57pilot><file>Aircraft/X-57/Nasal/pilot.nas</file></x57pilot></nasal>
  <input><keyboard>
-  <key n="127"><name>Delete</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+  <key n="127"><name>Delete</name><desc>Regeneration: the throttles run from idle at the top to full regeneration at the bottom, or back to driving the motors</desc>
     <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
-  <key n="8"><name>Backspace, a Mac's delete key</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+  <key n="8"><name>Backspace, a Mac's delete key</name><desc>Regeneration: the throttles run from idle at the top to full regeneration at the bottom, or back to driving the motors</desc>
     <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
  </keyboard></input>
 </PropertyList>

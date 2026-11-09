@@ -882,7 +882,7 @@ def lever_extra(e):
     frac = tag('max', val(0), tag('min', val(1), tag('max', tag('div', tag('sum', det, neg(c('throttle'))), tag('max', det, val(0.02))), tag('sum', val(1), tag('product', val(-50), det)))))
     off = lambda n: tag('sum', val(1), neg(c(n)))
     return tag('sum', tag('product', off('reverser'), off('cutoff'), normal),
-               tag('product', c('reverser'), off('cutoff'), val(-1.174), c('throttle')),
+               tag('product', c('reverser'), off('cutoff'), tag('sum', val(-0.174), tag('product', val(-0.826), c('throttle')))),
                tag('product', c('cutoff'), tag('sum', neg(c('throttle')), tag('product', val(-0.174), frac))))
 
 
@@ -912,7 +912,7 @@ def dialog(out):
 <!-- the cockpit's levers to the flight model: written by fdm/mkmodel.py -->
 <!-- The torque lever is the throttle plus lever-extra. Normally: overdrive in the throttle's last tenth, and regeneration in its first when the menu
      ticks it. With the engine's reverser on (Delete, or a joystick's reverser button: Nasal/cockpit.nas), the whole throttle runs through the regeneration
-     region, idle at 0 to full regeneration, -17.4 percent of the lever [SIM], at 1. With its cutoff on (a Warthog throttle's lever lifted past its idle
+     region the X-57's way, more as it comes back: idle at 1, full regeneration, -17.4 percent of the lever [SIM], at 0. With its cutoff on (a Warthog throttle's lever lifted past its idle
      detent), regeneration runs from where the lever crossed the detent, /sim/model/x57/regen-detent, to full at the stop; full at once if the axis
      doesn't move past the detent -->
 <PropertyList>

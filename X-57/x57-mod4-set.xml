@@ -42,9 +42,9 @@
     <binding><command>property-toggle</command><property>/sim/model/x57/hl-arm</property></binding></key>
   <key n="89"><name>Y</name><desc>High-lift quick disarm, the yoke switch</desc>
     <binding><command>property-assign</command><property>/sim/model/x57/hl-yoke</property><value>1</value></binding></key>
-  <key n="127"><name>Delete</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+  <key n="127"><name>Delete</name><desc>Regeneration: the throttles run from idle at the top to full regeneration at the bottom, or back to driving the motors</desc>
     <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
-  <key n="8"><name>Backspace, a Mac's delete key</name><desc>Regeneration: the throttles run from idle to full regeneration, or back to driving the motors</desc>
+  <key n="8"><name>Backspace, a Mac's delete key</name><desc>Regeneration: the throttles run from idle at the top to full regeneration at the bottom, or back to driving the motors</desc>
     <binding><command>nasal</command><script>x57cockpit.regen_toggle();</script></binding></key>
  </keyboard></input>
 </PropertyList>

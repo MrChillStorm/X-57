@@ -139,7 +139,7 @@ NASA treats the D175 as test information only. Trust the energy meters for the b
 \Pic[0.82\textwidth]{overhead.jpg}{Overhead panel: the traction battery and contactors.}
 \Pic[0.82\textwidth]{pedestal.jpg}{Pedestal: torque and propeller levers.}
 \Tab{levers}
-FlightGear's throttle stops at idle and full. For regeneration press \key{Delete} (\key{Backspace} on a Mac): the throttles then run from idle to full regeneration, and the levers on the pedestal move back past idle. A joystick's reverser button does the same. On a Thrustmaster Warthog throttle, lift a lever over its idle detent as on the X-57: with FlightGear's own Warthog binding that motor goes to full regeneration, or, if the axis is calibrated to keep reading past the detent, more the further back the lever goes. Overdrive, and regeneration in the throttle's bottom tenth, are ticked in \textbf{X-57 menu $>$ Systems and failures}.
+FlightGear's throttle stops at idle and full. For regeneration press \key{Delete} (\key{Backspace} on a Mac): the throttles then run from idle at the top to full regeneration at the bottom, more as they come back, and the levers on the pedestal move back past idle with them. Switched on with the throttles at idle, it starts at full: push them up to ease it off. A joystick's reverser button does the same. On a Thrustmaster Warthog throttle, whose axis reads nothing past the idle detent, bind the idle-detent button to Reverser Toggle: each pass over the detent switches regeneration on or off, and the levers set how much. With FlightGear's own Warthog binding that button gives the lever's motor full regeneration while it is held past the detent. Overdrive, and regeneration in the throttle's bottom tenth, are ticked in \textbf{X-57 menu $>$ Systems and failures}.
 
 \section{Lower panels}
 \Tab{lower}
@@ -246,10 +246,10 @@ With no high lift the approach is fast: NASA's reference speed is 94\,KCAS. Gear
 \begin{enumerate}
 \item Select \ann{AIRSPEED} while above 120\,KEAS. In \ann{FIXED} the propellers push harder: at idle the model climbs at 75\,KCAS, and full regeneration gives only 2.6 degrees down.
 \item \ann{ARM} between 120 and 95\,KEAS.
-\item Gear down, flaps 30, and slow to 75\,KCAS. The high-lift propellers now hold the wing up: the model settles at about 4300\,rpm and 5\,kW a disc.
+\item Gear down, flaps 30, propeller levers forward to 2700\,rpm in case of a go-around, and slow to 75\,KCAS. The high-lift propellers now hold the wing up: the model settles at about 4300\,rpm and 5\,kW a disc.
 \item Their thrust works against the descent. With the torque levers at idle the model holds a 3-degree path only at about 78\,KCAS, and slower the path flattens, level near 68. So below about 80\,KCAS on final, hold the path with regeneration: that is what NASA gave the levers' regeneration region, glide path control on a Mod IV approach. Just past idle is enough for 3 degrees at 75\,KCAS: the idle torque gone, the propellers windmill. Full regeneration gives about 5. Fly it like a throttle, more for a steeper path and less for a flatter one. Hold the speed: at 70\,KCAS 3 degrees takes nearly full regeneration, and slower no amount holds it.
 \item After touchdown, press the red disarm button on the yoke's left horn. The propellers stop and the blades fold. Until then their thrust outruns the brakes: NASA's pilots found that in the simulator, and the button was added for it.
-\item On a go-around, disarm above 120\,KEAS and the blades fold.
+\item On a go-around: regeneration off (in it, full throttle is only idle), torque levers to \ann{FULL}, and \ann{FIXED}, as NASA planned for a high-performance takeoff. At 75\,KCAS the model then climbs at 12 degrees against 10 in \ann{AIRSPEED}, at a lower angle of attack. Flaps 10 once climbing, then clean up as after takeoff. Disarm above 120\,KEAS and the blades fold.
 \end{enumerate}
 \begin{warning}
 On Mod IV at approach speed the wing is flying on the high-lift propellers. Losing them all takes the stall speed from 58\,KCAS to about 75, Mod III's 73 at this weight: that's the approach speed.

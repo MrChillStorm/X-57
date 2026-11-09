@@ -57,7 +57,8 @@ var levers_idle = func {
 
 # ---------------------------------------------------------------- regeneration by FlightGear's reverser
 # The real torque lever reaches regeneration past the idle detent, with a finger lift [20240006533]. FlightGear's throttle stops at idle, so its
-# reverser stands in for the finger lift: on, the throttles run from idle at 0 to full regeneration at 1 (Systems/x57-rules.xml). Delete or
+# reverser stands in for the finger lift: on, the throttles run from idle at the top to full regeneration at the bottom, more as they come
+# back, as the X-57's lever does below its detent (Systems/x57-rules.xml). Delete or
 # Backspace toggles it, and so does a joystick's reverser button. FlightGear's own reverser-all hands its value to the engines as an axis
 # would (on gives them 0, off 0.5), so it is read here and set right.
 var REV = "/controls/engines/engine[%d]/reverser";
@@ -67,7 +68,7 @@ var regen_set = func(on) {
 var regen_toggle = func { regen_set(!get(sprintf(REV, 0))); };
 setlistener("/controls/engines/reverser-all", func(n) { regen_set(get("/controls/engines/reverser-all") > 0.5); }, 0, 0);
 setlistener(sprintf(REV, 0), func(n) {
-    gui.popupTip(n.getBoolValue() ? "Regeneration: the throttles now run from idle to full regeneration" : "Regeneration off: the throttles drive the cruise motors");
+    gui.popupTip(n.getBoolValue() ? "Regeneration: the throttles now run from idle at the top to full regeneration at the bottom" : "Regeneration off: the throttles drive the cruise motors");
 }, 0, 0);
 
 # A Warthog throttle's idle switches (FlightGear's own binding, buttons 28 and 29) set an engine's cutoff while its lever is lifted past the
