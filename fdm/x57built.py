@@ -38,6 +38,7 @@ Y_AIL = (136.61, 181.97)
 HUBS = GEO['high_lift']['hubs_in']
 R_HL = GEO['high_lift']['diameter_in'] / 2
 AIL_HINGE = 0.75
+HL_NACELLE_IN = 6.5          # the high-lift nacelle's diameter; 20220006506 slide 10 marks its radius at 0.28 R, 6.35 in
 REF = GEO['reference']
 FIT_FILE = os.path.join(HERE, 'data', 'x57_section_fit.json')
 
@@ -197,7 +198,7 @@ def nacelles():
     z = GEO['cruise']['hub_in'][2]
     x0, x1 = 126.4, 166.0
     tip = body([dict(x=x0, z=z, h=0, w=0), dict(x=x0 + 8, z=z, h=0.8 * d, w=0.8 * d), dict(x=x0 + 16, z=z, h=d, w=d), dict(x=x1 - 14, z=z, h=0.8 * d, w=0.8 * d), dict(x=x1, z=z, h=0, w=0)], [x0, x0 + 8, x0 + 16, 150.0, x1])
-    d = 6.5
+    d = HL_NACELLE_IN
     z = HUBS[0][2]
     x0, x1 = 130.0, 168.0
     hl = body([dict(x=x0, z=z, h=0, w=0), dict(x=x0 + 6, z=z, h=0.8 * d, w=0.8 * d), dict(x=x0 + 12, z=z, h=d, w=d), dict(x=150.0, z=z, h=0.8 * d, w=0.8 * d), dict(x=x1, z=z, h=0, w=0)], [x0, x0 + 6, x0 + 12, 148.0, x1])
@@ -219,7 +220,7 @@ def config(hl):
     fus = P.fuselage()
     mid = le(0) + 0.5 * C0
     x_le, x_te = le(0) * IN, (le(0) + C0) * IN
-    c = dict(ring_wake=FIT.get('ring_wake', 0), rows=rows, S_ft2=REF['S_ft2'], tables=tables(), a_sec=a_sec, k_ind=k_ind, incidence=0.0, k_cd=1.0, y_split=ysplit, contraction=FIT['contraction'], k_jet=FIT['k_jet'], k_sat=FIT['k_sat'], jet_turn=FIT['jet_turn'], jet_keep=FIT['jet_keep'], jet_out=FIT['jet_out'], k_jet_roll=FIT['k_jet_roll'] if hl else 0.0,
+    c = dict(jet=FIT.get('jet', 'ring'), ring_wake=FIT.get('ring_wake', 0), rows=rows, S_ft2=REF['S_ft2'], tables=tables(), a_sec=a_sec, k_ind=k_ind, incidence=0.0, k_cd=1.0, y_split=ysplit, contraction=FIT['contraction'], k_jet=FIT['k_jet'], k_sat=FIT['k_sat'], jet_turn=FIT['jet_turn'], jet_keep=FIT['jet_keep'], jet_out=FIT['jet_out'], k_jet_roll=FIT['k_jet_roll'] if hl else 0.0,
              k_tail_jet=FIT['k_tail_jet'], k_wake=1.0, wake_ke=1.6 / (math.pi * 15.0), wake_te=(x_te, zw - 0.02, C0 * IN), k_munk=0.89, k_munk_aft=0.5, cdc=1.2, eps_lag=0.35,
              frozen='ctl/hold-props', fuselage_at_wing=dict(a=math.sqrt(fus['half_h'](mid) * fus['half_w'](mid)), z=fus['zc'](mid)),
              coef=dict(S=REF['S_ft2'], b=REF['b_ft'], c=REF['c_ft'], ref=REF['mrs_in']))
@@ -238,10 +239,17 @@ def config(hl):
         c['bodies'].append(dict(name=nm, stations=b['stations'], xmax=b['xmax'], y=y, sides=(-1, 1)))
     # discs: their slipstreams here, their forces from propulsion.py
     hub = GEO['cruise']['hub_in']
-    D = [dict(name=s, hub=(hub[0] * IN, sp * hub[1] * IN, hub[2] * IN), D=GEO['cruise']['diameter_in'] * IN, spin=sp, thrust='prop/%s/thrust-lbs' % s, torque='prop/%s/q-air-ftlb' % s, tip=True, swirl=SWIRL) for s, _, sp in PR.SIDES]
+    # hub_r: the nacelle's radius over the disc's, the jet's inner edge (the tip nacelle 13.8 in across, the high-lift 6.5, as nacelles() and 20220006506 slide 10's 0.28 R)
+    D = [dict(name=s, hub=(hub[0] * IN, sp * hub[1] * IN, hub[2] * IN), D=GEO['cruise']['diameter_in'] * IN, spin=sp, thrust='prop/%s/thrust-lbs' % s, torque='prop/%s/q-air-ftlb' % s, tip=True, swirl=SWIRL,
+              hub_r=13.8 / GEO['cruise']['diameter_in']) for s, _, sp in PR.SIDES]
     if hl:
         for i, q in enumerate(PR.hl_stations(), 1):
-            D.append(dict(name='h%d' % i, hub=tuple(v * IN for v in q), D=GEO['high_lift']['diameter_in'] * IN, spin=PR.spin_hl(i), thrust='prop/hl/d%d/thrust-lbs' % i, torque='prop/hl/d%d/q-air-ftlb' % i, test='prop/hl/d%d/power' % i))
+            D.append(dict(name='h%d' % i, hub=tuple(v * IN for v in q), D=GEO['high_lift']['diameter_in'] * IN, spin=PR.spin_hl(i), thrust='prop/hl/d%d/thrust-lbs' % i, torque='prop/hl/d%d/q-air-ftlb' % i, test='prop/hl/d%d/power' % i,
+                          hub_r=HL_NACELLE_IN / GEO['high_lift']['diameter_in']))
+            if FIT.get('jet', 'ring') != 'ring':
+                # the trial jets take the blades' own thrust, NASA's blade-element table: the tunnel's balance reads less, the propeller net of its spinner's
+                # and nacelle's blockage, which the table leaves out [20220006506 slide 7], and the table predicts the measured wake [slide 10]
+                D[-1]['rotor'] = dict(J='prop/hl/d%d/J' % i, k='prop/hl/d%d/k4' % i, out='prop/hl/d%d/deployed' % i, table=(PR.DT['high_lift']['J'], PR.DT['high_lift']['nasa_Ct']))
     c['discs'] = D
     c['disc_upwash'] = {}
     st = P.stabilator()

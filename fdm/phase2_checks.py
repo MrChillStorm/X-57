@@ -69,6 +69,53 @@ def tunnel():
         check('%s inside the tunnel\'s scatter' % c, np.sqrt((e ** 2).mean()) < tol, 'rms %.4f' % np.sqrt((e ** 2).mean()))
 
 
+def wake():
+    """The high-lift slipstream one radius aft of the disc's centre against NASA's wake survey [20220006506 slide 9], an isolated propeller in the tunnel.
+    The model's jet, as builtup's discs() makes it: the blades' thrust (NASA's table) and the swirl's low pressure over the annulus outside the nacelle, its
+    outer edge by momentum theory (builtup.jet_numbers), spread one radius back by a ring-vortex tube, less the nacelle's own tube. Before 2026-11-09 (FIT jet
+    'ring'): the balance's thrust over the whole disc at a fixed contraction. Limits set before the model was run: the mean over 0.45-0.85 R within 15 % at 58
+    and 75 KEAS and 5 ft/s at 90; the edge, where the speed falls through half that, within 0.05 R"""
+    import builtup as BU
+    import ringwake as RW
+    import x57built as B
+    W = L('digitised/hlp_wake.json')
+    d = L('disc_tables.json')['high_lift']
+    D = B.GEO['high_lift']['diameter_in'] / 12
+    k = B.FIT['contraction']
+
+    def plateau_edge(r, v):
+        m = (r >= 0.45 - 1e-9) & (r <= 0.85 + 1e-9)
+        pl = float(v[m].mean())
+        i = np.where((v[:-1] >= pl / 2) & (v[1:] < pl / 2))[0]
+        if not len(i):
+            return pl, float('nan')
+        i = i[-1]
+        return pl, float(r[i] + (pl / 2 - v[i]) / (v[i + 1] - v[i]) * (r[i + 1] - r[i]))
+    rg = np.round(np.arange(0.30, 1.201, 0.01), 2)
+    for s in ('58', '75', '90'):
+        V = W[s]['keas'] * 1.68781                   # the tunnel near sea level: true speed as equivalent
+        n = W[s]['rpm'] / 60
+        J = V / (n * D)
+        p = np.array(W[s]['points'])
+        r = np.unique(p[:, 0])
+        pm, em = plateau_edge(r, np.array([p[p[:, 0] == q, 1].mean() for q in r]))
+        if B.FIT.get('jet') in ('beta', 'sat'):
+            rho, hub = 0.002377, B.HL_NACELLE_IN / B.GEO['high_lift']['diameter_in']
+            a, ro = BU.jet_numbers(float(np.interp(J, d['J'], d['nasa_Ct'])) * rho * n * n * D ** 4, float(np.interp(J, d['J'], d['Cq'])) * rho * n * n * D ** 5, V, D / 2, hub, rho)
+            prof = [a * (RW.at(1.0, float(q), round(ro, 3)) - RW.at(round(1 / hub, 3), round(float(q) / hub, 2), 1.0)) for q in rg]
+        else:
+            Ct = float(np.interp(J, d['J'], d['Ct']))
+            a = 0.5 * V * (math.sqrt(1 + 8 * Ct / (math.pi * J * J)) - 1)
+            prof = [a * RW.at(1.0, float(q), k) for q in rg]
+        pl, ed = plateau_edge(rg, np.array(prof))
+        print('     %s KEAS, %d rpm, J %.3f: the model %.1f ft/s to %.3f R, the survey %.1f to %.3f' % (s, W[s]['rpm'], J, pl, ed, pm, em))
+        if s == '90':
+            check('slipstream at 90 KEAS within 5 ft/s of the survey', abs(pl - pm) <= 5.0, '%+.1f ft/s' % (pl - pm))
+        else:
+            check('slipstream speed at %s KEAS within 15 %% of the survey' % s, abs(pl / pm - 1) <= 0.15, '%+.0f %%' % (100 * (pl / pm - 1)))
+            check('slipstream edge at %s KEAS within 0.05 R of the survey' % s, abs(ed - em) <= 0.05, '%+.3f R' % (ed - em))
+
+
 def cruise_points():
     """NASA's Ct and Cp at its 37 points, from the tables the flight model reads"""
     import discs
@@ -317,7 +364,7 @@ if __name__ == '__main__':
     if 'tables' in what:
         tables(H.load('mod4'))
     if 'tunnel' in what:
-        print('Tunnel, 2022 retest'); tunnel(); cruise_points()
+        print('Tunnel, 2022 retest'); tunnel(); wake(); cruise_points()
     if 'windmill' in what:
         print('Windmilling after a contactor failure'); windmill()
     if 'response' in what:

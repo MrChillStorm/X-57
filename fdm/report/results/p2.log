@@ -23,6 +23,14 @@ ok   Ct inside the tunnel's scatter  rms 0.0064
      Cq LH: model less measured, mean -0.0006, rms 0.0008, 17 points
      Cq RH: model less measured, mean +0.0003, rms 0.0006, 28 points
 ok   Cq inside the tunnel's scatter  rms 0.0007
+     58 KEAS, 4861 rpm, J 0.639: the model 51.4 ft/s to 0.905 R, the survey 69.8 to 0.937
+MISS slipstream speed at 58 KEAS within 15 % of the survey  -26 %
+ok   slipstream edge at 58 KEAS within 0.05 R of the survey  -0.033 R
+     75 KEAS, 4145 rpm, J 0.970: the model 19.8 ft/s to 0.905 R, the survey 29.3 to 0.976
+MISS slipstream speed at 75 KEAS within 15 % of the survey  -32 %
+MISS slipstream edge at 75 KEAS within 0.05 R of the survey  -0.071 R
+     90 KEAS, 3650 rpm, J 1.322: the model 0.6 ft/s to 0.905 R, the survey 1.2 to 1.027
+ok   slipstream at 90 KEAS within 5 ft/s of the survey  -0.6 ft/s
 ok   cruise tables pass through NASA's points  worst Ct 0.0002, Cp 0.0003, 37 points
 Windmilling after a contactor failure
      tunnel, 75 KEAS, sea level: failed disc 2640 rpm, J 1.52, thrust -2.3 lbf (measured 2483 and 2654 rpm)
@@ -72,4 +80,4 @@ Planning powers
 ok   the efficiency chain is NASA's  system 121.6 kW from 29.5 + 78.3 shaft
      (NASA's ground roll: 96 + 108 kW shaft gives 229.2 kW by this chain; its table says 229.2)
 
-ALL WITHIN LIMITS
+MISSES: slipstream speed at 58 KEAS within 15 % of the survey; slipstream speed at 75 KEAS within 15 % of the survey; slipstream edge at 75 KEAS within 0.05 R of the survey

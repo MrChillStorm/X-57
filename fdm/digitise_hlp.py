@@ -77,11 +77,63 @@ def read(p, top):
     return dict(frame=[int(x0), int(x1), int(y1), int(y0)], RH=sorted(conv(marks(red))), LH=sorted(conv(marks(blue))), BEMT=sorted(conv(marks(black, 10, 34, 7))))
 
 
+def svg_paths(p):
+    """slide p's drawing as poppler writes it to SVG: each path's fill, stroke, opacity and points on the page, in pt"""
+    import re
+    os.makedirs(TMP, exist_ok=True)
+    fn = os.path.join(TMP, 'p%d.svg' % p)
+    subprocess.run(['pdftocairo', '-svg', '-f', str(p), '-l', str(p), PDF, fn], check=True)
+    out = []
+    for el in re.findall(r'<path [^>]*>', open(fn).read()):
+        at = dict(re.findall(r'([\w-]+)="([^"]*)"', el))
+        xy = np.array([float(v) for v in re.findall(r'-?\d+\.?\d*', re.sub(r'[MLCZ]', ' ', at.get('d', '')))]).reshape(-1, 2)
+        if 'transform' in at:
+            a, b, c, d, e, f = [float(v) for v in re.findall(r'-?\d+\.?\d*', at['transform'])]
+            xy = np.c_[a * xy[:, 0] + c * xy[:, 1] + e, b * xy[:, 0] + d * xy[:, 1] + f]
+        out.append(dict(fill=at.get('fill'), stroke=at.get('stroke'), opacity=at.get('stroke-opacity'), xy=xy))
+    return out
+
+
+def wake():
+    """Slide 9: induced axial velocity one radius aft of the disc's centre, ft/s, on r/R, at three loadings. The plot is drawn, not pictured, so its markers
+    are read from the drawing itself: red crosses 58 KEAS and 4861 rpm, black circles 75 KEAS and 4145, blue diamonds 90 KEAS and 3650. The faint grid gives the
+    scale, r/R 0 to 1.2 by 0.2 and -20 to 80 ft/s by 20. Repeated points are kept, each as read"""
+    P = svg_paths(9)
+    grid = [q['xy'] for q in P if q['stroke'] and q['opacity'] and float(q['opacity']) < 0.5 and len(q['xy']) == 2]
+    xs = sorted({round(g[0, 0], 2) for g in grid if abs(g[0, 0] - g[1, 0]) < 0.01})
+    ys = sorted({round(g[0, 1], 2) for g in grid if abs(g[0, 1] - g[1, 1]) < 0.01})
+    assert len(xs) == 7 and len(ys) == 6, (xs, ys)
+    rr = lambda u: float(np.interp(u, xs, np.arange(7) * 0.2))
+    vv = lambda w: float(np.interp(w, ys, [80.0, 60.0, 40.0, 20.0, 0.0, -20.0]))     # page y runs down
+    out = dict(source='NTRS 20220006506 slide 9: 2022 LSAWT test, induced axial velocity one radius aft of the centre of rotation, ft/s',
+               grid=dict(x=xs, y=ys))
+    for name, fill, kcas, rpm in (('58', 'rgb(100%, 0%, 0%)', 58.0, 4861.0), ('75', 'rgb(0%, 0%, 0%)', 75.0, 4145.0), ('90', 'rgb(0%, 0%, 100%)', 90.0, 3650.0)):
+        pts = []
+        for q in P:
+            if q['fill'] != fill or len(q['xy']) < 4:
+                continue
+            lo, hi = q['xy'].min(axis=0), q['xy'].max(axis=0)
+            if max(hi - lo) > 14 or min(hi - lo) < 4:                   # a marker: about 6 to 11 pt across; lines and text are not
+                continue
+            c = (lo + hi) / 2
+            r = rr(c[0])
+            if r < 0.3 or not (xs[0] < c[0] < xs[-1] and ys[0] < c[1] < ys[-1]):     # the legend's markers sit left of the first point
+                continue
+            pts.append((round(r, 4), round(vv(c[1]), 2)))
+        out[name] = dict(keas=kcas, rpm=rpm, points=sorted(pts))
+    return out
+
+
 def main():
     q, t = read(6, 0.05), read(7, 0.30)
     out = dict(source='NTRS 20220006506 slides 6, 7: 2022 LSAWT test, new blades', Cq=q, Ct=t)
     with open(os.path.join(HERE, 'data', 'digitised', 'hlp_tunnel.json'), 'w') as f:
         json.dump(out, f, indent=0)
+    w = wake()
+    with open(os.path.join(HERE, 'data', 'digitised', 'hlp_wake.json'), 'w') as f:
+        json.dump(w, f, indent=0)
+    for k in ('58', '75', '90'):
+        print('wake %s KEAS: %d points: %s' % (k, len(w[k]['points']), ' '.join('%.3f:%.1f' % p for p in w[k]['points'])))
     return out
 
 

@@ -157,6 +157,39 @@ def swirl_profile(x, Rs, sw, con):
     return k * g(np.asarray(x, float))
 
 
+# NASA's velocity multiplier for a slipstream of finite height [Patterson, Derlaga and Borer, NTRS 20160010105, eqs. 3-5]: the share of the far jet's added speed a
+# wing section feels, beta, by the disc's radius over the chord, its distance ahead of the leading edge over the chord, and the far jet's speed over the free
+# stream, Vj/V. A quartic in R/c whose coefficients are linear in X = [1, u/c, (u/c)^2, (u/c) Vj/V, Vj/V, (Vj/V)^2], fitted there to two-dimensional OVERFLOW
+# runs of actuator discs ahead of an airfoil over R/c 0.125-3, u/c 0.25-3, Vj/V 1.25-2.25 (R^2 0.986); it gives their fig. 6 back
+BETA_C = np.array([[0.378269, 0.748135, -0.179986, -0.056464, -0.146746, -0.015255],
+                   [3.071020, -1.769885, 0.436595, 0.148643, -0.989332, 0.197940],
+                   [-2.827730, 2.054064, -0.467410, -0.277325, 0.698981, -0.008226],
+                   [0.997936, -0.916118, 0.199829, 0.157810, -0.143368, -0.057385],
+                   [-0.127645, 0.135543, -0.028919, -0.026546, 0.010470, 0.012221]])
+BETA_RJ = (1.0, 2.25)        # Vj/V held to the fit's top; below 1.25 it runs on toward no jet, where beta's product with the jet's speed goes to nil anyway
+
+
+def beta_poly(Rc, uc):
+    """beta = b0 + b1 r + b2 r^2 in r = Vj/V, at one disc's R/c and u/c"""
+    c = np.array([Rc ** i for i in range(5)]) @ BETA_C
+    return float(c[0] + c[1] * uc + c[2] * uc * uc), float(c[3] * uc + c[4]), float(c[5])
+
+
+def jet_numbers(T, Q, u, R, hub, rho):
+    """The jet a disc drives, by momentum theory on the annulus outside its nacelle (hub, of R): the speed added at the disc, a, so 2 a far behind, and the
+    jet's far outer radius, of R, the nacelle staying its own width. T is the blades' thrust. Their torque Q leaves the jet turning, a free vortex for an even
+    loading, whose low pressure inside the jet adds pi Q^2 ln(1/hub) / (rho (u + a)^2 A^2) to its axial momentum. As the flight model's discs() computes it"""
+    A = math.pi * R * R * (1 - hub * hub)
+    T = max(T, 0.0)
+    a0 = 0.5 * (math.sqrt(u * u + 2 * T / (rho * A)) - u)
+    sw = math.pi * max(Q, 0.0) ** 2 * math.log(1 / hub) / (rho * (u + a0) ** 2 * A * A)
+    a = 0.5 * (math.sqrt(u * u + 2 * (T + sw) / (rho * A)) - u)
+    return a, math.sqrt(hub * hub + (1 - hub * hub) * (u + a) / (u + 2 * a))
+
+
+RO_GRID = [0.80, 0.85, 0.90, 0.95, 1.00]      # the jet's far outer radius, of R: the strips' beta tables
+
+
 def wetted_drag(L, wet, ff, k=1.0, V=65.0, nu=1.5e-5):
     """flat-plate friction by Reynolds number, a form factor, on a wetted area: drag area, m2"""
     return 0.455 / math.log10(V * L / nu) ** 2.58 * ff * wet * k
@@ -255,7 +288,29 @@ class Aero:
                 a = s.fn('bu/disc/%s/a-fps' % d['name'], M(v(0.5), D(SQ(S(SQR(uh), Q(M(v(2 / A), MAX(T, v(0))), s.RHO))), uh)), 'axial speed added at the disc')
                 nm = 'bu/disc/' + d['name']
                 s.fn(nm + '/vt-fps', Q(MAX(q, v(0)), M(s.RHO, S(uh, a), v(A * 0.7 * Dm / 2))), 'swirl at 0.7 R')
-                s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, a=a, ad=s.jet(nm, a, uh), R=Dm / 2, **s.drift(nm, vv, uh, a)))
+                if s.c.get('jet') in ('beta', 'sat'):
+                    # The jet, as jet_numbers(): the blades' thrust over the annulus outside the nacelle, with the swirl's low pressure; its far outer edge by
+                    # momentum theory. A wing behind it feels NASA's share beta of the far jet's 2 a, by its R/c, u/c and Vj/V [20160010105]. This is the stream
+                    # the tunnel's wake survey measured [20220006506 slide 9]; what pulls the aircraft stays the balance's thrust, T
+                    ro_ = d.get('rotor')
+                    rot = M(p(ro_['out']), T1(ro_['J'], *ro_['table']), p(ro_['k'])) if ro_ else p(d['thrust'])
+                    if d.get('test'):
+                        rot = IFTHEN(on, M(p('bu/test/hl-thrust'), w), rot)
+                    rot = s.fn(nm + '/rotor-lbs', MAX(rot, v(0)), 'the blades\' own thrust, which drives the jet')
+                    hb = d['hub_r']
+                    Aa = A * (1 - hb * hb)
+                    a0 = s.fn(nm + '/a0-fps', M(v(0.5), D(SQ(S(SQR(uh), Q(M(v(2 / Aa), rot), s.RHO))), uh)))
+                    swp = Q(M(v(math.pi * math.log(1 / hb) / Aa ** 2), SQR(MAX(q, v(0)))), M(s.RHO, SQR(S(uh, a0))))
+                    js = s.fn(nm + '/as-fps', M(v(0.5), D(SQ(S(SQR(uh), Q(M(v(2 / Aa), S(rot, swp)), s.RHO))), uh)), 'the jet\'s speed added at the disc, half its far value')
+                    s.fn(nm + '/ro', SQ(S(v(hb * hb), M(v(1 - hb * hb), Q(S(uh, js), S(uh, M(v(2), js)))))), 'the jet\'s far outer radius, of R')
+                    rj = s.fn(nm + '/vj-v', MAX(v(BETA_RJ[0]), MIN(v(BETA_RJ[1]), Q(S(uh, M(v(2), js)), uh))), 'the far jet\'s speed over the free stream, as beta takes it')
+                    if s.c['jet'] == 'sat':        # the jet-height saturation of the ring model (jet()), on this jet
+                        ad = s.fn(nm + '/ad', M(v(2), js, D(v(1), M(v(s.c.get('k_sat', 0.0)), Q(js, S(uh, js, v(1)))))), 'the far jet\'s added speed, less what a jet no taller than the chord does not give')
+                    else:
+                        ad = s.fn(nm + '/ad', M(v(2), js), 'the far jet\'s added speed, of which a strip feels its beta (wash_of)')
+                    s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, a=a, js=js, ro=nm + '/ro', rj=nm + '/vj-v', uc=s.beta_of(d), ad=ad, R=Dm / 2, **s.drift(nm, vv, uh, js)))
+                else:
+                    s.D.append(dict(d, nm=nm, x=x, y=y, z=z, u=uh, v=vv, w=w, a=a, ad=s.jet(nm, a, uh), R=Dm / 2, **s.drift(nm, vv, uh, a)))
                 if s.c.get('jet_turn') and d.get('test'):
                     # the flap turns the jet: the thrust's axial part lost, which the airframe feels as drag
                     th = M(v(math.radians(s.c['jet_turn'])), p('ctl/flap-deg'))
@@ -284,6 +339,15 @@ class Aero:
             s.g.fcs.channel('built-up aerodynamics')
 
     DRIFT = [round(-0.6 + 0.05 * i, 2) for i in range(25)]      # the jet's sideways run per ft behind its disc, the tables' points
+
+    def beta_of(s, d):
+        """a disc's distance ahead of the wing's leading edge over the chord, u/c, both read along the wing's strips at its hub"""
+        rows = sorted((r for r in s.c['rows'] if r['kind'] == 'wing' and r['side'] * d['hub'][1] > 0), key=lambda r: abs(r['ym']))
+        y = abs(d['hub'][1])
+        ym = [abs(r['ym']) for r in rows]
+        c = float(np.interp(y, ym, [r['c'] for r in rows]))
+        le = float(np.interp(y, ym, [r['x4'] - r['c'] / 4 for r in rows]))
+        return (le - d['hub'][0]) / c
 
     def drift(s, nm, vv, uh, a):
         """How far a jet runs sideways for each foot it goes back. The air crosses the airplane at -v, the body's side speed: the jet keeps that crossflow
@@ -324,7 +388,7 @@ class Aero:
             Rs = d['R'] * s.c['contraction']
             dy = y - d['y']
             x = r['x4'] * F - d['x']
-            reach = Rs + max(abs(s.DRIFT[0]), abs(s.DRIFT[-1])) * max(x, 0.0)
+            reach = (d['R'] if 'ro' in d else Rs) + max(abs(s.DRIFT[0]), abs(s.DRIFT[-1])) * max(x, 0.0)
             if not np.any(np.abs(dy) < reach):
                 continue
             ku = 1 + x / math.hypot(x, d['R'])
@@ -340,8 +404,34 @@ class Aero:
                 # a jet over an unflapped outer strip lifts less than the strip's own speed says [fitted to the contactor failure's rolling moment]
                 return float(np.mean(np.abs(dy - shift) < Rs)) * ku * out_k
             shifts = [g * x for g in s.DRIFT] if x > 0 else [0.0] * len(s.DRIFT)
-            a = [share(h) for h in shifts]
             sw = [sw_of(dy - h, Rs, d) for h in shifts]
+            if 'ro' in d:
+                # beta's jet. Across the strip's span, a point inside the annulus at the strip's height feels beta of the far jet, at the jet's height there:
+                # a round jet is 2 R tall only at its middle, so a two-dimensional beta goes strip by strip. As beta = b0 + b1 r + b2 r^2 in r = Vj/V, the
+                # strip keeps the span means of b0, b1, b2 (nil outside the jet), each on the jet's drift and outer radius
+                yy = np.linspace(min(r['ya'], r['yb']), max(r['ya'], r['yb']), 81) * F - d['y']
+                cf = r['c'] * F
+
+                ku2 = 0.5 + 0.5 * x / math.hypot(x, d['R'])        # 'sat': a uniform tube's development to the strip, on its axis, of the far speed
+
+                def means(h, q):
+                    dd = yy - h
+                    if s.c['jet'] == 'sat':
+                        rr = np.hypot(dd, zz)
+                        return np.array([np.mean((rr < q * d['R']) & (rr > d['hub_r'] * d['R'])) * ku2, 0.0, 0.0])
+                    rr = np.hypot(dd, zz)
+                    rc = np.sqrt(np.maximum((q * d['R']) ** 2 - dd * dd, 0.0)) / cf
+                    wt = ((rr < q * d['R']) & (rr > d['hub_r'] * d['R'])) * np.minimum(1.0, rc / 0.125)       # to nil at no height, as fig. 6
+                    c = np.array([np.maximum(rc, 0.125) ** i for i in range(5)]).T @ BETA_C
+                    uc = d['uc']
+                    return np.array([np.mean(wt * (c[:, 0] + c[:, 1] * uc + c[:, 2] * uc * uc)), np.mean(wt * (c[:, 3] * uc + c[:, 4])), np.mean(wt * c[:, 5])])
+                B = [[means(h, q) for q in RO_GRID] for h in shifts]
+                sw0 = sw[s.DRIFT.index(0.0)]
+                if max(abs(B[i][j][0]) + abs(B[i][j][1]) + abs(B[i][j][2]) for i in range(len(B)) for j in range(len(RO_GRID))) <= 0:
+                    continue
+                out.append(dict(d=d, B=[[[B[i][j][k] for j in range(len(RO_GRID))] for i in range(len(B))] for k in range(3)], moves=x > 0, sw0=sw0, sw=[q - sw0 for q in sw]))
+                continue
+            a = [share(h) for h in shifts]
             a0, sw0 = a[s.DRIFT.index(0.0)], sw[s.DRIFT.index(0.0)]
             if max(abs(q) for q in a) <= 0:
                 continue
@@ -354,6 +444,14 @@ class Aero:
         if not moves:
             return v(w[key + '0']) if w[key + '0'] else None
         return s.fn('%s/%s-%s' % (nm, key, w['d']['name']), S(v(w[key + '0']), T1(w['d']['drift'], s.DRIFT, w[key])))
+
+    def cover_term(s, nm, w):
+        """a strip's share of one beta jet's far speed: its beta, b0 + b1 r + b2 r^2, each a table on the jet's outer radius, and on its drift where the
+        strip is behind the disc"""
+        d = w['d']
+        tb = [T2(d['drift'], d['ro'], s.DRIFT, RO_GRID, w['B'][k]) if w['moves'] else T1(d['ro'], RO_GRID, w['B'][k][0]) for k in range(3)]
+        rj = p(d['rj'])
+        return s.fn('%s/a-%s' % (nm, d['name']), MAX(v(0), S(tb[0], M(tb[1], rj), M(tb[2], SQR(rj)))))
 
     # the wing
     def wing(s):
@@ -393,7 +491,7 @@ class Aero:
                 w = D(w, M(v(fp), p('flex/qd%s-fps' % sd)))
             wash = s.wash_of(r)
             u, vv = s.fn(nm + '/uf', u), s.fn(nm + '/vf', vv)       # each is used more than once, and each read takes a lock in FlightGear
-            jets = [(w['d'], s.wash_term(nm, w, 'a')) for w in wash]
+            jets = [(w['d'], s.cover_term(nm, w) if 'B' in w else s.wash_term(nm, w, 'a')) for w in wash]
             jets = [(d, k) for d, k in jets if k]
             U = s.fn(nm + '/u', S(u, *[M(k, d['ad']) for d, k in jets]))
             # the jet straightens the flow through it less than adding its speed along the shaft would: part of the angle stays
