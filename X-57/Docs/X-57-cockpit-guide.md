@@ -21,7 +21,7 @@ Mod III carries the high-lift motors on its wing, but they're inactive with the 
 | V | Cycle the views, among them the Battery View (the aft cabin's batteries, their control modules and vent) and, after it, the Pilot Face View (the pilot's face, headset and sunglasses, from over the yoke) |
 | [ and ] | Flaps |
 | H | High-lift ARM or DISARM/RESET |
-| Y | Yoke disarm (or click the red button on the yoke) |
+| Y | Yoke disarm (or click the red button on the yoke). On a Warthog stick, its red thumb button, unless you have bound it yourself |
 | Click a door | Opens or shuts it, from inside or out: the main door on the left, the rear door on the right. On the ground only, below 19 kt. Hover over a door to see whether it is open and whether a click will work. Each door clicks open and thumps shut, and while one is open the cockpit hears the outside |
 
 Torque, propeller and other lever bindings are FlightGear's usual throttle and propeller controls. The propeller lever is FlightGear's propeller pitch axis.

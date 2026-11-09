@@ -329,6 +329,26 @@ var runway_start = func {
 };
 setlistener("/sim/signals/fdm-initialized", func(n) { if (n.getBoolValue()) runway_start(); }, 0, 0);
 
+# A Warthog stick's red thumb button, Weapons Release, becomes the yoke's high-lift disarm button on Mod IV. FlightGear's own Warthog binding
+# leaves that button unbound, a popup naming it; a binding the user has given it is left alone. A button's binding reads its script each time
+# it is pressed, so changing the script here is enough.
+var warthog_disarm = func {
+    if (getprop(J ~ "prop/hl/rpm") == nil) return;
+    var root = props.globals.getNode("/input/joysticks");
+    if (root == nil) return;
+    foreach (var js; root.getChildren("js")) {
+        var stick = 0;
+        foreach (var k; ["name", "id"])
+            foreach (var n; js.getChildren(k))
+                if (find("Joystick - HOTAS Warthog", n.getValue() or "") >= 0) stick = 1;
+        var script = js.getNode("button[1]/binding[0]/script");
+        if (!stick or script == nil or find("popup(", script.getValue() or "") != 0) continue;
+        script.setValue('setprop("/sim/model/x57/hl-yoke", 1);');
+        logprint(LOG_INFO, "X-57: the Warthog's red thumb button is the yoke's high-lift disarm");
+    }
+};
+setlistener("/sim/signals/fdm-initialized", func(n) { if (n.getBoolValue()) settimer(warthog_disarm, 1); }, 1, 0);
+
 var timer = nil;
 var ready_l = setlistener("/sim/signals/fdm-initialized", func(n) {
     if (n.getBoolValue()) {
