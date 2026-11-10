@@ -11,6 +11,8 @@ SimGear reads them, over a sweep of states and along flights through the flight 
   - that no loop holds a source at nil volume, and none is cut off while it could be heard;
   - that nothing runs on a parked aircraft, or from a propeller that isn't turning;
   - that each group's loops add to one equal-power whole, so the bookkeeping hasn't lost a loop;
+  - that each loop plays at its own pitch, its rpm over the one it was rendered at, wherever it can be heard (SimGear adds 1.0
+    to a <pitch> that states no <offset>, and plays nothing over 2.0);
   - that the airframe's sounds play at their stated levels, the gear's loops at PyWopWop's only with the gear out, the tyres' only rolling, and the touchdowns once a wheel.
 """
 import os, re, sys
@@ -22,6 +24,7 @@ os.environ.setdefault('X57_BUILT', '1')      # flown on what ships
 HERE = os.path.dirname(os.path.abspath(__file__))
 S = os.path.join(HERE, '..', 'X-57')
 LIMIT = 64
+HEARD = 1e-3            # -60 dB of a loop's full volume, as x57sound.py's gates
 SIG = '/environment/density-slugft3'
 TAS = '/fdm/jsbsim/velocities/vtrue-kts'
 DOORS = ('sim/model/door-left', 'sim/model/door-right')        # the main and rear doors, 0 shut to 1 open
@@ -98,7 +101,7 @@ def loops(mod):
             continue
         n = e.find('name').text.split('-')
         out.append(dict(tag=e.tag, name=e.find('name').text, group=n[-2], view=n[-1], path=e.find('path').text, mode=e.find('mode').text,
-                        door=DOORS[0] in ET.tostring(e.find('condition'), encoding='unicode'),
+                        door=DOORS[0] in ET.tostring(e.find('condition'), encoding='unicode'), pitch=e.findall('pitch'),
                         cond=list(e.find('condition'))[0], vol=list(e.find('volume').find('expression'))[0]))
     return out
 
@@ -114,6 +117,42 @@ def evaluate(L, P):
         C[i] = np.broadcast_to(test(l['cond'], P), (n,))
         V[i] = np.broadcast_to(val(l['vol'], P), (n,))
     return C, V
+
+
+def sg_pitch(l, P):
+    """the pitch SimGear plays a loop at, and its own. SimGear (xmlsound.cxx) multiplies the <pitch> blocks' factor x property, each
+    within its <min> and <max>, and adds their <offset>s, which are 1.0 where none is given (a <volume>'s are 0); then it holds the
+    sum within 0.01 and 2.0 (sample.hxx). A loop's own pitch is its rpm over the rpm it was rendered at, the factor x property"""
+    n = len(next(iter(P.values())))
+    sg, own, offset = np.ones(n), np.ones(n), 0.0
+    for p in l['pitch']:
+        q = np.broadcast_to(val(p.find('property'), P) * float(p.findtext('factor')), (n,))
+        own = own * q
+        sg = sg * np.clip(q, float(p.findtext('min') or 0.0), float(p.findtext('max') or np.inf))
+        offset += float(p.findtext('offset') or 1.0)
+    return np.clip(offset + sg, 0.01, 2.0), own
+
+
+# the most each propeller's rpm can reach in the flight model: the cruise propellers' integration limit, the high-lift discs' free spin
+RPM_MAX = (('x57/cruise', 3400.0), ('x57/hl', 6500.0))
+
+
+def off_pitch(L, P, C, V):
+    """the loops that play off their own pitch, or need more than SimGear can play, anywhere they can be heard; for each, its worst"""
+    bad, over = {}, {}
+    for i, l in enumerate(L):
+        rp = [q for q in names([l]) if q.endswith('/rpm')][0]
+        top = next(m for k, m in RPM_MAX if k in rp)
+        heard = C[i] & (V[i] > HEARD) & (P[rp] <= top)
+        if not heard.any():
+            continue
+        sg, own = sg_pitch(l, P)
+        err = np.abs(sg / np.clip(own, 0.01, 2.0) - 1.0)[heard]
+        if err.max() > 1e-3:
+            bad[l['name']] = float(err.max())
+        if own[heard].max() > 2.0:
+            over[l['name']] = float(own[heard].max())
+    return bad, over
 
 
 def names(L):
@@ -179,6 +218,11 @@ def audit(mod):
     check('nothing audible is cut off by its condition', not cut.any(), '%d cases' % cut.sum())
     wrong = C & ~view
     check('only the current view\'s loops run, and the outside\'s through an open door', not wrong.any())
+    bad, over = off_pitch(L, P, C, V)
+    worst = max(bad, key=bad.get) if bad else None
+    check('every loop plays at its own pitch wherever it can be heard', not bad,
+          '%d off, worst %s by %.0f %%' % (len(bad), worst, 100 * bad[worst]) if bad else '')
+    check('no loop needs a pitch over SimGear\'s 2.0 to keep it', not over, '%d: %s' % (len(over), sorted(over)[:3]) if over else '')
     # all stopped: nothing, whatever the speed or view
     Z = {k: (np.zeros_like(v) if k.endswith('/rpm') else v) for k, v in P.items()}
     C0, _ = evaluate(L, Z)
@@ -261,6 +305,8 @@ def flights(mod, L):
         faint = C & (V < 1e-3)
         print('     %s: %d of %d sources held under -60 dB, %d under -40 dB' % (label, faint.sum(), C.sum(), (C & (V < 1e-2)).sum()))
         check('%s: under 1 %% of the sources held are under -60 dB' % label, faint.sum() < 0.01 * C.sum())
+        bad, _ = off_pitch(L, P, C, V)
+        check('%s: every loop heard along the flight at its own pitch' % label, not bad, '%d off: %s' % (len(bad), sorted(bad)[:3]) if bad else '')
     moving = np.argmax(A[:, 0] > 10.0)           # (not the gear settling at the start)
     check('the propellers are heard once under way', res['cockpit'][moving + 20:].min() > 0)
 

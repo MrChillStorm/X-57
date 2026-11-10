@@ -31,12 +31,18 @@ sounds, which LEVELS sets with what each level rests on.
 
 Place. The bank's positions are from the moment reference; SimGear's are from the model's origin, the VRP at station 0.
 
+Pitch. Each loop plays at its propeller's rpm over the rpm it was rendered at. SimGear adds a <pitch>'s <offset> to that, and
+reads 1.0 where none is given (a <volume>'s is 0), then caps the sum at 2.0 (xmlsound.cxx, sample.hxx). So the bank's pitch
+blocks state <offset>0</offset>; before they did, every loop played at 2.0, an octave up. soundcheck.py works out SimGear's pitch.
+
 Doors. In the cockpit an open door lets the outside in: the outside's loops fade in on top of the cockpit's, by how far a
 door is open, the rear door at half the main door's (about 1.8 m behind the pilot, across the cabin: an estimate). Only its
 motors, and its propellers' loops of 0 kt, which fade out by 40 to 59 kt: a door opens only on the ground. Not the spinners,
 30 dB under the propellers there; this keeps the sweep's worst case at the limit. The cockpit's own loops stay, as the walls
-still carry them. Recorded at idle (FlightGear's own mix), the main door open lifts 3 to 8 kHz by 8 dB and leaves the motors'
-low tone, so it sounds brighter, not louder. The outside's loops are PyWopWop's levels at 30 m; beside the door they would be
+still carry them. Recorded at idle (FlightGear's own mix), the main door open lifted 3 to 8 kHz by 8 dB and left the motors'
+low tone, so it sounded brighter, not louder. That was before the pitch blocks stated their offset, when every loop played
+an octave up (see Pitch), and at idle every sound heard was a loop: so it is 1.5 to 4 kHz at the loops' own pitch, by
+inference, not recorded again. The outside's loops are PyWopWop's levels at 30 m; beside the door they would be
 about 15 dB more, which needs louder copies of the loops (55 MB), so this is the outside as it is, crossfaded in by the door.
 """
 import json, math, os, re, shutil, subprocess, sys
